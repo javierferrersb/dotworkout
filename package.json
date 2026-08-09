@@ -14,8 +14,9 @@
     "generate": "npm run generate:proto && npm run generate:constraints",
     "generate:proto": "buf generate",
     "generate:constraints": "node scripts/gen-compatibility.mjs",
-    "build": "tsc -b packages/codec packages/domain",
-    "clean": "tsc -b --clean packages/codec packages/domain",
+    "build": "tsc -b packages/codec packages/domain packages/cli",
+    "clean": "tsc -b --clean packages/codec packages/domain packages/cli",
+    "cli": "node packages/cli/dist/src/bin.js",
     "test": "npm run build && node --test \"packages/*/dist/test/*.test.js\"",
     "check": "npm run generate && npm run test"
   },
