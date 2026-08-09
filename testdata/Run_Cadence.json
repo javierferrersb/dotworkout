@@ -1,0 +1,105 @@
+{
+  "GUID": "2B68D286-F1CA-488B-BF2A-87CEE08F628E",
+  "custom_workout": {
+    "activity_type": "RUNNING",
+    "location_type": "OUTDOOR",
+    "display_name": "Run_Cadence",
+    "interval_blocks": [
+      {
+        "interval_steps": [
+          {
+            "purpose": "WORK",
+            "workout_step": {
+              "workout_goal": {
+                "goal_type": "DISTANCE",
+                "distance_goal": {
+                  "unit_type": "METERS",
+                  "unit_value": 400.0
+                }
+              },
+              "workout_alert": {
+                "alert_metric": "CADENCE",
+                "alert_style": "RANGE",
+                "cadence_alert": {
+                  "cadence_range_alert": {
+                    "lower_bound": {
+                      "cadence": 170,
+                      "time_unit": {
+                        "unit": 2,
+                        "value": 1.0
+                      }
+                    },
+                    "upper_bound": {
+                      "cadence": 180,
+                      "time_unit": {
+                        "unit": 2,
+                        "value": 1.0
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "purpose": "RECOVERY",
+            "workout_step": {
+              "workout_goal": {
+                "goal_type": "TIME",
+                "time_goal": {
+                  "unit_type": "SECONDS",
+                  "unit_value": 60.0
+                }
+              }
+            }
+          }
+        ],
+        "iterations": 2
+      },
+      {
+        "interval_steps": [
+          {
+            "purpose": "WORK",
+            "workout_step": {
+              "workout_goal": {
+                "goal_type": "DISTANCE",
+                "distance_goal": {
+                  "unit_type": "METERS",
+                  "unit_value": 400.0
+                }
+              },
+              "workout_alert": {
+                "alert_metric": "CADENCE",
+                "alert_style": "VALUE",
+                "cadence_alert": {
+                  "cadence_target": {
+                    "cadence": 175,
+                    "time_unit": {
+                      "unit": 2,
+                      "value": 1.0
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "purpose": "RECOVERY",
+            "workout_step": {
+              "workout_goal": {
+                "goal_type": "TIME",
+                "time_goal": {
+                  "unit_type": "SECONDS",
+                  "unit_value": 60.0
+                }
+              }
+            }
+          }
+        ],
+        "iterations": 2
+      }
+    ]
+  },
+  "version": 1,
+  "format": 5
+}

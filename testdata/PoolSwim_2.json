@@ -1,0 +1,180 @@
+{
+  "GUID": "C90D7D83-1DAD-4BFA-B6B1-B418F1E37C52",
+  "custom_workout": {
+    "activity_type": "SWIMMING",
+    "location_type": "OUTDOOR",
+    "display_name": "Workout #1",
+    "warmup": {
+      "workout_goal": {
+        "goal_type": "DISTANCE",
+        "distance_goal": {
+          "unit_type": "METERS",
+          "unit_value": 400.0
+        }
+      }
+    },
+    "interval_blocks": [
+      {
+        "interval_steps": [
+          {
+            "purpose": "WORK",
+            "workout_step": {
+              "workout_goal": {
+                "goal_type": "DISTANCE",
+                "distance_goal": {
+                  "unit_type": "METERS",
+                  "unit_value": 50.0
+                }
+              },
+              "display_name": "Build"
+            }
+          },
+          {
+            "purpose": "RECOVERY",
+            "workout_step": {
+              "workout_goal": {
+                "goal_type": "TIME",
+                "time_goal": {
+                  "unit_type": "SECONDS",
+                  "unit_value": 15.0
+                }
+              }
+            }
+          }
+        ],
+        "iterations": 4
+      },
+      {
+        "interval_steps": [
+          {
+            "purpose": "WORK",
+            "workout_step": {
+              "workout_goal": {
+                "goal_type": "DISTANCE",
+                "distance_goal": {
+                  "unit_type": "METERS",
+                  "unit_value": 25.0
+                }
+              },
+              "display_name": "Sprint power"
+            }
+          },
+          {
+            "purpose": "RECOVERY",
+            "workout_step": {
+              "workout_goal": {
+                "goal_type": "TIME",
+                "time_goal": {
+                  "unit_type": "SECONDS",
+                  "unit_value": 30.0
+                }
+              }
+            }
+          }
+        ],
+        "iterations": 8
+      },
+      {
+        "interval_steps": [
+          {
+            "purpose": "WORK",
+            "workout_step": {
+              "workout_goal": {
+                "goal_type": "DISTANCE",
+                "distance_goal": {
+                  "unit_type": "METERS",
+                  "unit_value": 50.0
+                }
+              },
+              "display_name": "Pull strength (pullboy + paddles)"
+            }
+          },
+          {
+            "purpose": "RECOVERY",
+            "workout_step": {
+              "workout_goal": {
+                "goal_type": "TIME",
+                "time_goal": {
+                  "unit_type": "SECONDS",
+                  "unit_value": 25.0
+                }
+              }
+            }
+          }
+        ],
+        "iterations": 8
+      },
+      {
+        "interval_steps": [
+          {
+            "purpose": "WORK",
+            "workout_step": {
+              "workout_goal": {
+                "goal_type": "DISTANCE",
+                "distance_goal": {
+                  "unit_type": "METERS",
+                  "unit_value": 100.0
+                }
+              },
+              "display_name": "Pull volume (pullboy only)"
+            }
+          },
+          {
+            "purpose": "RECOVERY",
+            "workout_step": {
+              "workout_goal": {
+                "goal_type": "TIME",
+                "time_goal": {
+                  "unit_type": "SECONDS",
+                  "unit_value": 30.0
+                }
+              }
+            }
+          }
+        ],
+        "iterations": 4
+      },
+      {
+        "interval_steps": [
+          {
+            "purpose": "WORK",
+            "workout_step": {
+              "workout_goal": {
+                "goal_type": "DISTANCE",
+                "distance_goal": {
+                  "unit_type": "METERS",
+                  "unit_value": 50.0
+                }
+              },
+              "display_name": "Backstroke"
+            }
+          },
+          {
+            "purpose": "RECOVERY",
+            "workout_step": {
+              "workout_goal": {
+                "goal_type": "TIME",
+                "time_goal": {
+                  "unit_type": "SECONDS",
+                  "unit_value": 20.0
+                }
+              }
+            }
+          }
+        ],
+        "iterations": 4
+      }
+    ],
+    "cooldown": {
+      "workout_goal": {
+        "goal_type": "DISTANCE",
+        "distance_goal": {
+          "unit_type": "METERS",
+          "unit_value": 200.0
+        }
+      }
+    }
+  },
+  "version": 1,
+  "format": 5
+}

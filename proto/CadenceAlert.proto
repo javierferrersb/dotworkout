@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+import "buf/validate/validate.proto";
+
+message CadenceAlert {
+    option (buf.validate.message).cel = {
+        id: "cadence_alert.exactly_one_shape"
+        message: "set exactly one of cadence_target (alert_style VALUE) or cadence_range_alert (alert_style RANGE)"
+        expression: "has(this.cadence_target) != has(this.cadence_range_alert)"
+    };
+
+    CadenceBound      cadence_target      = 1;  // style VALUE
+    CadenceRangeAlert cadence_range_alert = 2;  // style RANGE
+
+    message CadenceRangeAlert {
+        // structuralRules[5].
+        option (buf.validate.message).cel = {
+            id: "cadence_range.bounds_ordered"
+            message: "lower_bound must be <= upper_bound"
+            expression:
+                "!has(this.lower_bound) || !has(this.upper_bound)"
+                " || this.lower_bound.cadence <= this.upper_bound.cadence"
+        };
+
+        CadenceBound lower_bound = 1;
+        CadenceBound upper_bound = 2;
+    }
+    message CadenceBound {
+        uint32   cadence   = 1;   // steps/revolutions per time_unit
+        TimeUnit time_unit = 2;   // observed {MINUTES, 1.0} -> per minute
+    }
+    // A real denominator, not a constant. Cadence bounds carry MINUTES where
+    // speed bounds carry SECONDS, matching how each metric is displayed.
+    message TimeUnit {
+        uint32 unit  = 1;   // same enum as WorkoutGoal.TimeGoal.TimeUnitType
+        double value = 2;
+    }
+}

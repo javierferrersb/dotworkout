@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+option csharp_namespace = "DotnetWorkoutKit.Protobuf.CustomWorkout";
+
+import "buf/validate/validate.proto";
+import "WorkoutStep.proto";
+
+message IntervalBlock {
+    // structuralRules[3]: a block's interval_steps need NOT be a work/recovery
+    // pair. Work-only (Swim_DistTime block A) and recovery-only (Minimal,
+    // Activity_Cycle) blocks both occur, so nothing here may assume pairing.
+    // A block with no steps at all has never been observed and means nothing.
+    repeated IntervalStep interval_steps = 1 [(buf.validate.field).repeated.min_items = 1];
+
+    // structuralRules[2]: iterations >= 1 on the wire. The composer UI offers
+    // 2-98, but a single unrepeated step is written as iterations: 1, so 1 is
+    // valid here even though the picker's minimum is 2. Stress.workout confirms
+    // 98 encodes fine. No upper bound is enforced: spec 9 lists block and
+    // iteration ceilings as unverified, and guessing one would reject a
+    // legitimate file.
+    uint32 iterations = 2 [(buf.validate.field).uint32.gte = 1];
+
+    message IntervalStep {
+        enum IntervalPurpose {
+            UNSPECIFIED = 0;  // Default value
+            WORK = 1;
+            RECOVERY = 2;
+        }
+        IntervalPurpose purpose = 1 [(buf.validate.field).enum = {defined_only: true, not_in: [0]}];
+        WorkoutStep workout_step = 2 [(buf.validate.field).required = true];
+    }
+}

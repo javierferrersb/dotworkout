@@ -1,0 +1,57 @@
+{
+  "GUID": "4004C7EB-8906-4861-B689-C99F93A3A33F",
+  "custom_workout": {
+    "activity_type": "RUNNING",
+    "location_type": "OUTDOOR",
+    "display_name": "Probe Alerts",
+    "interval_blocks": [
+      {
+        "interval_steps": [
+          {
+            "purpose": "WORK",
+            "workout_step": {
+              "workout_goal": {
+                "goal_type": "DISTANCE",
+                "distance_goal": {
+                  "unit_type": "METERS",
+                  "unit_value": 400.0
+                }
+              },
+              "workout_alert": {
+                "alert_metric": "CURRENT",
+                "alert_style": "VALUE",
+                "speed_alert": {
+                  "speed_target": {
+                    "speed": {
+                      "unit": "METERS_PER_SECOND",
+                      "speed": 3.3333333333333335
+                    },
+                    "time_unit": {
+                      "unit": 1,
+                      "value": 1.0
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "purpose": "RECOVERY",
+            "workout_step": {
+              "workout_goal": {
+                "goal_type": "TIME",
+                "time_goal": {
+                  "unit_type": "SECONDS",
+                  "unit_value": 60.0
+                }
+              }
+            }
+          }
+        ],
+        "iterations": 3
+      }
+    ]
+  },
+  "version": 1,
+  "format": 5
+}

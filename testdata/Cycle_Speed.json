@@ -1,0 +1,171 @@
+{
+  "GUID": "1ABEBCDB-11D4-4B33-B7FD-BC2D01292ABE",
+  "custom_workout": {
+    "activity_type": "CYCLING",
+    "location_type": "OUTDOOR",
+    "display_name": "Cycle_Speed",
+    "interval_blocks": [
+      {
+        "interval_steps": [
+          {
+            "purpose": "WORK",
+            "workout_step": {
+              "workout_goal": {
+                "goal_type": "TIME",
+                "time_goal": {
+                  "unit_type": "MINUTES",
+                  "unit_value": 5.0
+                }
+              },
+              "workout_alert": {
+                "alert_metric": "CURRENT",
+                "alert_style": "RANGE",
+                "speed_alert": {
+                  "speed_range_alert": {
+                    "lower_bound": {
+                      "speed": {
+                        "unit": "METERS_PER_SECOND",
+                        "speed": 6.944444444444445
+                      },
+                      "time_unit": {
+                        "unit": 1,
+                        "value": 1.0
+                      }
+                    },
+                    "upper_bound": {
+                      "speed": {
+                        "unit": "METERS_PER_SECOND",
+                        "speed": 8.333333333333334
+                      },
+                      "time_unit": {
+                        "unit": 1,
+                        "value": 1.0
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "purpose": "RECOVERY",
+            "workout_step": {
+              "workout_goal": {
+                "goal_type": "TIME",
+                "time_goal": {
+                  "unit_type": "SECONDS",
+                  "unit_value": 120.0
+                }
+              }
+            }
+          }
+        ],
+        "iterations": 2
+      },
+      {
+        "interval_steps": [
+          {
+            "purpose": "WORK",
+            "workout_step": {
+              "workout_goal": {
+                "goal_type": "TIME",
+                "time_goal": {
+                  "unit_type": "MINUTES",
+                  "unit_value": 5.0
+                }
+              },
+              "workout_alert": {
+                "alert_metric": "AVERAGE",
+                "alert_style": "RANGE",
+                "speed_alert": {
+                  "speed_range_alert": {
+                    "lower_bound": {
+                      "speed": {
+                        "unit": "METERS_PER_SECOND",
+                        "speed": 6.944444444444445
+                      },
+                      "time_unit": {
+                        "unit": 1,
+                        "value": 1.0
+                      }
+                    },
+                    "upper_bound": {
+                      "speed": {
+                        "unit": "METERS_PER_SECOND",
+                        "speed": 8.333333333333334
+                      },
+                      "time_unit": {
+                        "unit": 1,
+                        "value": 1.0
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "purpose": "RECOVERY",
+            "workout_step": {
+              "workout_goal": {
+                "goal_type": "TIME",
+                "time_goal": {
+                  "unit_type": "SECONDS",
+                  "unit_value": 120.0
+                }
+              }
+            }
+          }
+        ],
+        "iterations": 2
+      },
+      {
+        "interval_steps": [
+          {
+            "purpose": "WORK",
+            "workout_step": {
+              "workout_goal": {
+                "goal_type": "TIME",
+                "time_goal": {
+                  "unit_type": "MINUTES",
+                  "unit_value": 5.0
+                }
+              },
+              "workout_alert": {
+                "alert_metric": "CURRENT",
+                "alert_style": "VALUE",
+                "speed_alert": {
+                  "speed_target": {
+                    "speed": {
+                      "unit": "METERS_PER_SECOND",
+                      "speed": 7.777777777777778
+                    },
+                    "time_unit": {
+                      "unit": 1,
+                      "value": 1.0
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "purpose": "RECOVERY",
+            "workout_step": {
+              "workout_goal": {
+                "goal_type": "TIME",
+                "time_goal": {
+                  "unit_type": "SECONDS",
+                  "unit_value": 120.0
+                }
+              }
+            }
+          }
+        ],
+        "iterations": 2
+      }
+    ]
+  },
+  "version": 1,
+  "format": 5
+}

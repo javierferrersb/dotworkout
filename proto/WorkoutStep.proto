@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+option csharp_namespace = "DotnetWorkoutKit.Protobuf.CustomWorkout";
+
+import "buf/validate/validate.proto";
+import "WorkoutAlert.proto";
+import "WorkoutGoal.proto";
+
+message WorkoutStep {
+    WorkoutGoal workout_goal = 1 [(buf.validate.field).required = true];
+    optional WorkoutAlert workout_alert = 2; // WorkoutAlert (optional)
+    // There is no stroke field in this format. Users type the stroke into this
+    // free-text name, so an authoring UI's stroke picker writes here (spec 3).
+    // Stress.workout carries 1,574 characters with emoji as ordinary UTF-8, so
+    // no length limit is imposed.
+    optional string display_name = 3;        // DisplayName (optional)
+}

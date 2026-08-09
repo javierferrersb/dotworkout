@@ -1,0 +1,9 @@
+# Normalise text files to LF inside the repository, whatever the OS.
+* text=auto
+
+# The corpus is ground truth, and the conformance suite asserts byte-identity
+# against it. Git's binary detection is a content heuristic (it looks for NUL
+# bytes) — a small .workout file that happens not to contain one would be
+# treated as text and have its line endings rewritten, corrupting it silently.
+# Declare it explicitly so that can never happen.
+*.workout binary

@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+option csharp_namespace = "DotnetWorkoutKit.Protobuf";
+
+import "buf/validate/validate.proto";
+import "CustomWorkout.proto";
+import "SingleGoalWorkout.proto";
+
+message WorkoutBinary {
+    // structuralRules[0] in constraints/compatibility.json.
+    //
+    // Fields 10 and 11 are mutually exclusive in every one of the 20 corpus
+    // files. A file holds either a single-goal workout or a custom one, never
+    // both and never neither. Decoders must branch on which is present rather
+    // than assuming field 11 - see spec/FORMAT.md 1 and 9.
+    option (buf.validate.message).cel = {
+        id: "workout_binary.exactly_one_container"
+        message: "exactly one of single_goal_workout (field 10) or custom_workout (field 11) must be set"
+        expression: "has(this.single_goal_workout) != has(this.custom_workout)"
+    };
+
+    // structuralRules[1]. The GUID is a stable per-workout identity, not a
+    // per-export nonce: four corpus files exported from one workout after only
+    // changing display units share a GUID. Generators must mint a fresh UUIDv4
+    // per workout, so this checks the shape a v4 must have. Case is not
+    // constrained - Apple writes uppercase, and nothing proves lowercase fails.
+    //
+    // Freshness itself cannot be expressed here; the domain layer owns that.
+    string GUID = 9 [(buf.validate.field).cel = {
+        id: "workout_binary.guid_uuidv4"
+        message: "GUID must be a UUIDv4, e.g. EB04F3B5-6C4E-4F8F-BB9D-276D50D7E2A8"
+        expression:
+            "this.matches('^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-4[0-9A-Fa-f]{3}"
+            "-[89ABab][0-9A-Fa-f]{3}-[0-9A-Fa-f]{12}$')"
+    }];
+
+    SingleGoalWorkout single_goal_workout = 10;
+    CustomWorkout     custom_workout      = 11;
+
+    // Observed only as 1 and 5. Deliberately unconstrained: spec 9 lists an
+    // Apple format revision as an open question and asks that unexpected values
+    // be handled gracefully rather than rejected.
+    uint32            version             = 1000;
+    uint32            format              = 1002;
+}

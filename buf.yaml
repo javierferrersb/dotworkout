@@ -1,0 +1,26 @@
+version: v2
+modules:
+  - path: proto
+deps:
+  - buf.build/bufbuild/protovalidate
+lint:
+  use:
+    - STANDARD
+  except:
+    # The corpus schema mirrors Apple's wire format verbatim. Field and message
+    # names are dictated by the reverse-engineered format, not by style guides,
+    # and renaming them would break the JSON mapping the testdata pins.
+    - PACKAGE_DEFINED
+    - PACKAGE_DIRECTORY_MATCH
+    - PACKAGE_SAME_DIRECTORY
+    - PACKAGE_SAME_CSHARP_NAMESPACE
+    - FIELD_LOWER_SNAKE_CASE
+    - ENUM_VALUE_PREFIX
+    - ENUM_VALUE_UPPER_SNAKE_CASE
+    - ENUM_ZERO_VALUE_SUFFIX
+    # Renaming a .proto file changes the file name recorded in the descriptor,
+    # which is a schema change in its own right. Not worth it for style.
+    - FILE_LOWER_SNAKE_CASE
+breaking:
+  use:
+    - FILE

@@ -1,0 +1,75 @@
+syntax = "proto3";
+
+option csharp_namespace = "DotnetWorkoutKit.Protobuf.CustomWorkout.Alert";
+
+import "buf/validate/validate.proto";
+import "SpeedAlert.proto";
+import "HeartRateRangeAlert.proto";
+import "CadenceAlert.proto";
+import "PowerAlert.proto";
+
+message WorkoutAlert {
+    option (buf.validate.message).cel = {
+        id: "workout_alert.exactly_one_metric_payload"
+        message: "exactly one of speed_alert, cadence_alert, power_alert or heart_rate_range_alert must be set"
+        expression:
+            "[has(this.speed_alert), has(this.cadence_alert), has(this.power_alert),"
+            " has(this.heart_rate_range_alert)].filter(set, set).size() == 1"
+    };
+
+    // alert_style is the payload discriminator (spec/FORMAT.md 6). It was named
+    // `unknown` in the reference schema, which is correction 10 of the ten.
+    //
+    // Heart rate has no VALUE case, and that is structural rather than a UI
+    // restriction: HeartRateRangeAlert field 1 holds a zone index, not a single
+    // target, so there is nowhere for a single HR value to go. Its picker offers
+    // zones precisely because the format has no field for anything else.
+    option (buf.validate.message).cel = {
+        id: "workout_alert.style_matches_payload_shape"
+        message:
+            "alert_style must match the payload shape: VALUE -> a single target, "
+            "RANGE -> lower/upper bounds, ZONE -> a heart rate zone"
+        expression:
+            "this.alert_style == 1 ?"
+            "  (has(this.speed_alert) ? has(this.speed_alert.speed_target)"
+            "   : has(this.cadence_alert) ? has(this.cadence_alert.cadence_target)"
+            "   : has(this.power_alert) ? has(this.power_alert.power_target)"
+            "   : false)"
+            " : this.alert_style == 2 ?"
+            "  (has(this.speed_alert) ? has(this.speed_alert.speed_range_alert)"
+            "   : has(this.cadence_alert) ? has(this.cadence_alert.cadence_range_alert)"
+            "   : has(this.power_alert) ? has(this.power_alert.power_range_alert)"
+            "   : has(this.heart_rate_range_alert) ? has(this.heart_rate_range_alert.heart_rate_range)"
+            "   : false)"
+            " : this.alert_style == 3 ?"
+            "  (has(this.heart_rate_range_alert) && has(this.heart_rate_range_alert.heart_rate_zone))"
+            " : false"
+    };
+
+    enum AlertMetricEnum {
+        UNSPECIFIED = 0;
+        AVERAGE = 1;
+        CURRENT = 2;
+        CADENCE = 3;
+        POWER_CURRENT = 4;
+        COUNT_PER_MINUTE = 5;
+        POWER_AVERAGE = 6;
+    }
+
+    enum AlertStyle {
+        UNSPECIFIED_STYLE = 0;
+        VALUE = 1;   // single target
+        RANGE = 2;   // explicit lower/upper bounds
+        ZONE  = 3;   // named zone, bounds resolved on device
+    }
+
+    // Which metric pairs with which alert, and whether a current/average toggle
+    // exists for it, is a compatibility question and lives in
+    // constraints/compatibility.json - not here.
+    AlertMetricEnum alert_metric = 1 [(buf.validate.field).enum = {defined_only: true, not_in: [0]}];
+    AlertStyle      alert_style  = 2 [(buf.validate.field).enum = {defined_only: true, not_in: [0]}];
+    SpeedAlert speed_alert = 4;
+    CadenceAlert cadence_alert = 5;
+    PowerAlert power_alert = 6;
+    HeartRateRangeAlert heart_rate_range_alert = 7;
+}

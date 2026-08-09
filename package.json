@@ -1,0 +1,28 @@
+{
+  "name": "dotworkout-monorepo",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "TypeScript codec and authoring library for Apple .workout files",
+  "workspaces": [
+    "packages/*"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "generate": "npm run generate:proto && npm run generate:constraints",
+    "generate:proto": "buf generate",
+    "generate:constraints": "node scripts/gen-compatibility.mjs",
+    "build": "tsc -b packages/codec packages/domain",
+    "clean": "tsc -b --clean packages/codec packages/domain",
+    "test": "npm run build && node --test \"packages/*/dist/test/*.test.js\"",
+    "check": "npm run generate && npm run test"
+  },
+  "devDependencies": {
+    "@bufbuild/buf": "^1.72.0",
+    "@bufbuild/protoc-gen-es": "^2.13.0",
+    "@types/node": "^22.20.1",
+    "typescript": "^5.9.3"
+  }
+}

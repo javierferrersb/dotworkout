@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+import "buf/validate/validate.proto";
+import "CustomWorkout.proto";
+import "WorkoutGoal.proto";
+
+// The simple, non-custom workouts: one activity, one goal, no blocks.
+// Lives at WorkoutBinary field 10, a sibling of custom_workout at field 11.
+//
+// These are trivial to create on-device and of limited product value, but they
+// are the ONLY place the ENERGY goal type appears.
+message SingleGoalWorkout {
+    CustomWorkout.ActivityType activity_type = 1 [(buf.validate.field).enum.not_in = 0];
+    CustomWorkout.LocationType location_type = 2 [(buf.validate.field).enum.not_in = 0];
+    // PRESUMED - never observed. Inferred by analogy with CustomWorkout; the one
+    // corpus file at field 10 has no name. Treat as unconfirmed (spec 2, 9).
+    optional string            display_name  = 3;
+    // A bare WorkoutGoal, NOT a WorkoutStep.
+    WorkoutGoal                goal          = 4 [(buf.validate.field).required = true];
+}

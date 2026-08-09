@@ -1,0 +1,8 @@
+node_modules/
+dist/
+*.tsbuildinfo
+
+# Generated code IS checked in, deliberately — building must not require protoc
+# or the buf CLI. Regenerate with `npm run generate`:
+#   packages/codec/src/gen/
+#   packages/domain/src/generated/

@@ -1,0 +1,178 @@
+// @generated from constraints/compatibility.json — DO NOT EDIT.
+//
+// Regenerate with `npm run generate:constraints`.
+//
+// constraints/compatibility.json is the single source of truth for which goals
+// and alerts each sport allows. This file is a build-time transcription of it so
+// the validator has no runtime filesystem dependency. Editing it by hand, or
+// restating the matrix anywhere else in TypeScript or prose, reintroduces
+// exactly the drift the data file exists to prevent.
+
+/** SHA-256 of constraints/compatibility.json at generation time. */
+export const COMPATIBILITY_SOURCE_SHA256 =
+  "cea723d2e29f9d2e0c143d66974387c48e0e5786bf86503d16ba6ebea2509038";
+
+/** Path of the source file, relative to the repo root. */
+export const COMPATIBILITY_SOURCE_PATH = "constraints/compatibility.json";
+
+export const COMPATIBILITY = {
+  "$schema": "./compatibility.schema.json",
+  "_about": "Single source of truth for sport/goal/alert compatibility. The .workout format itself encodes NONE of these constraints - a power alert on a swim step serialises fine and produces a file the Watch may reject. This file is data, not schema: the validator reads it, and the table in spec/FORMAT.md §7 is generated from it. Do not hand-edit that table.",
+  "_provenance": "Read off the iOS Workout app composer UI, August 2026, by a single user on one device with metric units. Apple can change this in any OS update, and regional or unit settings may vary it. Treat every entry as provisional and dated, not as a specification.",
+  "_confidence": {
+    "confirmed": "Observed directly in the composer UI or in a corpus file.",
+    "presumed": "Inferred by analogy with a confirmed case. Safe to allow, but unproven.",
+    "unknown": "Never checked. The validator should permit these and warn, rather than reject, so an unverified-but-legal combination is not blocked."
+  },
+  "observedOn": "2026-08",
+  "appVersion": "unrecorded",
+  "alertStyles": {
+    "HEART_RATE": {
+      "styles": [
+        "RANGE",
+        "ZONE"
+      ],
+      "metrics": [
+        "COUNT_PER_MINUTE"
+      ],
+      "currentAverageToggle": false,
+      "confidence": "confirmed",
+      "note": "Offers zones instead of a single-value target. VALUE style never observed for heart rate."
+    },
+    "SPEED": {
+      "styles": [
+        "RANGE",
+        "VALUE"
+      ],
+      "metrics": [
+        "CURRENT",
+        "AVERAGE"
+      ],
+      "currentAverageToggle": true,
+      "confidence": "confirmed",
+      "note": "Displayed as pace (min/km) for running and speed (km/h) for cycling. Identical encoding either way: always metres per second. ZONE style not observed."
+    },
+    "CADENCE": {
+      "styles": [
+        "RANGE",
+        "VALUE"
+      ],
+      "metrics": [
+        "CADENCE"
+      ],
+      "currentAverageToggle": false,
+      "confidence": "confirmed"
+    },
+    "POWER": {
+      "styles": [
+        "RANGE",
+        "VALUE"
+      ],
+      "metrics": [
+        "POWER_CURRENT",
+        "POWER_AVERAGE"
+      ],
+      "currentAverageToggle": true,
+      "confidence": "confirmed",
+      "note": "ZONE style not offered at the time of observation, but this was not exhaustively checked."
+    }
+  },
+  "customWorkout": {
+    "SWIMMING": {
+      "goalTypes": [
+        "TIME",
+        "DISTANCE",
+        "OPEN",
+        "DISTANCE_TIME"
+      ],
+      "alerts": [
+        "HEART_RATE"
+      ],
+      "confidence": "confirmed",
+      "note": "DISTANCE_TIME (send-off intervals) is offered ONLY for swimming. Pool swims store as OUTDOOR; open water is not a separate composer activity. There is no stroke field - stroke is typed into the step's display_name."
+    },
+    "RUNNING": {
+      "goalTypes": [
+        "DISTANCE",
+        "TIME",
+        "OPEN"
+      ],
+      "alerts": [
+        "SPEED",
+        "HEART_RATE",
+        "CADENCE",
+        "POWER"
+      ],
+      "confidence": "confirmed"
+    },
+    "CYCLING": {
+      "goalTypes": [
+        "TIME",
+        "DISTANCE",
+        "OPEN"
+      ],
+      "alerts": [
+        "SPEED"
+      ],
+      "alertsUnverified": [
+        "HEART_RATE",
+        "CADENCE",
+        "POWER"
+      ],
+      "confidence": "confirmed",
+      "note": "Goal types confirmed. Only the Speed alert was verified; the other three are very likely offered but were never checked. Validator should warn rather than reject on those."
+    },
+    "HIGH_INTENSITY_INTERVAL_TRAINING": {
+      "goalTypes": [
+        "TIME",
+        "OPEN"
+      ],
+      "alerts": [
+        "HEART_RATE"
+      ],
+      "confidence": "confirmed",
+      "note": "No distance goal, as expected for a non-distance sport."
+    }
+  },
+  "customWorkoutUnverifiedActivities": {
+    "_note": "WorkoutKit accepts these for custom workouts but their composer options were never enumerated. The validator should permit any goal or alert for these and emit a warning, rather than guessing a restriction.",
+    "activities": [
+      "CROSS_TRAINING",
+      "ELLIPTICAL",
+      "FUNCTIONAL_STRENGTH_TRAINING",
+      "HIKING",
+      "ROWING",
+      "STAIR_CLIMBING",
+      "TRADITIONAL_STRENGTH_TRAINING",
+      "WALKING",
+      "YOGA",
+      "CORE_TRAINING"
+    ],
+    "confidence": "unknown"
+  },
+  "singleGoalWorkout": {
+    "_note": "The simple non-custom workouts, WorkoutBinary field 10. One activity, one goal, no blocks. ENERGY appears ONLY here and never in a custom workout.",
+    "goalTypes": [
+      "DISTANCE",
+      "TIME",
+      "ENERGY"
+    ],
+    "confidence": "confirmed",
+    "observedActivities": [
+      "CYCLING"
+    ],
+    "openQuestion": "The user also reported a 'pace' option among simple workouts. That is most likely WorkoutKit's separate Pacer workout type, which would occupy a different WorkoutBinary container field entirely, not a goal type here. Unresolved - do not model it as a goal until a Pacer file is captured."
+  },
+  "structuralRules": {
+    "_note": "These are invariants of the format rather than UI restrictions, and are better enforced in protovalidate than from this file.",
+    "rules": [
+      "Exactly one of WorkoutBinary.single_goal_workout (10) or custom_workout (11) is set.",
+      "GUID must be a fresh UUIDv4 per workout; it is a stable workout identity, not a per-export nonce.",
+      "iterations >= 1 on the wire. The composer UI offers 2-98, but a single unrepeated step is written as iterations: 1.",
+      "A block's interval_steps need not be a work/recovery pair; work-only and recovery-only blocks both occur.",
+      "goal_type determines which payload field is set: TIME->2, ENERGY->3, DISTANCE->4, DISTANCE_TIME->5, OPEN->none.",
+      "For a RANGE alert, lower_bound must be <= upper_bound in stored units. For pace this means the lower bound is the SLOWER pace, which inverts relative to how pace is displayed.",
+      "Authored units must be preserved on round-trip; never canonicalise to metres or seconds."
+    ]
+  }
+} as const;

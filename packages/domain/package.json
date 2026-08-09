@@ -1,0 +1,22 @@
+{
+  "name": "@dotworkout/domain",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Swimming-oriented authoring API and validation over the .workout codec",
+  "license": "MIT",
+  "exports": {
+    ".": {
+      "types": "./dist/src/index.d.ts",
+      "default": "./dist/src/index.js"
+    }
+  },
+  "files": [
+    "dist/src"
+  ],
+  "sideEffects": false,
+  "dependencies": {
+    "@bufbuild/protobuf": "^2.13.0",
+    "@bufbuild/protovalidate": "^1.2.0",
+    "@dotworkout/codec": "0.1.0"
+  }
+}

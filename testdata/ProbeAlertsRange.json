@@ -1,0 +1,101 @@
+{
+  "GUID": "4004C7EB-8906-4861-B689-C99F93A3A33F",
+  "custom_workout": {
+    "activity_type": "RUNNING",
+    "location_type": "OUTDOOR",
+    "display_name": "Probe Alerts",
+    "warmup": {
+      "workout_goal": {
+        "goal_type": "TIME",
+        "time_goal": {
+          "unit_type": "MINUTES",
+          "unit_value": 10.0
+        }
+      },
+      "workout_alert": {
+        "alert_metric": "COUNT_PER_MINUTE",
+        "alert_style": "RANGE",
+        "heart_rate_range_alert": {
+          "heart_rate_range": {
+            "lower_bound": {
+              "value": 120.0
+            },
+            "upper_bound": {
+              "value": 140.0
+            }
+          }
+        }
+      }
+    },
+    "interval_blocks": [
+      {
+        "interval_steps": [
+          {
+            "purpose": "WORK",
+            "workout_step": {
+              "workout_goal": {
+                "goal_type": "DISTANCE",
+                "distance_goal": {
+                  "unit_type": "METERS",
+                  "unit_value": 400.0
+                }
+              },
+              "workout_alert": {
+                "alert_metric": "CURRENT",
+                "alert_style": "RANGE",
+                "speed_alert": {
+                  "speed_range_alert": {
+                    "lower_bound": {
+                      "speed": {
+                        "unit": "METERS_PER_SECOND",
+                        "speed": 3.0303030303030303
+                      },
+                      "time_unit": {
+                        "unit": 1,
+                        "value": 1.0
+                      }
+                    },
+                    "upper_bound": {
+                      "speed": {
+                        "unit": "METERS_PER_SECOND",
+                        "speed": 3.3333333333333335
+                      },
+                      "time_unit": {
+                        "unit": 1,
+                        "value": 1.0
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "purpose": "RECOVERY",
+            "workout_step": {
+              "workout_goal": {
+                "goal_type": "TIME",
+                "time_goal": {
+                  "unit_type": "SECONDS",
+                  "unit_value": 60.0
+                }
+              }
+            }
+          }
+        ],
+        "iterations": 3
+      }
+    ],
+    "cooldown": {
+      "workout_goal": {
+        "goal_type": "TIME",
+        "time_goal": {
+          "unit_type": "SECONDS",
+          "unit_value": 300.0
+        }
+      }
+    }
+  },
+  "version": 1,
+  "format": 5
+}

@@ -1,0 +1,123 @@
+{
+  "GUID": "F07D74B9-B6C8-42F5-AE2A-99EFF9AA0A80",
+  "custom_workout": {
+    "activity_type": "SWIMMING",
+    "location_type": "OUTDOOR",
+    "display_name": "Swim_DistTime",
+    "warmup": {
+      "workout_goal": {
+        "goal_type": "DISTANCE",
+        "distance_goal": {
+          "unit_type": "METERS",
+          "unit_value": 200.0
+        }
+      }
+    },
+    "interval_blocks": [
+      {
+        "interval_steps": [
+          {
+            "purpose": "WORK",
+            "workout_step": {
+              "workout_goal": {
+                "goal_type": "DISTANCE_TIME",
+                "distance_time_goal": {
+                  "distance": {
+                    "unit_type": "METERS",
+                    "unit_value": 50.0
+                  },
+                  "time": {
+                    "unit_type": "SECONDS",
+                    "unit_value": 60.0
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "iterations": 4
+      },
+      {
+        "interval_steps": [
+          {
+            "purpose": "WORK",
+            "workout_step": {
+              "workout_goal": {
+                "goal_type": "DISTANCE_TIME",
+                "distance_time_goal": {
+                  "distance": {
+                    "unit_type": "METERS",
+                    "unit_value": 100.0
+                  },
+                  "time": {
+                    "unit_type": "SECONDS",
+                    "unit_value": 120.0
+                  }
+                }
+              }
+            }
+          },
+          {
+            "purpose": "RECOVERY",
+            "workout_step": {
+              "workout_goal": {
+                "goal_type": "TIME",
+                "time_goal": {
+                  "unit_type": "SECONDS",
+                  "unit_value": 20.0
+                }
+              }
+            }
+          }
+        ],
+        "iterations": 2
+      },
+      {
+        "interval_steps": [
+          {
+            "purpose": "WORK",
+            "workout_step": {
+              "workout_goal": {
+                "goal_type": "DISTANCE_TIME",
+                "distance_time_goal": {
+                  "distance": {
+                    "unit_type": "METERS",
+                    "unit_value": 100.0
+                  },
+                  "time": {
+                    "unit_type": "MINUTES",
+                    "unit_value": 3.0
+                  }
+                }
+              }
+            }
+          },
+          {
+            "purpose": "RECOVERY",
+            "workout_step": {
+              "workout_goal": {
+                "goal_type": "TIME",
+                "time_goal": {
+                  "unit_type": "SECONDS",
+                  "unit_value": 20.0
+                }
+              }
+            }
+          }
+        ],
+        "iterations": 2
+      }
+    ],
+    "cooldown": {
+      "workout_goal": {
+        "goal_type": "DISTANCE",
+        "distance_goal": {
+          "unit_type": "METERS",
+          "unit_value": 100.0
+        }
+      }
+    }
+  },
+  "version": 1,
+  "format": 5
+}

@@ -1,0 +1,59 @@
+{
+  "GUID": "A7A2F422-37D4-4170-9CA2-551960FC5067",
+  "custom_workout": {
+    "activity_type": "SWIMMING",
+    "location_type": "OUTDOOR",
+    "display_name": "Probe Time",
+    "warmup": {
+      "workout_goal": {
+        "goal_type": "TIME",
+        "time_goal": {
+          "unit_type": "MINUTES",
+          "unit_value": 5.0
+        }
+      }
+    },
+    "interval_blocks": [
+      {
+        "interval_steps": [
+          {
+            "purpose": "WORK",
+            "workout_step": {
+              "workout_goal": {
+                "goal_type": "TIME",
+                "time_goal": {
+                  "unit_type": "MINUTES",
+                  "unit_value": 1.0
+                }
+              }
+            }
+          },
+          {
+            "purpose": "RECOVERY",
+            "workout_step": {
+              "workout_goal": {
+                "goal_type": "TIME",
+                "time_goal": {
+                  "unit_type": "SECONDS",
+                  "unit_value": 30.0
+                }
+              }
+            }
+          }
+        ],
+        "iterations": 4
+      }
+    ],
+    "cooldown": {
+      "workout_goal": {
+        "goal_type": "TIME",
+        "time_goal": {
+          "unit_type": "SECONDS",
+          "unit_value": 120.0
+        }
+      }
+    }
+  },
+  "version": 1,
+  "format": 5
+}

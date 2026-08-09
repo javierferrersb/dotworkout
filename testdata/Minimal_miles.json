@@ -1,0 +1,46 @@
+{
+  "GUID": "EB04F3B5-6C4E-4F8F-BB9D-276D50D7E2A8",
+  "custom_workout": {
+    "activity_type": "SWIMMING",
+    "location_type": "OUTDOOR",
+    "display_name": "New Custom Workout",
+    "interval_blocks": [
+      {
+        "interval_steps": [
+          {
+            "purpose": "WORK",
+            "workout_step": {
+              "workout_goal": {
+                "goal_type": "DISTANCE",
+                "distance_goal": {
+                  "unit_type": "MILES",
+                  "unit_value": 0.06
+                }
+              }
+            }
+          }
+        ],
+        "iterations": 1
+      },
+      {
+        "interval_steps": [
+          {
+            "purpose": "RECOVERY",
+            "workout_step": {
+              "workout_goal": {
+                "goal_type": "TIME",
+                "time_goal": {
+                  "unit_type": "SECONDS",
+                  "unit_value": 30.0
+                }
+              }
+            }
+          }
+        ],
+        "iterations": 1
+      }
+    ]
+  },
+  "version": 1,
+  "format": 5
+}

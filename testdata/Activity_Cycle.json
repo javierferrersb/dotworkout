@@ -1,0 +1,55 @@
+{
+  "GUID": "036A1CB7-7CC8-4A9D-992B-BDB72C182B04",
+  "custom_workout": {
+    "activity_type": "CYCLING",
+    "location_type": "OUTDOOR",
+    "display_name": "Activity_Cycle",
+    "warmup": {
+      "workout_goal": {
+        "goal_type": "TIME",
+        "time_goal": {
+          "unit_type": "SECONDS",
+          "unit_value": 300.0
+        }
+      }
+    },
+    "interval_blocks": [
+      {
+        "interval_steps": [
+          {
+            "purpose": "WORK",
+            "workout_step": {
+              "workout_goal": {
+                "goal_type": "TIME",
+                "time_goal": {
+                  "unit_type": "SECONDS",
+                  "unit_value": 120.0
+                }
+              }
+            }
+          }
+        ],
+        "iterations": 1
+      },
+      {
+        "interval_steps": [
+          {
+            "purpose": "RECOVERY",
+            "workout_step": {
+              "workout_goal": {
+                "goal_type": "TIME",
+                "time_goal": {
+                  "unit_type": "SECONDS",
+                  "unit_value": 60.0
+                }
+              }
+            }
+          }
+        ],
+        "iterations": 1
+      }
+    ]
+  },
+  "version": 1,
+  "format": 5
+}

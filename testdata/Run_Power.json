@@ -1,0 +1,141 @@
+{
+  "GUID": "ADB91F10-953D-451C-B8B9-F6D7C91AC5AE",
+  "custom_workout": {
+    "activity_type": "RUNNING",
+    "location_type": "OUTDOOR",
+    "display_name": "Run_Power",
+    "interval_blocks": [
+      {
+        "interval_steps": [
+          {
+            "purpose": "WORK",
+            "workout_step": {
+              "workout_goal": {
+                "goal_type": "DISTANCE",
+                "distance_goal": {
+                  "unit_type": "METERS",
+                  "unit_value": 400.0
+                }
+              },
+              "workout_alert": {
+                "alert_metric": "POWER_CURRENT",
+                "alert_style": "RANGE",
+                "power_alert": {
+                  "power_range_alert": {
+                    "lower_bound": {
+                      "unit": 1,
+                      "power": 200.0
+                    },
+                    "upper_bound": {
+                      "unit": 1,
+                      "power": 250.0
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "purpose": "RECOVERY",
+            "workout_step": {
+              "workout_goal": {
+                "goal_type": "TIME",
+                "time_goal": {
+                  "unit_type": "SECONDS",
+                  "unit_value": 60.0
+                }
+              }
+            }
+          }
+        ],
+        "iterations": 2
+      },
+      {
+        "interval_steps": [
+          {
+            "purpose": "WORK",
+            "workout_step": {
+              "workout_goal": {
+                "goal_type": "DISTANCE",
+                "distance_goal": {
+                  "unit_type": "METERS",
+                  "unit_value": 400.0
+                }
+              },
+              "workout_alert": {
+                "alert_metric": "POWER_AVERAGE",
+                "alert_style": "RANGE",
+                "power_alert": {
+                  "power_range_alert": {
+                    "lower_bound": {
+                      "unit": 1,
+                      "power": 200.0
+                    },
+                    "upper_bound": {
+                      "unit": 1,
+                      "power": 250.0
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "purpose": "RECOVERY",
+            "workout_step": {
+              "workout_goal": {
+                "goal_type": "TIME",
+                "time_goal": {
+                  "unit_type": "SECONDS",
+                  "unit_value": 60.0
+                }
+              }
+            }
+          }
+        ],
+        "iterations": 2
+      },
+      {
+        "interval_steps": [
+          {
+            "purpose": "WORK",
+            "workout_step": {
+              "workout_goal": {
+                "goal_type": "DISTANCE",
+                "distance_goal": {
+                  "unit_type": "METERS",
+                  "unit_value": 400.0
+                }
+              },
+              "workout_alert": {
+                "alert_metric": "POWER_CURRENT",
+                "alert_style": "VALUE",
+                "power_alert": {
+                  "power_target": {
+                    "unit": 1,
+                    "power": 225.0
+                  }
+                }
+              }
+            }
+          },
+          {
+            "purpose": "RECOVERY",
+            "workout_step": {
+              "workout_goal": {
+                "goal_type": "TIME",
+                "time_goal": {
+                  "unit_type": "SECONDS",
+                  "unit_value": 60.0
+                }
+              }
+            }
+          }
+        ],
+        "iterations": 2
+      }
+    ]
+  },
+  "version": 1,
+  "format": 5
+}

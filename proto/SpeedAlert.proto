@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+import "buf/validate/validate.proto";
+
+message SpeedAlert {
+    option (buf.validate.message).cel = {
+        id: "speed_alert.exactly_one_shape"
+        message: "set exactly one of speed_target (alert_style VALUE) or speed_range_alert (alert_style RANGE)"
+        expression: "has(this.speed_target) != has(this.speed_range_alert)"
+    };
+
+    SpeedBound       speed_target      = 1;  // present when AlertStyle == VALUE
+    SpeedRangeAlert  speed_range_alert = 2;  // present when AlertStyle == RANGE
+
+    message SpeedRangeAlert {
+        // structuralRules[5]. Speed is always metres per second, and
+        // lower_bound is the SLOWER value. For running pace that inverts
+        // relative to how it is displayed - 5'30"/km is 3.03 m/s and 5'00"/km is
+        // 3.33 m/s, so the "slower" pace is the numerically smaller bound. This
+        // is a common source of inverted-range bugs (spec/FORMAT.md 6).
+        option (buf.validate.message).cel = {
+            id: "speed_range.bounds_ordered"
+            message:
+                "lower_bound must be <= upper_bound in stored units (m/s). "
+                "For pace this reads backwards: the lower bound is the SLOWER pace."
+            expression:
+                "!has(this.lower_bound) || !has(this.upper_bound)"
+                " || this.lower_bound.speed.speed <= this.upper_bound.speed.speed"
+        };
+
+        SpeedBound lower_bound = 1;   // slower pace = lower m/s
+        SpeedBound upper_bound = 2;   // faster pace = higher m/s
+    }
+    message SpeedBound {
+        Speed    speed     = 1;
+        TimeUnit time_unit = 2;
+    }
+    message Speed {
+        enum SpeedUnitEnum { UNSPECIFIED = 0; METERS_PER_SECOND = 1; }
+        SpeedUnitEnum unit  = 1 [(buf.validate.field).enum = {defined_only: true, not_in: [0]}];
+        double        speed = 2 [(buf.validate.field).double.gt = 0];
+    }
+    // A real denominator, not a constant: observed as {SECONDS, 1.0}, giving
+    // metres per second. Reuses WorkoutGoal.TimeGoal.TimeUnitType.
+    message TimeUnit {
+        uint32 unit  = 1;
+        double value = 2;
+    }
+}

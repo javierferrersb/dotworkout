@@ -1,0 +1,88 @@
+syntax = "proto3";
+
+import "buf/validate/validate.proto";
+
+message WorkoutGoal {
+    // structuralRules[4] in constraints/compatibility.json:
+    // "goal_type determines which payload field is set:
+    //  TIME->2, ENERGY->3, DISTANCE->4, DISTANCE_TIME->5, OPEN->none."
+    //
+    // Note the DISTANCE_TIME case in particular: spec/FORMAT.md 5 records that
+    // a send-off does NOT populate time_goal and distance_goal together, it
+    // uses the dedicated field 5 carrying both quantities.
+    option (buf.validate.message).cel = {
+        id: "workout_goal.payload_matches_goal_type"
+        message:
+            "goal_type must match the populated payload: TIME->time_goal, "
+            "ENERGY->energy_goal, DISTANCE->distance_goal, "
+            "DISTANCE_TIME->distance_time_goal, OPEN->no payload"
+        expression:
+            "this.goal_type == 1 ? has(this.time_goal)"
+            " : this.goal_type == 2 ? has(this.energy_goal)"
+            " : this.goal_type == 3 ? has(this.distance_goal)"
+            " : this.goal_type == 5 ? has(this.distance_time_goal)"
+            " : this.goal_type == 4 ? !(has(this.time_goal) || has(this.energy_goal)"
+            "                           || has(this.distance_goal)"
+            "                           || has(this.distance_time_goal))"
+            " : false"
+    };
+
+    // A goal carries one payload or none, never two. Kept separate from the
+    // rule above so a message setting the right payload plus a stray extra one
+    // reports the actual problem.
+    option (buf.validate.message).cel = {
+        id: "workout_goal.at_most_one_payload"
+        message: "at most one of time_goal, energy_goal, distance_goal or distance_time_goal may be set"
+        expression:
+            "[has(this.time_goal), has(this.energy_goal), has(this.distance_goal),"
+            " has(this.distance_time_goal)].filter(set, set).size() <= 1"
+    };
+
+    enum GoalType {
+        UNSPECIFIED   = 0;
+        TIME          = 1;
+        ENERGY        = 2;  // kilocalories; single-goal workouts only
+        DISTANCE      = 3;
+        OPEN          = 4;
+        DISTANCE_TIME = 5;  // swim send-off: "50 m on 1:00"
+    }
+
+    GoalType         goal_type          = 1;
+    TimeGoal         time_goal          = 2;  // when TIME
+    EnergyGoal       energy_goal        = 3;  // when ENERGY
+    DistanceGoal     distance_goal      = 4;  // when DISTANCE
+    DistanceTimeGoal distance_time_goal = 5;  // when DISTANCE_TIME
+    // OPEN carries no payload
+
+    message TimeGoal {
+        enum TimeUnitType { UNSPECIFIED = 0; SECONDS = 1; MINUTES = 2; HOURS = 3; }
+        // Units are authored data, not normalised. Probe_Time stores its warm up
+        // as MINUTES 5 but its cool down as SECONDS 120, and Swim_DistTime mixes
+        // SECONDS and MINUTES within one file. Preserve what you read
+        // (structuralRules[6]).
+        TimeUnitType unit_type  = 1 [(buf.validate.field).enum = {defined_only: true, not_in: [0]}];
+        double       unit_value = 2 [(buf.validate.field).double.gt = 0];
+    }
+    message DistanceGoal {
+        enum DistanceUnitType { UNSPECIFIED = 0; METERS = 1; KILOMETERS = 2; FEET = 3; YARDS = 4; MILES = 5; }
+        // Never canonicalise to metres: 100 m authored as miles becomes 0.06 mi,
+        // which is 96.6 m. Switching display units is lossy.
+        DistanceUnitType unit_type  = 1 [(buf.validate.field).enum = {defined_only: true, not_in: [0]}];
+        double           unit_value = 2 [(buf.validate.field).double.gt = 0];
+    }
+    message EnergyGoal {
+        enum EnergyUnitType { UNSPECIFIED = 0; KILOCALORIES = 1; }
+        EnergyUnitType unit_type  = 1 [(buf.validate.field).enum = {defined_only: true, not_in: [0]}];
+        double         unit_value = 2 [(buf.validate.field).double.gt = 0];
+    }
+    message DistanceTimeGoal {
+        option (buf.validate.message).cel = {
+            id: "distance_time_goal.both_quantities_present"
+            message: "a send-off carries both a distance and a time, e.g. 50 m on 1:00"
+            expression: "has(this.distance) && has(this.time)"
+        };
+
+        DistanceGoal distance = 1;
+        TimeGoal     time     = 2;
+    }
+}

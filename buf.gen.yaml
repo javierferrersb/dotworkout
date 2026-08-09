@@ -1,0 +1,21 @@
+version: v2
+clean: true
+plugins:
+  - local: protoc-gen-es
+    out: packages/codec/src/gen
+    opt:
+      # No json_types: the corpus JSON uses original proto field names
+      # (toJson useProtoFieldName), which the generated *Json types do not model.
+      - target=ts
+      - import_extension=js
+inputs:
+  - directory: proto
+  # The corpus schema imports buf/validate/validate.proto for its option
+  # extensions, so the generated files import a `file_buf_validate_validate`
+  # descriptor and it has to exist somewhere. @bufbuild/protovalidate keeps its
+  # own copy private (its package.json exports only "."), so we generate one.
+  #
+  # Two copies of the extension descriptors are harmless: protobuf-es resolves
+  # extensions by field number against the options bytes, not by object
+  # identity, so protovalidate reads our options through its copy regardless.
+  - module: buf.build/bufbuild/protovalidate

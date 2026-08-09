@@ -1,0 +1,60 @@
+syntax = "proto3";
+
+option csharp_namespace = "DotnetWorkoutKit.Protobuf.CustomWorkout";
+
+import "buf/validate/validate.proto";
+import "WorkoutStep.proto";
+import "IntervalBlock.proto";
+
+message CustomWorkout {
+    option (buf.validate.message).cel = {
+        id: "custom_workout.not_empty"
+        message: "a custom workout needs at least a warm up, one interval block, or a cool down"
+        expression: "has(this.warmup) || this.interval_blocks.size() > 0 || has(this.cooldown)"
+    };
+
+    // This is HKWorkoutActivityType verbatim - confirmed against Apple's
+    // documented HealthKit enum, 14 of 14 values matching exactly. The values
+    // listed below are a PERMISSION LIST, not a value list: they are the subset
+    // WorkoutKit accepts for custom workouts, drawn from a public enum of ~80
+    // entries. The field could hold pickleball = 79; the composer just will not
+    // produce one.
+    //
+    // That is why the field carries no `defined_only` rule. Which activities are
+    // actually offered, and which goals and alerts each allows, is a
+    // compatibility question owned by constraints/compatibility.json - where an
+    // unverified activity is allowed with a warning rather than rejected.
+    enum ActivityType {
+        UNSPECIFIED_ActivityType = 0;
+        CROSS_TRAINING = 11;
+        CYCLING = 13;
+        ELLIPTICAL = 16;
+        FUNCTIONAL_STRENGTH_TRAINING = 20;
+        HIKING = 24;
+        ROWING = 35;
+        RUNNING = 37;
+        STAIR_CLIMBING = 44;
+        SWIMMING = 46;
+        TRADITIONAL_STRENGTH_TRAINING = 50;
+        WALKING = 52;
+        YOGA = 57;
+        CORE_TRAINING = 59;
+        HIGH_INTENSITY_INTERVAL_TRAINING = 63;
+    }
+
+    enum LocationType {
+        UNSPECIFIED_LocationType = 0;  // Default value
+        INDOOR = 2;
+        OUTDOOR = 3;
+    }
+
+    ActivityType activity_type = 1 [(buf.validate.field).enum.not_in = 0];
+    // Pool swims store as OUTDOOR, and open water swim is not offered as a
+    // separate activity in the composer.
+    LocationType location_type = 2 [(buf.validate.field).enum.not_in = 0];
+    optional string display_name = 3;            // DisplayName (optional)
+    // Genuinely optional - omitted from the wire, not written as empty messages.
+    optional WorkoutStep warmup = 4;             // Warmup (optional)
+    repeated IntervalBlock interval_blocks = 5;  // IntervalBlock
+    optional WorkoutStep cooldown = 6;           // Cooldown (optional)
+}

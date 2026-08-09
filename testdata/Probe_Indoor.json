@@ -1,0 +1,59 @@
+{
+  "GUID": "64B80AA1-F30B-404A-95E3-421217B000E1",
+  "custom_workout": {
+    "activity_type": "RUNNING",
+    "location_type": "INDOOR",
+    "display_name": "Probe Indoor",
+    "warmup": {
+      "workout_goal": {
+        "goal_type": "TIME",
+        "time_goal": {
+          "unit_type": "SECONDS",
+          "unit_value": 300.0
+        }
+      }
+    },
+    "interval_blocks": [
+      {
+        "interval_steps": [
+          {
+            "purpose": "WORK",
+            "workout_step": {
+              "workout_goal": {
+                "goal_type": "TIME",
+                "time_goal": {
+                  "unit_type": "SECONDS",
+                  "unit_value": 120.0
+                }
+              }
+            }
+          },
+          {
+            "purpose": "RECOVERY",
+            "workout_step": {
+              "workout_goal": {
+                "goal_type": "TIME",
+                "time_goal": {
+                  "unit_type": "SECONDS",
+                  "unit_value": 60.0
+                }
+              }
+            }
+          }
+        ],
+        "iterations": 2
+      }
+    ],
+    "cooldown": {
+      "workout_goal": {
+        "goal_type": "TIME",
+        "time_goal": {
+          "unit_type": "SECONDS",
+          "unit_value": 300.0
+        }
+      }
+    }
+  },
+  "version": 1,
+  "format": 5
+}

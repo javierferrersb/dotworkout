@@ -1,0 +1,82 @@
+{
+  "GUID": "695B15B3-7FA4-4B6E-A2E4-4D38AB783192",
+  "custom_workout": {
+    "activity_type": "SWIMMING",
+    "location_type": "OUTDOOR",
+    "display_name": "Swim_HR",
+    "warmup": {
+      "workout_goal": {
+        "goal_type": "DISTANCE",
+        "distance_goal": {
+          "unit_type": "METERS",
+          "unit_value": 200.0
+        }
+      },
+      "workout_alert": {
+        "alert_metric": "COUNT_PER_MINUTE",
+        "alert_style": "RANGE",
+        "heart_rate_range_alert": {
+          "heart_rate_range": {
+            "lower_bound": {
+              "value": 120.0
+            },
+            "upper_bound": {
+              "value": 140.0
+            }
+          }
+        }
+      }
+    },
+    "interval_blocks": [
+      {
+        "interval_steps": [
+          {
+            "purpose": "WORK",
+            "workout_step": {
+              "workout_goal": {
+                "goal_type": "DISTANCE",
+                "distance_goal": {
+                  "unit_type": "METERS",
+                  "unit_value": 100.0
+                }
+              },
+              "workout_alert": {
+                "alert_metric": "COUNT_PER_MINUTE",
+                "alert_style": "ZONE",
+                "heart_rate_range_alert": {
+                  "heart_rate_zone": {
+                    "zone": 3
+                  }
+                }
+              }
+            }
+          },
+          {
+            "purpose": "RECOVERY",
+            "workout_step": {
+              "workout_goal": {
+                "goal_type": "TIME",
+                "time_goal": {
+                  "unit_type": "SECONDS",
+                  "unit_value": 30.0
+                }
+              }
+            }
+          }
+        ],
+        "iterations": 3
+      }
+    ],
+    "cooldown": {
+      "workout_goal": {
+        "goal_type": "DISTANCE",
+        "distance_goal": {
+          "unit_type": "METERS",
+          "unit_value": 100.0
+        }
+      }
+    }
+  },
+  "version": 1,
+  "format": 5
+}

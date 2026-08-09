@@ -1,0 +1,16 @@
+{
+  "GUID": "C9520E4C-6B9D-4B19-9859-D2F149BB8F29",
+  "single_goal_workout": {
+    "activity_type": "CYCLING",
+    "location_type": "OUTDOOR",
+    "goal": {
+      "goal_type": "ENERGY",
+      "energy_goal": {
+        "unit_type": "KILOCALORIES",
+        "unit_value": 360.0
+      }
+    }
+  },
+  "version": 1,
+  "format": 5
+}

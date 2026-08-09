@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+import "buf/validate/validate.proto";
+
+message PowerAlert {
+    option (buf.validate.message).cel = {
+        id: "power_alert.exactly_one_shape"
+        message: "set exactly one of power_target (alert_style VALUE) or power_range_alert (alert_style RANGE)"
+        expression: "has(this.power_target) != has(this.power_range_alert)"
+    };
+
+    PowerBound      power_target      = 1;  // style VALUE
+    PowerRangeAlert power_range_alert = 2;  // style RANGE
+
+    message PowerRangeAlert {
+        // structuralRules[5].
+        option (buf.validate.message).cel = {
+            id: "power_range.bounds_ordered"
+            message: "lower_bound must be <= upper_bound"
+            expression:
+                "!has(this.lower_bound) || !has(this.upper_bound)"
+                " || this.lower_bound.power <= this.upper_bound.power"
+        };
+
+        PowerBound lower_bound = 1;
+        PowerBound upper_bound = 2;
+    }
+    message PowerBound {
+        // Observed only as 1, presumed watts (spec 9 lists this as unverified),
+        // so the value is not constrained to that.
+        uint32 unit  = 1;
+        double power = 2 [(buf.validate.field).double.gt = 0];
+    }
+}

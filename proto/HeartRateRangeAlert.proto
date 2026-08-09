@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+import "buf/validate/validate.proto";
+
+message HeartRateRangeAlert {
+    option (buf.validate.message).cel = {
+        id: "heart_rate_alert.exactly_one_shape"
+        message: "set exactly one of heart_rate_zone (alert_style ZONE) or heart_rate_range (alert_style RANGE)"
+        expression: "has(this.heart_rate_zone) != has(this.heart_rate_range)"
+    };
+
+    // Field 1 holds a ZONE index rather than a single target - heart rate is the
+    // exception to the shared alert layout, because its picker offers zones
+    // instead of single values (spec/FORMAT.md 6).
+    HeartRateZone heart_rate_zone   = 1;  // present when AlertStyle == ZONE
+    ClosedRange   heart_rate_range  = 2;  // present when AlertStyle == RANGE
+
+    message HeartRateZone {
+        // Zones store only the index. The bpm boundaries live on-device and
+        // track the user's own HR data, so the same file means different bpm for
+        // different users.
+        uint32 zone = 1 [(buf.validate.field).uint32 = {gte: 1, lte: 5}];
+    }
+    message ClosedRange {
+        // structuralRules[5].
+        option (buf.validate.message).cel = {
+            id: "heart_rate_range.bounds_ordered"
+            message: "lower_bound must be <= upper_bound"
+            expression:
+                "!has(this.lower_bound) || !has(this.upper_bound)"
+                " || this.lower_bound.value <= this.upper_bound.value"
+        };
+
+        WrapDouble lower_bound = 1;
+        WrapDouble upper_bound = 2;
+    }
+    message WrapDouble {
+        double value = 1 [(buf.validate.field).double.gt = 0];
+    }
+}

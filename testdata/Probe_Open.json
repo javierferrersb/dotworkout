@@ -1,0 +1,47 @@
+{
+  "GUID": "779BB3B8-9746-4D3D-B10B-7BD9C27D93F7",
+  "custom_workout": {
+    "activity_type": "SWIMMING",
+    "location_type": "OUTDOOR",
+    "display_name": "Probe Open",
+    "warmup": {
+      "workout_goal": {
+        "goal_type": "OPEN"
+      }
+    },
+    "interval_blocks": [
+      {
+        "interval_steps": [
+          {
+            "purpose": "WORK",
+            "workout_step": {
+              "workout_goal": {
+                "goal_type": "DISTANCE",
+                "distance_goal": {
+                  "unit_type": "METERS",
+                  "unit_value": 100.0
+                }
+              }
+            }
+          },
+          {
+            "purpose": "RECOVERY",
+            "workout_step": {
+              "workout_goal": {
+                "goal_type": "OPEN"
+              }
+            }
+          }
+        ],
+        "iterations": 2
+      }
+    ],
+    "cooldown": {
+      "workout_goal": {
+        "goal_type": "OPEN"
+      }
+    }
+  },
+  "version": 1,
+  "format": 5
+}
