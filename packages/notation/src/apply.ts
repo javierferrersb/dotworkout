@@ -7,7 +7,7 @@
  */
 
 import { formatDistance, formatDuration, swim, type WorkoutBuilder } from "@dotworkout/domain";
-import { restText } from "../swimtime.js";
+import { restText } from "./swimtime.js";
 import type { ParsedLine, Quantity } from "./parse.js";
 
 export interface ComposeOptions {

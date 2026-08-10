@@ -6,9 +6,9 @@
 
 import { deepStrictEqual, strictEqual, throws } from "node:assert/strict";
 import { describe, it } from "node:test";
-import { NotationError } from "../src/notation/tokenize.js";
-import { parseLine, tryParseLine, type ParsedLine } from "../src/notation/parse.js";
-import { applyLines, describeLine } from "../src/notation/apply.js";
+import { NotationError } from "../src/tokenize.js";
+import { parseLine, tryParseLine, type ParsedLine } from "../src/parse.js";
+import { applyLines, describeLine } from "../src/apply.js";
 
 function set(line: string) {
   const parsed = parseLine(line);

@@ -23,7 +23,7 @@ import {
   type WorkoutBinary,
   type WorkoutStep,
 } from "@dotworkout/codec";
-import { restText } from "../swimtime.js";
+import { restText } from "@dotworkout/notation";
 import { Painter, displayWidth, padEnd, padStart, truncate } from "./ansi.js";
 
 export interface Row {

@@ -1,0 +1,20 @@
+{
+  "name": "@dotworkout/notation",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Swim notation grammar — parses `8x50 on 1:00` into workout blocks",
+  "license": "MIT",
+  "exports": {
+    ".": {
+      "types": "./dist/src/index.d.ts",
+      "default": "./dist/src/index.js"
+    }
+  },
+  "files": [
+    "dist/src"
+  ],
+  "sideEffects": false,
+  "dependencies": {
+    "@dotworkout/domain": "0.1.0"
+  }
+}

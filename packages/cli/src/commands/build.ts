@@ -7,9 +7,9 @@
  */
 
 import { writeFileSync } from "node:fs";
-import { applyLines } from "../notation/apply.js";
-import { parseLine, type ParsedLine } from "../notation/parse.js";
-import { NotationError } from "../notation/tokenize.js";
+import { applyLines } from "@dotworkout/notation";
+import { parseLine, type ParsedLine } from "@dotworkout/notation";
+import { NotationError } from "@dotworkout/notation";
 import { Painter, detectCapabilities } from "../ui/ansi.js";
 import { renderHeader, renderRows, renderTotals, summarize } from "../ui/format.js";
 

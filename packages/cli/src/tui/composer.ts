@@ -13,8 +13,8 @@
  */
 
 import { stdin, stdout } from "node:process";
-import { tryParseLine } from "../notation/parse.js";
-import { NotationError } from "../notation/tokenize.js";
+import { tryParseLine } from "@dotworkout/notation";
+import { NotationError } from "@dotworkout/notation";
 import { ESC, Painter, detectCapabilities, truncate } from "../ui/ansi.js";
 import { apply, initialState, type EditorState } from "./editor.js";
 import { composeFrame } from "./frame.js";

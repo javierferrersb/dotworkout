@@ -6,9 +6,9 @@
  * `composer.ts` is left with only the parts that genuinely cannot be.
  */
 
-import { applyLines, describeLine } from "../notation/apply.js";
-import { parseLine, tryParseLine, type ParsedLine } from "../notation/parse.js";
-import { NotationError } from "../notation/tokenize.js";
+import { applyLines, describeLine } from "@dotworkout/notation";
+import { parseLine, tryParseLine, type ParsedLine } from "@dotworkout/notation";
+import { NotationError } from "@dotworkout/notation";
 import type { Painter } from "../ui/ansi.js";
 import { renderHeader, renderRows, renderTotals, summarize } from "../ui/format.js";
 import type { EditorState } from "./editor.js";

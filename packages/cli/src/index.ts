@@ -6,9 +6,9 @@
  * second, subtly different one.
  */
 
-export { parseLine, tryParseLine, type ParsedLine, type Quantity } from "./notation/parse.js";
-export { tokenize, NotationError, type Token } from "./notation/tokenize.js";
-export { applyLines, describeLine, lineMeters, type ComposeOptions } from "./notation/apply.js";
+export { parseLine, tryParseLine, type ParsedLine, type Quantity } from "@dotworkout/notation";
+export { tokenize, NotationError, type Token } from "@dotworkout/notation";
+export { applyLines, describeLine, lineMeters, type ComposeOptions } from "@dotworkout/notation";
 export { summarize, renderRows, renderTotals, renderHeader, type Row } from "./ui/format.js";
 export {
   detectCapabilities,

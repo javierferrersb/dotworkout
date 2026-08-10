@@ -8,8 +8,8 @@
 
 import { writeFileSync } from "node:fs";
 import { stdin, stdout } from "node:process";
-import { applyLines } from "./notation/apply.js";
-import { parseLine } from "./notation/parse.js";
+import { applyLines } from "@dotworkout/notation";
+import { parseLine } from "@dotworkout/notation";
 import { build, slug } from "./commands/build.js";
 import { show } from "./commands/show.js";
 import { runComposer } from "./tui/composer.js";

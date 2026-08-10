@@ -6,3 +6,5 @@ dist/
 # or the buf CLI. Regenerate with `npm run generate`:
 #   packages/codec/src/gen/
 #   packages/domain/src/generated/
+
+.vercel
