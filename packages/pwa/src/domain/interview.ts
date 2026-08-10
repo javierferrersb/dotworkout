@@ -184,7 +184,7 @@ export function questionSequence(
     questions.push(alertValueQuestion(draft.alertMetric, activity));
   }
 
-  questions.push(labelQuestion(activity));
+  if (draft.kind === "INTERVAL") questions.push(labelQuestion(activity));
   return questions;
 }
 

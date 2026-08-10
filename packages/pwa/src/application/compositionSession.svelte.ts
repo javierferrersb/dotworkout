@@ -72,11 +72,27 @@ export class CompositionSession {
     this.questions.every((question) => question.optional || isAnswered(this.draft, question.id)),
   );
 
+  snapshot = $derived({
+    activityId: this.activity.id,
+    title: this.title,
+    blocks: this.blocks,
+    cursor: this.cursor,
+  });
+
   chooseActivity(activity: Activity): void {
     this.activity = activity;
     this.blocks = [];
     this.cursor = 0;
     this.focused = undefined;
+  }
+
+  restore(activity: Activity, title: string, blocks: readonly BlockDraft[], cursor: number): void {
+    this.activity = activity;
+    this.title = title;
+    this.blocks = [...blocks];
+    this.cursor = Math.min(Math.max(0, cursor), blocks.length);
+    this.focused = undefined;
+    this.problem = undefined;
   }
 
   answer(id: QuestionId, raw: string): void {

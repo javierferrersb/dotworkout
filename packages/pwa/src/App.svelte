@@ -2,26 +2,51 @@
   import { fade } from "svelte/transition";
   import { AppFlow } from "./application/appFlow.svelte.js";
   import { CompositionSession } from "./application/compositionSession.svelte.js";
+  import { clearSession, loadSession, saveSession } from "./application/sessionStore.js";
   import { clearInboundWorkout, readInboundWorkout } from "./application/share.js";
   import { saveBytes } from "./application/workoutFile.js";
-  import type { Activity } from "./domain/activity.js";
+  import { ACTIVITY_CATALOGUE, type Activity } from "./domain/activity.js";
   import ActivityPicker from "./ui/ActivityPicker.svelte";
   import Composer from "./ui/Composer.svelte";
   import Welcome from "./ui/Welcome.svelte";
 
   const flow = new AppFlow();
   const session = new CompositionSession();
-
   const inbound = readInboundWorkout();
+
+  let restored = $state(false);
+
+  if (inbound === undefined) {
+    const saved = loadSession();
+    const activity =
+      saved === undefined
+        ? undefined
+        : ACTIVITY_CATALOGUE.find((candidate) => candidate.id === saved.activityId);
+    if (saved !== undefined && activity !== undefined) {
+      session.restore(activity, saved.title, saved.blocks, saved.cursor);
+      flow.go(saved.stage);
+      restored = saved.stage === "compose" && saved.blocks.length > 0;
+    }
+  }
 
   $effect(() => {
     flow.applyTheme();
+  });
+
+  $effect(() => {
+    if (inbound !== undefined) return;
+    saveSession({ ...session.snapshot, stage: flow.stage });
   });
 
   function keepInbound() {
     if (inbound === undefined) return;
     saveBytes(inbound.bytes, inbound.title);
     clearInboundWorkout();
+    location.reload();
+  }
+
+  function startOver() {
+    clearSession();
     location.reload();
   }
 
@@ -76,7 +101,16 @@
         theme={flow.theme}
         onback={() => flow.go("choose")}
         ontheme={() => flow.toggleTheme()}
+        onreset={startOver}
       />
+    </div>
+  {/if}
+
+  {#if restored}
+    <div class="resumed" transition:fade={{ duration: 180 }}>
+      <span>Picked up where you left off.</span>
+      <button onclick={() => (restored = false)}>Got it</button>
+      <button class="link" onclick={startOver}>Start fresh</button>
     </div>
   {/if}
 </div>
@@ -135,5 +169,38 @@
     background: var(--bg-raised);
     color: var(--text-primary);
     font-weight: 500;
+  }
+
+  .resumed {
+    position: absolute;
+    left: 50%;
+    bottom: 22px;
+    transform: translateX(-50%);
+    z-index: 30;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px 10px 18px;
+    border-radius: var(--radius-pill);
+    background: var(--bg-surface);
+    box-shadow: var(--shadow);
+    font-size: 13px;
+    white-space: nowrap;
+  }
+
+  .resumed button {
+    padding: 7px 14px;
+    font-size: 13px;
+  }
+
+  .resumed .link {
+    background: none;
+    color: var(--text-secondary);
+    font-weight: 500;
+    padding: 7px 6px;
+  }
+
+  .resumed .link:hover {
+    color: var(--accent);
   }
 </style>

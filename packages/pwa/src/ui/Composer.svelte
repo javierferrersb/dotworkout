@@ -11,9 +11,10 @@
     session: CompositionSession;
     onback: () => void;
     ontheme: () => void;
+    onreset: () => void;
     theme: "dark" | "light";
   }
-  let { session, onback, ontheme, theme }: Props = $props();
+  let { session, onback, ontheme, onreset, theme }: Props = $props();
 
   let card = $state<BlockCard | undefined>(undefined);
   let rail = $state<SummaryRail | undefined>(undefined);
@@ -103,6 +104,7 @@
     <BackButton label={session.activity.title} onclick={onback} />
     <nav>
       <span class="grow"></span>
+      <button class="theme" onclick={onreset}>New workout</button>
       <button class="theme" onclick={ontheme} aria-label="Toggle colour scheme">
         {theme === "dark" ? "Light" : "Dark"}
       </button>
@@ -144,6 +146,7 @@
   nav {
     display: flex;
     align-items: center;
+    gap: 6px;
     padding: 20px 32px 0;
     min-height: 42px;
   }

@@ -63,8 +63,8 @@
           {/if}
         </div>
         <div class="row">
-          <span class="name">{block.label || "Untitled"}</span>
-          <span class="measure">{summarise(block)}</span>
+          {#if block.label}<span class="name">{block.label}</span>{/if}
+          <span class="measure" class:alone={!block.label}>{summarise(block)}</span>
         </div>
         {#if block.alert}
           <div class="row"><span class="target">{describeAlert(block)}</span></div>
@@ -216,6 +216,12 @@
     font-family: var(--mono);
     font-size: 13px;
     color: var(--text-secondary);
+  }
+
+  .measure.alone {
+    flex: 1;
+    color: var(--text-primary);
+    font-size: 15px;
   }
 
   .target {
