@@ -3,6 +3,7 @@
   import { Languages, Monitor, Moon, Sun } from "@lucide/svelte";
   import type { ThemeChoice } from "../application/appFlow.svelte.js";
   import type { CompositionSession } from "../application/compositionSession.svelte.js";
+  import { choiceKey } from "../i18n/format.js";
   import { locale, t } from "../i18n/locale.svelte.js";
   import { LOCALES, type LocaleCode } from "../i18n/messages.js";
   import BackButton from "./BackButton.svelte";
@@ -106,7 +107,8 @@
     if (question === undefined || question.form.type !== "choice") return;
     if (meta || event.altKey) return;
     const choice = question.form.choices.find(
-      (candidate) => candidate.key.toLowerCase() === event.key.toLowerCase(),
+      (candidate) =>
+        choiceKey(candidate, session.activity.id).toLowerCase() === event.key.toLowerCase(),
     );
     if (choice !== undefined) {
       event.preventDefault();

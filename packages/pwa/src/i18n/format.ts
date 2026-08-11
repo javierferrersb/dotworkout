@@ -40,6 +40,15 @@ export function choiceText(choice: Choice, activityId: string): string {
   return choice.value;
 }
 
+export function choiceKey(choice: Choice, activityId: string): string {
+  if (choice.group === "zone") return choice.value;
+  if (choice.group === "alert" && choice.value === "SPEED") {
+    return activityId === "RUNNING" ? t("alertKey.SPEED.pace") : t("alertKey.SPEED.speed");
+  }
+  const prefix = choice.group === "kind" ? "kindKey" : choice.group === "goal" ? "goalKey" : "alertKey";
+  return t(`${prefix}.${choice.value}` as MessageKey);
+}
+
 export function alertSummary(draft: BlockDraft): string {
   const alert = draft.alert;
   if (alert === undefined) return "";

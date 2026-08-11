@@ -2,7 +2,7 @@
   import { fly } from "svelte/transition";
   import { Check, CornerDownLeft } from "@lucide/svelte";
   import type { Question } from "../domain/interview.js";
-  import { choiceText, questionNote, questionText } from "../i18n/format.js";
+  import { choiceKey, choiceText, questionNote, questionText } from "../i18n/format.js";
   import { t } from "../i18n/locale.svelte.js";
   import { flashConfirm } from "./confirmFlash.js";
   import { keys } from "../i18n/keys.svelte.js";
@@ -70,7 +70,7 @@
           class:chosen={chosen === choice.value}
           onclick={() => pressKey(choice.value)}
         >
-          <kbd>{choice.key}</kbd>
+          <kbd>{choiceKey(choice, activityId)}</kbd>
           <span>{choiceText(choice, activityId)}</span>
           {#if choice.caution}<span class="flag">{t("prompt.notVerified")}</span>{/if}
           {#if chosen === choice.value}<Check class="current" size={17} strokeWidth={3} />{/if}

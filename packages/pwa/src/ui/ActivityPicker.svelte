@@ -61,7 +61,7 @@
 
 <svelte:window onkeydown={onKeydown} />
 
-<BackButton label={t("resume.ok")} onclick={onback} />
+<BackButton label={t("nav.back")} onclick={onback} />
 
 <div class="picker">
   <div class="panel" in:fly={{ y: 14, duration: 360 }}>

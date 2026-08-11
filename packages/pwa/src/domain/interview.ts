@@ -17,7 +17,6 @@ export type QuestionId =
 export type ChoiceGroup = "kind" | "goal" | "alert" | "zone";
 
 export interface Choice {
-  readonly key: string;
   readonly value: string;
   readonly group: ChoiceGroup;
   readonly caution: boolean;
@@ -47,34 +46,20 @@ export interface BlockContext {
 const STROKE_SUGGESTIONS = ["Free", "Back", "Breast", "Fly", "IM", "Kick", "Drill", "Pull", "Build"];
 const EFFORT_SUGGESTIONS = ["Easy", "Steady", "Tempo", "Threshold", "Hard", "Sprint", "Recovery"];
 
-const GOAL_KEYS: Record<GoalKind, string> = {
-  DISTANCE: "D",
-  DISTANCE_TIME: "S",
-  TIME: "T",
-  OPEN: "O",
-};
-
-const ALERT_KEYS: Record<AlertMetric, string> = {
-  HEART_RATE: "H",
-  SPEED: "P",
-  CADENCE: "C",
-  POWER: "W",
-};
-
 function blockKindChoices(draft: BlockDraft, context: BlockContext): readonly Choice[] {
   const choices: Choice[] = [];
 
   const warmupAvailable = !context.hasWarmup || draft.kind === "WARMUP";
   if (warmupAvailable && context.position === 0) {
-    choices.push({ key: "W", value: "WARMUP", group: "kind", caution: false });
+    choices.push({ value: "WARMUP", group: "kind", caution: false });
   }
 
-  choices.push({ key: "S", value: "INTERVAL", group: "kind", caution: false });
-  choices.push({ key: "R", value: "RECOVERY", group: "kind", caution: false });
+  choices.push({ value: "INTERVAL", group: "kind", caution: false });
+  choices.push({ value: "RECOVERY", group: "kind", caution: false });
 
   const cooldownAvailable = !context.hasCooldown || draft.kind === "COOLDOWN";
   if (cooldownAvailable) {
-    choices.push({ key: "C", value: "COOLDOWN", group: "kind", caution: false });
+    choices.push({ value: "COOLDOWN", group: "kind", caution: false });
   }
 
   return choices;
@@ -118,7 +103,6 @@ export function questionSequence(
     form: {
       type: "choice",
       choices: capabilities.goals.map((goal) => ({
-        key: GOAL_KEYS[goal],
         value: goal,
         group: "goal" as const,
         caution: false,
@@ -185,13 +169,11 @@ export function questionSequence(
 
 function alertQuestion(capabilities: ActivityCapabilities): Question {
   const offered = capabilities.alerts.map((metric) => ({
-    key: ALERT_KEYS[metric],
     value: metric,
     group: "alert" as const,
     caution: false,
   }));
   const unverified = capabilities.unverifiedAlerts.map((metric) => ({
-    key: ALERT_KEYS[metric],
     value: metric,
     group: "alert" as const,
     caution: true,
@@ -205,7 +187,7 @@ function alertQuestion(capabilities: ActivityCapabilities): Question {
     form: {
       type: "choice",
       choices: [
-        { key: "N", value: "NONE", group: "alert" as const, caution: false },
+        { value: "NONE", group: "alert" as const, caution: false },
         ...offered,
         ...unverified,
       ],
@@ -223,7 +205,6 @@ function alertValueQuestion(metric: AlertMetric, activity: Activity): Question {
       form: {
         type: "choice",
         choices: [1, 2, 3, 4, 5].map((zone) => ({
-          key: String(zone),
           value: String(zone),
           group: "zone" as const,
           caution: false,
