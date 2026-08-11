@@ -26,11 +26,11 @@
 
 <div class="welcome">
   <div class="panel" in:fly={{ y: 16, duration: 420 }}>
-    <h1>Build your workouts on a proper keyboard.</h1>
+    <h1>Build <em>Apple&nbsp;Watch workouts</em> on a proper keyboard.</h1>
     <p class="lede">
       Apple only lets you create custom workouts by tapping them out on your phone. Build them on
-      your computer instead — intervals, repetitions and heart-rate zones — then send the file to
-      your Apple&nbsp;Watch.
+      your computer instead — intervals, repetitions and heart-rate zones — then send the file
+      straight to your watch.
     </p>
 
     <ul>
@@ -79,6 +79,11 @@
     line-height: 1.04;
     font-weight: 700;
     letter-spacing: -1.5px;
+  }
+
+  h1 em {
+    color: var(--accent);
+    font-style: normal;
   }
 
   .lede {

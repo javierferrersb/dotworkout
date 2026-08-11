@@ -3,7 +3,7 @@
   import { Check } from "@lucide/svelte";
   import type { CompositionSession } from "../application/compositionSession.svelte.js";
   import { answerText, blockTitle, rawAnswer } from "../domain/interview.js";
-  import { COMMIT_HINT } from "./platform.js";
+  import { KEY } from "./platform.js";
   import QuestionPrompt from "./QuestionPrompt.svelte";
 
   interface Props {
@@ -31,7 +31,7 @@
     {#if session.complete}
       <button class="commit" onclick={() => session.commitBlock()}>
         {session.composingNew ? "Add block" : "Done"}
-        <kbd>{COMMIT_HINT}</kbd>
+        <kbd>{KEY.enter}</kbd>
       </button>
     {/if}
   </header>

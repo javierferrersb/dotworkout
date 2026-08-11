@@ -44,6 +44,17 @@
       session.commitBlock();
       return;
     }
+    if (
+      event.key === "Enter" &&
+      !event.shiftKey &&
+      !typing(event.target) &&
+      session.current === undefined &&
+      session.complete
+    ) {
+      event.preventDefault();
+      session.commitBlock();
+      return;
+    }
     if (event.altKey && event.key === "ArrowUp") {
       event.preventDefault();
       session.previousBlock();
