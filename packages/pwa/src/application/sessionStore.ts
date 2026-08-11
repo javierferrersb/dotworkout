@@ -37,7 +37,10 @@ export function loadSession(): SessionSnapshot | undefined {
       title: typeof parsed.title === "string" ? parsed.title : "Workout",
       blocks: parsed.blocks as BlockDraft[],
       cursor: typeof parsed.cursor === "number" ? parsed.cursor : parsed.blocks.length,
-      stage: parsed.stage === "compose" || parsed.stage === "choose" ? parsed.stage : "welcome",
+      stage:
+        parsed.stage === "compose" || parsed.stage === "choose" || parsed.stage === "name"
+          ? parsed.stage
+          : "welcome",
     };
   } catch {
     return undefined;

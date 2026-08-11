@@ -3,20 +3,24 @@
   import { AppFlow } from "./application/appFlow.svelte.js";
   import { CompositionSession } from "./application/compositionSession.svelte.js";
   import { clearSession, loadSession, saveSession } from "./application/sessionStore.js";
-  import { clearInboundWorkout, readInboundWorkout } from "./application/share.js";
+  import { clearInboundWorkout, readInboundWorkout, shareBytes } from "./application/share.js";
   import { saveBytes } from "./application/workoutFile.js";
   import { ACTIVITY_CATALOGUE, type Activity } from "./domain/activity.js";
   import ActivityPicker from "./ui/ActivityPicker.svelte";
   import Composer from "./ui/Composer.svelte";
+  import NameWorkout from "./ui/NameWorkout.svelte";
   import Welcome from "./ui/Welcome.svelte";
 
   const flow = new AppFlow();
   const session = new CompositionSession();
-  const inbound = readInboundWorkout();
 
+  const arrivedWithWorkout = readInboundWorkout();
+
+  let inbound = $state(arrivedWithWorkout);
   let restored = $state(false);
+  let handoff = $state<"idle" | "saved" | "shared">("idle");
 
-  if (inbound === undefined) {
+  if (arrivedWithWorkout === undefined) {
     const saved = loadSession();
     const activity =
       saved === undefined
@@ -38,11 +42,29 @@
     saveSession({ ...session.snapshot, stage: flow.stage });
   });
 
-  function keepInbound() {
+  async function keepInbound() {
     if (inbound === undefined) return;
+    const outcome = await shareBytes(inbound.bytes, inbound.title);
+    if (outcome === "shared") {
+      handoff = "shared";
+      return;
+    }
+    if (outcome === "cancelled") return;
     saveBytes(inbound.bytes, inbound.title);
+    handoff = "saved";
+  }
+
+  function leaveInbound() {
     clearInboundWorkout();
-    location.reload();
+    inbound = undefined;
+    handoff = "idle";
+  }
+
+  function onHashChange() {
+    const arriving = readInboundWorkout();
+    if (arriving === undefined) return;
+    inbound = arriving;
+    handoff = "idle";
   }
 
   function startOver() {
@@ -60,11 +82,16 @@
   function pick(activity: Activity) {
     session.chooseActivity(activity);
     session.title = `${activity.title} workout`;
+    flow.go("name");
+  }
+
+  function named(title: string) {
+    session.title = title;
     flow.go("compose");
   }
 </script>
 
-<svelte:window onkeydown={onKeydown} />
+<svelte:window onkeydown={onKeydown} onhashchange={onHashChange} />
 
 <div class="stack">
   {#if inbound !== undefined}
@@ -72,17 +99,18 @@
       <div class="handoff">
         <div class="sheet">
           <h1>{inbound.title}</h1>
-          <p>A workout was shared with you. Save it, then open it in the Workouts app.</p>
-          <button onclick={keepInbound}>Save the file</button>
-          <button
-            class="ghost"
-            onclick={() => {
-              clearInboundWorkout();
-              location.reload();
-            }}
-          >
-            Start my own instead
-          </button>
+          {#if handoff === "idle"}
+            <p>Someone shared this workout with you. Save it, then open it in the Workouts app.</p>
+            <button onclick={keepInbound}>Save the workout</button>
+          {:else}
+            <p class="done">
+              {handoff === "shared"
+                ? "Sent. Choose the Workouts app if it wasn’t already opened."
+                : "Saved to your downloads. Open it from there and the Workouts app takes over."}
+            </p>
+            <button onclick={keepInbound}>Save it again</button>
+          {/if}
+          <button class="ghost" onclick={leaveInbound}>Build my own instead</button>
         </div>
       </div>
     </div>
@@ -93,6 +121,15 @@
   {:else if flow.stage === "choose"}
     <div class="screen" out:fade={{ duration: 120 }}>
       <ActivityPicker onpick={pick} onback={() => flow.go("welcome")} />
+    </div>
+  {:else if flow.stage === "name"}
+    <div class="screen" out:fade={{ duration: 120 }}>
+      <NameWorkout
+        activity={session.activity}
+        initial={session.title}
+        onconfirm={named}
+        onback={() => flow.go("choose")}
+      />
     </div>
   {:else}
     <div class="screen">
@@ -154,6 +191,10 @@
     color: var(--text-secondary);
     font-size: 15px;
     line-height: 1.5;
+  }
+
+  .done {
+    color: var(--lime);
   }
 
   button {

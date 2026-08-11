@@ -17,23 +17,16 @@ export function saveBytes(bytes: Uint8Array, title: string): string {
   const anchor = document.createElement("a");
   anchor.href = url;
   anchor.download = fileNameFor(title);
+  anchor.rel = "noopener";
   document.body.appendChild(anchor);
   anchor.click();
-  anchor.remove();
-  URL.revokeObjectURL(url);
+  setTimeout(() => {
+    anchor.remove();
+    URL.revokeObjectURL(url);
+  }, 30_000);
   return anchor.download;
 }
 
 export function download(draft: WorkoutDraft): string {
-  const bytes = encode(compose(draft));
-  const blob = new Blob([bytes as BlobPart], { type: "application/octet-stream" });
-  const url = URL.createObjectURL(blob);
-  const anchor = document.createElement("a");
-  anchor.href = url;
-  anchor.download = fileNameFor(draft.title);
-  document.body.appendChild(anchor);
-  anchor.click();
-  anchor.remove();
-  URL.revokeObjectURL(url);
-  return anchor.download;
+  return saveBytes(encode(compose(draft)), draft.title);
 }

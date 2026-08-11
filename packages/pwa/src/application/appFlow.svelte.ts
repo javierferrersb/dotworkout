@@ -1,4 +1,4 @@
-export type Stage = "welcome" | "choose" | "compose";
+export type Stage = "welcome" | "choose" | "name" | "compose";
 
 const THEME_KEY = "dotworkout.theme";
 

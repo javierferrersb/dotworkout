@@ -89,6 +89,25 @@ export async function shareWorkout(draft: WorkoutDraft): Promise<ShareOutcome> {
   }
 }
 
+export async function shareBytes(bytes: Uint8Array, title: string): Promise<ShareOutcome> {
+  if (typeof navigator === "undefined" || typeof navigator.share !== "function") {
+    return "unavailable";
+  }
+  const file = new File([bytes as BlobPart], fileNameFor(title), {
+    type: "application/octet-stream",
+  });
+  if (typeof navigator.canShare === "function" && !navigator.canShare({ files: [file] })) {
+    return "unavailable";
+  }
+  try {
+    await navigator.share({ files: [file], title });
+    return "shared";
+  } catch (error) {
+    if (error instanceof DOMException && error.name === "AbortError") return "cancelled";
+    return "unavailable";
+  }
+}
+
 export function whatsappLink(draft: WorkoutDraft, summary: string): string {
   const message = `${draft.title} — ${draft.activity.title}\n${summary}\n\n${workoutLink(draft)}`;
   return `https://wa.me/?text=${encodeURIComponent(message)}`;

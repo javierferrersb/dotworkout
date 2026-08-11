@@ -84,6 +84,8 @@
       return;
     }
 
+    if (typing(event.target)) return;
+
     const question = session.current;
     if (question === undefined || question.form.type !== "choice") return;
     if (meta || event.altKey) return;
