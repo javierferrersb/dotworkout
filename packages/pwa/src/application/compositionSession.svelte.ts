@@ -14,6 +14,7 @@ import {
   type Question,
   type QuestionId,
 } from "../domain/interview.js";
+import { activityName } from "../i18n/format.js";
 import { inspect, type WorkoutDraft } from "./workoutComposition.js";
 
 export class CompositionSession {
@@ -25,6 +26,8 @@ export class CompositionSession {
   problem = $state<string | undefined>(undefined);
 
   capabilities = $derived<ActivityCapabilities>(capabilitiesOf(this.activity));
+
+  activityName = $derived(activityName(this.activity.id));
 
   draft = $derived<BlockDraft>(this.blocks[this.cursor] ?? {});
 

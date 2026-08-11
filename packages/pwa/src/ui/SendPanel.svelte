@@ -3,6 +3,7 @@
   import { Check, Copy, TriangleAlert } from "@lucide/svelte";
   import { qrMatrix, workoutLink } from "../application/share.js";
   import type { WorkoutDraft } from "../application/workoutComposition.js";
+  import { t } from "../i18n/locale.svelte.js";
 
   interface Props {
     draft: WorkoutDraft;
@@ -37,11 +38,11 @@
     class="sheet"
     role="dialog"
     aria-modal="true"
-    aria-label="Send to phone"
+    aria-label={t("send.heading")}
     transition:fly={{ y: 12, duration: 220 }}
   >
-    <h2>Scan with your phone</h2>
-    <p class="body">The workout travels inside the link. Nothing is uploaded.</p>
+    <h2>{t("send.heading")}</h2>
+    <p class="body">{t("send.body")}</p>
 
     {#if matrix}
       <div class="qr" style="--cells:{matrix.length}">
@@ -54,26 +55,26 @@
     {:else}
       <p class="alert">
         <TriangleAlert size={16} />
-        <span>This workout is too long for a QR code. Copy the link instead.</span>
+        <span>{t("send.tooBig")}</span>
       </p>
     {/if}
 
     {#if unreachable}
       <p class="alert">
         <TriangleAlert size={16} />
-        <span>Your phone can’t reach localhost. This works once the app is deployed.</span>
+        <span>{t("send.localhost")}</span>
       </p>
     {/if}
 
     <button class="copy" onclick={copy}>
       {#if copied}
-        <Check size={16} /> Link copied
+        <Check size={16} /> {t("send.copied")}
       {:else}
-        <Copy size={16} /> Copy link
+        <Copy size={16} /> {t("send.copy")}
       {/if}
     </button>
 
-    <button class="close" onclick={onclose}>Done</button>
+    <button class="close" onclick={onclose}>{t("send.done")}</button>
   </div>
 </div>
 

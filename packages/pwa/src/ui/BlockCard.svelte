@@ -2,7 +2,9 @@
   import { fly } from "svelte/transition";
   import { Check } from "@lucide/svelte";
   import type { CompositionSession } from "../application/compositionSession.svelte.js";
-  import { answerText, blockTitle, rawAnswer } from "../domain/interview.js";
+  import { rawAnswer } from "../domain/interview.js";
+  import { answerLabel, blockHeading, questionText } from "../i18n/format.js";
+  import { t } from "../i18n/locale.svelte.js";
   import { KEY } from "./platform.js";
   import QuestionPrompt from "./QuestionPrompt.svelte";
 
@@ -21,16 +23,16 @@
 <article class="block">
   <header>
     <div class="who">
-      <h1>{blockTitle(session.draft, session.cursor)}</h1>
+      <h1>{blockHeading(session.draft, session.cursor)}</h1>
       <p>
         {session.composingNew
-          ? `New block · ${session.blocks.length + 1} of ${session.blocks.length + 1}`
-          : `Editing block ${session.cursor + 1} of ${session.blocks.length}`}
+          ? t("block.newBlock", { index: session.blocks.length + 1, total: session.blocks.length + 1 })
+          : t("block.editing", { index: session.cursor + 1, total: session.blocks.length })}
       </p>
     </div>
     {#if session.complete}
       <button class="commit" onclick={() => session.commitBlock()}>
-        {session.composingNew ? "Add block" : "Done"}
+        {session.composingNew ? t("block.add") : t("block.done")}
         <kbd>{KEY.enter}</kbd>
       </button>
     {/if}
@@ -40,8 +42,8 @@
     {#each session.answered as question (question.id)}
       <button class="answered" onclick={() => session.focus(question.id)} transition:fly={{ y: -6, duration: 200 }}>
         <Check class="tick" size={15} strokeWidth={3} />
-        <span class="label">{question.prompt}</span>
-        <span class="value">{answerText(session.draft, question.id, session.activity)}</span>
+        <span class="label">{questionText(question)}</span>
+        <span class="value">{answerLabel(session.draft, question.id, session.activity.id)}</span>
       </button>
     {/each}
   </div>
@@ -53,6 +55,7 @@
         question={session.current}
         problem={session.problem}
         chosen={rawAnswer(session.draft, session.current.id)}
+        activityId={session.activity.id}
         onanswer={(raw) => session.answer(session.current!.id, raw)}
         onskip={() => session.skip(session.current!.id)}
       />
@@ -62,7 +65,7 @@
   {#if session.upcoming.length > 0}
     <div class="upcoming">
       {#each session.upcoming as question (question.id)}
-        <span class="pending">{question.prompt}</span>
+        <span class="pending">{questionText(question)}</span>
       {/each}
     </div>
   {/if}

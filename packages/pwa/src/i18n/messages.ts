@@ -1,0 +1,304 @@
+export type LocaleCode = "en" | "es";
+
+export const LOCALES: readonly { code: LocaleCode; label: string }[] = [
+  { code: "en", label: "English" },
+  { code: "es", label: "Español" },
+];
+
+const en = {
+  "welcome.headingBefore": "Build ",
+  "welcome.headingEm": "Apple Watch workouts",
+  "welcome.headingAfter": " on a proper keyboard.",
+  "welcome.lede":
+    "Apple only lets you create custom workouts by tapping them out on your phone. Build them on your computer instead — intervals, repetitions and heart-rate zones — then send the file straight to your watch.",
+  "welcome.fix1.title": "Series and repetitions in seconds",
+  "welcome.fix1.body":
+    "8 × 400 m with 90 seconds recovery takes four keystrokes here. On the phone it takes forty taps.",
+  "welcome.fix2.title": "Target a heart-rate zone",
+  "welcome.fix2.body":
+    "Pin any interval to a zone, a pace, a cadence or a power number, and only the ones your sport actually supports are offered.",
+  "welcome.fix3.title": "Straight onto the Watch",
+  "welcome.fix3.body":
+    "Get a real .workout file. Send it to yourself, open it in the Workouts app, and it syncs across.",
+  "welcome.cta": "Build a workout",
+  "welcome.privacy":
+    "Runs entirely on your device. Nothing is uploaded, and it works offline once installed.",
+  "welcome.madeWith": "Made with",
+  "welcome.inSpain": "in Spain by",
+
+  "picker.heading": "What are you training?",
+  "picker.search": "Search activities",
+  "picker.goalTypes": "{count} goal types",
+  "picker.targets": "{count} targets",
+  "picker.target": "{count} target",
+  "picker.noMatch": "Nothing matches “{query}”",
+
+  "naming.heading": "What are you calling it?",
+  "naming.lede": "This is the name you’ll see in the Workouts app.",
+  "naming.continue": "Continue",
+  "naming.hint": "You can change it later from the summary panel.",
+  "naming.defaultTitle": "{activity} workout",
+
+  "composer.newWorkout": "New workout",
+  "composer.legend.question": "question",
+  "composer.legend.block": "block",
+  "composer.legend.confirm": "confirm",
+  "composer.legend.skip": "skip",
+  "composer.legend.deselect": "deselect",
+
+  "block.newBlock": "New block · {index} of {total}",
+  "block.editing": "Editing block {index} of {total}",
+  "block.done": "Done",
+  "block.add": "Add block",
+  "block.untitled": "Block {index}",
+
+  "prompt.optional": "optional",
+  "prompt.notVerified": "not verified",
+  "prompt.skipHint": "{tab} to skip",
+  "prompt.skipChoiceHint": "{enter} or {tab} to skip",
+  "prompt.confirm": "Confirm",
+  "prompt.namePlaceholder": "a short name",
+
+  "question.kind": "What are you adding?",
+  "question.goal": "Measured by",
+  "question.distance": "How far?",
+  "question.duration": "How long?",
+  "question.sendOff": "Leave every",
+  "question.sendOff.note": "The next rep starts on this clock, however fast you finish",
+  "question.repetitions": "How many?",
+  "question.recovery": "Rest between",
+  "question.alert": "Keep me at",
+  "question.zone": "Which zone?",
+  "question.zone.note": "Zone limits come from your own heart-rate data on the Watch",
+  "question.pace": "Target pace",
+  "question.pace.note": "Per kilometre",
+  "question.speed": "Target speed",
+  "question.speed.note": "Kilometres per hour",
+  "question.watts": "Target watts",
+  "question.cadence": "Target cadence",
+  "question.label": "Name it",
+  "question.label.note": "Stroke, equipment, or how it should feel",
+
+  "kind.WARMUP": "Warm up",
+  "kind.INTERVAL": "Set",
+  "kind.RECOVERY": "Rest",
+  "kind.COOLDOWN": "Cool down",
+
+  "goal.DISTANCE": "Distance",
+  "goal.DISTANCE_TIME": "Send-off",
+  "goal.TIME": "Time",
+  "goal.OPEN": "Open",
+
+  "alert.NONE": "No target",
+  "alert.HEART_RATE": "Heart Rate",
+  "alert.SPEED.pace": "Pace",
+  "alert.SPEED.speed": "Speed",
+  "alert.CADENCE": "Cadence",
+  "alert.POWER": "Power",
+  "alert.zone": "Zone {n}",
+  "alert.bpm": "{from}–{to} bpm",
+  "alert.mps": "{value} m/s",
+  "alert.spm": "{value} spm",
+  "alert.watts": "{value} W",
+
+  "rail.name": "Workout name",
+  "rail.empty": "Your blocks will appear here as you answer.",
+  "rail.total": "Total",
+  "rail.download": "Download",
+  "rail.scan": "Scan to phone",
+  "rail.share": "Share",
+  "rail.whatsapp": "WhatsApp",
+  "rail.privacy": "Nothing leaves this device unless you share it.",
+  "rail.saved": "Saved {file}",
+  "rail.untitled": "Untitled",
+
+  "send.heading": "Scan with your phone",
+  "send.body": "The workout travels inside the link. Nothing is uploaded.",
+  "send.tooBig": "This workout is too long for a QR code. Copy the link instead.",
+  "send.localhost": "Your phone can’t reach localhost. This works once the app is deployed.",
+  "send.copy": "Copy link",
+  "send.copied": "Link copied",
+  "send.done": "Done",
+
+  "install.heading": "Getting it onto your Watch",
+  "install.step1": "Open the file you just saved.",
+  "install.step2": "If it does not open by itself, tap Share and choose the Workouts app.",
+  "install.step3": "Close the Workouts app and open it again — the workout appears under Custom.",
+  "install.gotIt": "Got it",
+  "install.dontShow": "Don’t show this again",
+
+  "handoff.body": "Someone shared this workout with you. Save it, then open it in the Workouts app.",
+  "handoff.save": "Save the workout",
+  "handoff.again": "Save it again",
+  "handoff.shared": "Sent. Choose the Workouts app if it wasn’t already opened.",
+  "handoff.saved": "Saved to your downloads. Open it from there and the Workouts app takes over.",
+  "handoff.mine": "Build my own instead",
+
+  "resume.text": "Picked up where you left off.",
+  "resume.ok": "Got it",
+  "resume.fresh": "Start fresh",
+
+  "theme.label": "Appearance",
+  "theme.system": "System",
+  "theme.light": "Light",
+  "theme.dark": "Dark",
+  "language.label": "Language",
+
+  "activity.SWIMMING": "Pool Swim",
+  "activity.RUNNING": "Outdoor Run",
+  "activity.CYCLING": "Outdoor Cycle",
+  "activity.HIGH_INTENSITY_INTERVAL_TRAINING": "HIIT",
+} as const;
+
+export type MessageKey = keyof typeof en;
+
+const es: Record<MessageKey, string> = {
+  "welcome.headingBefore": "Crea ",
+  "welcome.headingEm": "entrenamientos para el Apple Watch",
+  "welcome.headingAfter": " con un teclado de verdad.",
+  "welcome.lede":
+    "Apple solo te deja crear entrenamientos personalizados tocando la pantalla del móvil. Créalos en el ordenador — series, repeticiones y zonas de frecuencia cardíaca — y envía el archivo directamente al reloj.",
+  "welcome.fix1.title": "Series y repeticiones en segundos",
+  "welcome.fix1.body":
+    "8 × 400 m con 90 segundos de recuperación son cuatro pulsaciones aquí. En el móvil son cuarenta toques.",
+  "welcome.fix2.title": "Fija una zona de frecuencia cardíaca",
+  "welcome.fix2.body":
+    "Asigna a cualquier intervalo una zona, un ritmo, una cadencia o una potencia. Solo aparecen las que tu deporte admite de verdad.",
+  "welcome.fix3.title": "Directo al reloj",
+  "welcome.fix3.body":
+    "Obtienes un archivo .workout real. Envíatelo, ábrelo en la app Entreno y se sincroniza con el reloj.",
+  "welcome.cta": "Crear un entrenamiento",
+  "welcome.privacy":
+    "Funciona por completo en tu dispositivo. No se sube nada y funciona sin conexión una vez instalado.",
+  "welcome.madeWith": "Hecho con",
+  "welcome.inSpain": "en España por",
+
+  "picker.heading": "¿Qué vas a entrenar?",
+  "picker.search": "Buscar actividades",
+  "picker.goalTypes": "{count} tipos de objetivo",
+  "picker.targets": "{count} objetivos",
+  "picker.target": "{count} objetivo",
+  "picker.noMatch": "No hay nada que coincida con «{query}»",
+
+  "naming.heading": "¿Cómo lo vas a llamar?",
+  "naming.lede": "Este es el nombre que verás en la app Entreno.",
+  "naming.continue": "Continuar",
+  "naming.hint": "Puedes cambiarlo después desde el panel de resumen.",
+  "naming.defaultTitle": "Entrenamiento de {activity}",
+
+  "composer.newWorkout": "Nuevo entrenamiento",
+  "composer.legend.question": "pregunta",
+  "composer.legend.block": "bloque",
+  "composer.legend.confirm": "confirmar",
+  "composer.legend.skip": "omitir",
+  "composer.legend.deselect": "deseleccionar",
+
+  "block.newBlock": "Bloque nuevo · {index} de {total}",
+  "block.editing": "Editando el bloque {index} de {total}",
+  "block.done": "Listo",
+  "block.add": "Añadir bloque",
+  "block.untitled": "Bloque {index}",
+
+  "prompt.optional": "opcional",
+  "prompt.notVerified": "sin verificar",
+  "prompt.skipHint": "{tab} para omitir",
+  "prompt.skipChoiceHint": "{enter} o {tab} para omitir",
+  "prompt.confirm": "Confirmar",
+  "prompt.namePlaceholder": "un nombre corto",
+
+  "question.kind": "¿Qué quieres añadir?",
+  "question.goal": "Medido por",
+  "question.distance": "¿Qué distancia?",
+  "question.duration": "¿Cuánto tiempo?",
+  "question.sendOff": "Salida cada",
+  "question.sendOff.note": "La siguiente repetición empieza con este reloj, acabes cuando acabes",
+  "question.repetitions": "¿Cuántas veces?",
+  "question.recovery": "Descanso entre series",
+  "question.alert": "Mantenme en",
+  "question.zone": "¿Qué zona?",
+  "question.zone.note":
+    "Los límites de cada zona salen de tus propios datos de frecuencia cardíaca en el reloj",
+  "question.pace": "Ritmo objetivo",
+  "question.pace.note": "Por kilómetro",
+  "question.speed": "Velocidad objetivo",
+  "question.speed.note": "Kilómetros por hora",
+  "question.watts": "Vatios objetivo",
+  "question.cadence": "Cadencia objetivo",
+  "question.label": "Ponle nombre",
+  "question.label.note": "Estilo, material o cómo debería sentirse",
+
+  "kind.WARMUP": "Calentamiento",
+  "kind.INTERVAL": "Serie",
+  "kind.RECOVERY": "Descanso",
+  "kind.COOLDOWN": "Enfriamiento",
+
+  "goal.DISTANCE": "Distancia",
+  "goal.DISTANCE_TIME": "Salida",
+  "goal.TIME": "Tiempo",
+  "goal.OPEN": "Abierto",
+
+  "alert.NONE": "Sin objetivo",
+  "alert.HEART_RATE": "Frecuencia cardíaca",
+  "alert.SPEED.pace": "Ritmo",
+  "alert.SPEED.speed": "Velocidad",
+  "alert.CADENCE": "Cadencia",
+  "alert.POWER": "Potencia",
+  "alert.zone": "Zona {n}",
+  "alert.bpm": "{from}–{to} ppm",
+  "alert.mps": "{value} m/s",
+  "alert.spm": "{value} ppm",
+  "alert.watts": "{value} W",
+
+  "rail.name": "Nombre del entrenamiento",
+  "rail.empty": "Tus bloques aparecerán aquí según vayas respondiendo.",
+  "rail.total": "Total",
+  "rail.download": "Descargar",
+  "rail.scan": "Escanear en el móvil",
+  "rail.share": "Compartir",
+  "rail.whatsapp": "WhatsApp",
+  "rail.privacy": "No sale nada de este dispositivo salvo que tú lo compartas.",
+  "rail.saved": "Guardado {file}",
+  "rail.untitled": "Sin nombre",
+
+  "send.heading": "Escanea con el móvil",
+  "send.body": "El entrenamiento viaja dentro del enlace. No se sube nada.",
+  "send.tooBig": "Este entrenamiento es demasiado largo para un código QR. Copia el enlace.",
+  "send.localhost":
+    "Tu móvil no puede acceder a localhost. Esto funciona cuando la app esté desplegada.",
+  "send.copy": "Copiar enlace",
+  "send.copied": "Enlace copiado",
+  "send.done": "Listo",
+
+  "install.heading": "Cómo llevarlo al reloj",
+  "install.step1": "Abre el archivo que acabas de guardar.",
+  "install.step2": "Si no se abre solo, pulsa Compartir y elige la app Entreno.",
+  "install.step3":
+    "Cierra la app Entreno y vuelve a abrirla: el entrenamiento aparece en Personalizado.",
+  "install.gotIt": "Entendido",
+  "install.dontShow": "No volver a mostrar",
+
+  "handoff.body":
+    "Alguien ha compartido este entrenamiento contigo. Guárdalo y ábrelo en la app Entreno.",
+  "handoff.save": "Guardar el entrenamiento",
+  "handoff.again": "Guardar otra vez",
+  "handoff.shared": "Enviado. Elige la app Entreno si no se ha abierto ya.",
+  "handoff.saved": "Guardado en tus descargas. Ábrelo desde ahí y la app Entreno se encarga.",
+  "handoff.mine": "Prefiero crear el mío",
+
+  "resume.text": "Retomamos donde lo dejaste.",
+  "resume.ok": "Entendido",
+  "resume.fresh": "Empezar de cero",
+
+  "theme.label": "Apariencia",
+  "theme.system": "Sistema",
+  "theme.light": "Claro",
+  "theme.dark": "Oscuro",
+  "language.label": "Idioma",
+
+  "activity.SWIMMING": "Natación en piscina",
+  "activity.RUNNING": "Carrera al aire libre",
+  "activity.CYCLING": "Ciclismo al aire libre",
+  "activity.HIGH_INTENSITY_INTERVAL_TRAINING": "HIIT",
+};
+
+export const DICTIONARIES: Record<LocaleCode, Record<MessageKey, string>> = { en, es };

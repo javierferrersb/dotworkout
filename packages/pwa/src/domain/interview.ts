@@ -1,13 +1,6 @@
-import { formatDistance, formatDuration } from "@dotworkout/domain";
-import {
-  alertTitle,
-  goalTitle,
-  type Activity,
-  type ActivityCapabilities,
-  type AlertMetric,
-  type GoalKind,
-} from "./activity.js";
-import { blockKindTitle, repeats, type BlockDraft, type BlockKind } from "./block.js";
+import type { MessageKey } from "../i18n/messages.js";
+import type { Activity, ActivityCapabilities, AlertMetric, GoalKind } from "./activity.js";
+import { repeats, type BlockDraft, type BlockKind } from "./block.js";
 
 export type QuestionId =
   | "kind"
@@ -21,10 +14,12 @@ export type QuestionId =
   | "alertValue"
   | "label";
 
+export type ChoiceGroup = "kind" | "goal" | "alert" | "zone";
+
 export interface Choice {
   readonly key: string;
   readonly value: string;
-  readonly title: string;
+  readonly group: ChoiceGroup;
   readonly caution: boolean;
 }
 
@@ -37,8 +32,8 @@ export type QuestionForm =
 
 export interface Question {
   readonly id: QuestionId;
-  readonly prompt: string;
-  readonly note: string | undefined;
+  readonly promptKey: MessageKey;
+  readonly noteKey: MessageKey | undefined;
   readonly optional: boolean;
   readonly form: QuestionForm;
 }
@@ -71,15 +66,15 @@ function blockKindChoices(draft: BlockDraft, context: BlockContext): readonly Ch
 
   const warmupAvailable = !context.hasWarmup || draft.kind === "WARMUP";
   if (warmupAvailable && context.position === 0) {
-    choices.push({ key: "W", value: "WARMUP", title: "Warm up", caution: false });
+    choices.push({ key: "W", value: "WARMUP", group: "kind", caution: false });
   }
 
-  choices.push({ key: "S", value: "INTERVAL", title: "Set", caution: false });
-  choices.push({ key: "R", value: "RECOVERY", title: "Rest", caution: false });
+  choices.push({ key: "S", value: "INTERVAL", group: "kind", caution: false });
+  choices.push({ key: "R", value: "RECOVERY", group: "kind", caution: false });
 
   const cooldownAvailable = !context.hasCooldown || draft.kind === "COOLDOWN";
   if (cooldownAvailable) {
-    choices.push({ key: "C", value: "COOLDOWN", title: "Cool down", caution: false });
+    choices.push({ key: "C", value: "COOLDOWN", group: "kind", caution: false });
   }
 
   return choices;
@@ -94,8 +89,8 @@ export function questionSequence(
   const questions: Question[] = [
     {
       id: "kind",
-      prompt: "What are you adding?",
-      note: undefined,
+      promptKey: "question.kind",
+      noteKey: undefined,
       optional: false,
       form: { type: "choice", choices: blockKindChoices(draft, context) },
     },
@@ -106,8 +101,8 @@ export function questionSequence(
   if (draft.kind === "RECOVERY") {
     questions.push({
       id: "duration",
-      prompt: "How long?",
-      note: undefined,
+      promptKey: "question.duration",
+      noteKey: undefined,
       optional: false,
       form: { type: "duration", placeholder: "1:00" },
     });
@@ -117,15 +112,15 @@ export function questionSequence(
 
   questions.push({
     id: "goal",
-    prompt: "Measured by",
-    note: undefined,
+    promptKey: "question.goal",
+    noteKey: undefined,
     optional: false,
     form: {
       type: "choice",
       choices: capabilities.goals.map((goal) => ({
         key: GOAL_KEYS[goal],
         value: goal,
-        title: goalTitle(goal),
+        group: "goal" as const,
         caution: false,
       })),
     },
@@ -136,8 +131,8 @@ export function questionSequence(
   if (draft.goalKind === "DISTANCE" || draft.goalKind === "DISTANCE_TIME") {
     questions.push({
       id: "distance",
-      prompt: "How far?",
-      note: undefined,
+      promptKey: "question.distance",
+      noteKey: undefined,
       optional: false,
       form: { type: "distance", unit: activity.defaultDistanceUnit },
     });
@@ -145,8 +140,8 @@ export function questionSequence(
   if (draft.goalKind === "TIME") {
     questions.push({
       id: "duration",
-      prompt: "How long?",
-      note: undefined,
+      promptKey: "question.duration",
+      noteKey: undefined,
       optional: false,
       form: { type: "duration", placeholder: "10:00" },
     });
@@ -154,8 +149,8 @@ export function questionSequence(
   if (draft.goalKind === "DISTANCE_TIME") {
     questions.push({
       id: "sendOff",
-      prompt: "Leave every",
-      note: "The next rep starts on this clock, however fast you finish",
+      promptKey: "question.sendOff",
+      noteKey: "question.sendOff.note",
       optional: false,
       form: { type: "duration", placeholder: "1:00" },
     });
@@ -164,21 +159,21 @@ export function questionSequence(
   if (repeats(draft)) {
     questions.push({
       id: "repetitions",
-      prompt: "How many?",
-      note: undefined,
+      promptKey: "question.repetitions",
+      noteKey: undefined,
       optional: false,
       form: { type: "count", placeholder: "8" },
     });
     questions.push({
       id: "recovery",
-      prompt: "Rest between",
-      note: undefined,
+      promptKey: "question.recovery",
+      noteKey: undefined,
       optional: true,
       form: { type: "duration", placeholder: "0:20" },
     });
   }
 
-  questions.push(alertQuestion(activity, capabilities));
+  questions.push(alertQuestion(capabilities));
 
   if (draft.alertMetric !== undefined && draft.alertMetric !== "NONE") {
     questions.push(alertValueQuestion(draft.alertMetric, activity));
@@ -188,29 +183,29 @@ export function questionSequence(
   return questions;
 }
 
-function alertQuestion(activity: Activity, capabilities: ActivityCapabilities): Question {
+function alertQuestion(capabilities: ActivityCapabilities): Question {
   const offered = capabilities.alerts.map((metric) => ({
     key: ALERT_KEYS[metric],
     value: metric,
-    title: alertTitle(metric, activity),
+    group: "alert" as const,
     caution: false,
   }));
   const unverified = capabilities.unverifiedAlerts.map((metric) => ({
     key: ALERT_KEYS[metric],
     value: metric,
-    title: alertTitle(metric, activity),
+    group: "alert" as const,
     caution: true,
   }));
 
   return {
     id: "alert",
-    prompt: "Keep me at",
-    note: undefined,
+    promptKey: "question.alert",
+    noteKey: undefined,
     optional: true,
     form: {
       type: "choice",
       choices: [
-        { key: "N", value: "NONE", title: "No target", caution: false },
+        { key: "N", value: "NONE", group: "alert" as const, caution: false },
         ...offered,
         ...unverified,
       ],
@@ -222,47 +217,49 @@ function alertValueQuestion(metric: AlertMetric, activity: Activity): Question {
   if (metric === "HEART_RATE") {
     return {
       id: "alertValue",
-      prompt: "Which zone?",
-      note: "Zone limits come from your own heart-rate data on the Watch",
+      promptKey: "question.zone",
+      noteKey: "question.zone.note",
       optional: false,
       form: {
         type: "choice",
         choices: [1, 2, 3, 4, 5].map((zone) => ({
           key: String(zone),
           value: String(zone),
-          title: `Zone ${zone}`,
+          group: "zone" as const,
           caution: false,
         })),
       },
     };
   }
   if (metric === "SPEED") {
+    const running = activity.id === "RUNNING";
     return {
       id: "alertValue",
-      prompt: activity.id === "RUNNING" ? "Target pace" : "Target speed",
-      note: activity.id === "RUNNING" ? "Per kilometre" : "Kilometres per hour",
+      promptKey: running ? "question.pace" : "question.speed",
+      noteKey: running ? "question.pace.note" : "question.speed.note",
       optional: false,
-      form: { type: "duration", placeholder: activity.id === "RUNNING" ? "5:00" : "25" },
+      form: { type: "duration", placeholder: running ? "5:00" : "25" },
     };
   }
   return {
     id: "alertValue",
-    prompt: metric === "POWER" ? "Target watts" : "Target cadence",
-    note: undefined,
+    promptKey: metric === "POWER" ? "question.watts" : "question.cadence",
+    noteKey: undefined,
     optional: false,
     form: { type: "count", placeholder: metric === "POWER" ? "250" : "90" },
   };
 }
 
 function labelQuestion(activity: Activity): Question {
+  const swimming = activity.id === "SWIMMING";
   return {
     id: "label",
-    prompt: "Name it",
-    note: activity.id === "SWIMMING" ? "Stroke, equipment, or how it should feel" : undefined,
+    promptKey: "question.label",
+    noteKey: swimming ? "question.label.note" : undefined,
     optional: true,
     form: {
       type: "text",
-      suggestions: activity.id === "SWIMMING" ? STROKE_SUGGESTIONS : EFFORT_SUGGESTIONS,
+      suggestions: swimming ? STROKE_SUGGESTIONS : EFFORT_SUGGESTIONS,
     },
   };
 }
@@ -293,33 +290,6 @@ export function isAnswered(draft: BlockDraft, id: QuestionId): boolean {
   }
 }
 
-export function answerText(draft: BlockDraft, id: QuestionId, activity: Activity): string {
-  switch (id) {
-    case "kind":
-      return draft.kind === undefined ? "" : blockKindTitle(draft.kind);
-    case "goal":
-      return draft.goalKind === undefined ? "" : goalTitle(draft.goalKind);
-    case "distance":
-      return draft.distance === undefined ? "" : formatDistance(draft.distance);
-    case "duration":
-      return draft.duration === undefined ? "" : formatDuration(draft.duration);
-    case "sendOff":
-      return draft.sendOff === undefined ? "" : formatDuration(draft.sendOff);
-    case "repetitions":
-      return draft.repetitions === undefined ? "" : `${draft.repetitions}`;
-    case "recovery":
-      return draft.recovery === undefined ? "none" : formatDuration(draft.recovery);
-    case "alert":
-      return draft.alertMetric === undefined || draft.alertMetric === "NONE"
-        ? "No target"
-        : alertTitle(draft.alertMetric, activity);
-    case "alertValue":
-      return describeAlert(draft);
-    case "label":
-      return draft.label === undefined || draft.label === "" ? "unnamed" : draft.label;
-  }
-}
-
 export function rawAnswer(draft: BlockDraft, id: QuestionId): string | undefined {
   switch (id) {
     case "kind":
@@ -345,33 +315,6 @@ export function rawAnswer(draft: BlockDraft, id: QuestionId): string | undefined
     case "label":
       return draft.label;
   }
-}
-
-export function describeAlert(draft: BlockDraft): string {
-  const alert = draft.alert;
-  if (alert === undefined) return "";
-  if (alert.metric === "HEART_RATE" && alert.style === "ZONE") return `Zone ${alert.zone}`;
-  if (alert.metric === "HEART_RATE") return `${alert.from}–${alert.to} bpm`;
-  if (alert.metric === "SPEED") return `${alert.metersPerSecond.toFixed(2)} m/s`;
-  if (alert.metric === "CADENCE") return `${alert.perMinute} spm`;
-  return `${alert.watts} W`;
-}
-
-export function summarise(draft: BlockDraft): string {
-  const parts: string[] = [];
-  if (draft.repetitions !== undefined && draft.repetitions > 1) parts.push(`${draft.repetitions}×`);
-  if (draft.distance !== undefined) parts.push(formatDistance(draft.distance));
-  if (draft.duration !== undefined) parts.push(formatDuration(draft.duration));
-  if (draft.goalKind === "OPEN") parts.push("open");
-  if (draft.sendOff !== undefined) parts.push(`on ${formatDuration(draft.sendOff)}`);
-  if (draft.recovery !== undefined) parts.push(`rest ${formatDuration(draft.recovery)}`);
-  return parts.join(" ");
-}
-
-export function blockTitle(draft: BlockDraft, index: number): string {
-  if (draft.label !== undefined && draft.label !== "") return draft.label;
-  if (draft.kind !== undefined && draft.kind !== "INTERVAL") return blockKindTitle(draft.kind);
-  return `Block ${index + 1}`;
 }
 
 export type { BlockKind };

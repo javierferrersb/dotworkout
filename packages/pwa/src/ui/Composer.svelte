@@ -1,31 +1,44 @@
 <script lang="ts">
   import { fly } from "svelte/transition";
+  import { Languages, Monitor, Moon, Sun } from "@lucide/svelte";
+  import type { ThemeChoice } from "../application/appFlow.svelte.js";
   import type { CompositionSession } from "../application/compositionSession.svelte.js";
+  import { locale, t } from "../i18n/locale.svelte.js";
+  import { LOCALES, type LocaleCode } from "../i18n/messages.js";
   import BackButton from "./BackButton.svelte";
   import BlockCard from "./BlockCard.svelte";
   import Kbd from "./Kbd.svelte";
+  import Menu from "./Menu.svelte";
   import SummaryRail from "./SummaryRail.svelte";
   import { BLOCK_DOWN_HINT, BLOCK_UP_HINT, KEY } from "./platform.js";
 
   interface Props {
     session: CompositionSession;
+    themeChoice: ThemeChoice;
     onback: () => void;
-    ontheme: () => void;
+    ontheme: (choice: ThemeChoice) => void;
     onreset: () => void;
-    theme: "dark" | "light";
   }
-  let { session, onback, ontheme, onreset, theme }: Props = $props();
+  let { session, themeChoice, onback, ontheme, onreset }: Props = $props();
 
   let card = $state<BlockCard | undefined>(undefined);
   let rail = $state<SummaryRail | undefined>(undefined);
 
-  const LEGEND = [
-    { key: `${KEY.up} ${KEY.down}`, what: "question" },
-    { key: `${BLOCK_UP_HINT} / ${BLOCK_DOWN_HINT}`, what: "block" },
-    { key: KEY.enter, what: "confirm" },
-    { key: KEY.tab, what: "skip" },
-    { key: KEY.escape, what: "deselect" },
-  ];
+  let legend = $derived([
+    { key: `${KEY.up} ${KEY.down}`, what: t("composer.legend.question") },
+    { key: `${BLOCK_UP_HINT} / ${BLOCK_DOWN_HINT}`, what: t("composer.legend.block") },
+    { key: KEY.enter, what: t("composer.legend.confirm") },
+    { key: KEY.tab, what: t("composer.legend.skip") },
+    { key: KEY.escape, what: t("composer.legend.deselect") },
+  ]);
+
+  let themeOptions = $derived([
+    { value: "system", label: t("theme.system") },
+    { value: "light", label: t("theme.light") },
+    { value: "dark", label: t("theme.dark") },
+  ]);
+
+  let localeOptions = $derived(LOCALES.map((entry) => ({ value: entry.code, label: entry.label })));
 
   function typing(target: EventTarget | null): boolean {
     return target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement;
@@ -76,14 +89,6 @@
       session.skip(session.current.id);
       return;
     }
-    if (event.key === "Enter" && !event.shiftKey && !typing(event.target)) {
-      const optionalChoice = session.current;
-      if (optionalChoice?.optional === true && optionalChoice.form.type === "choice") {
-        event.preventDefault();
-        session.skip(optionalChoice.id);
-        return;
-      }
-    }
     if (event.key === "ArrowUp" && !typing(event.target)) {
       event.preventDefault();
       session.previousQuestion();
@@ -114,13 +119,39 @@
 
 <main>
   <section class="stage">
-    <BackButton label={session.activity.title} onclick={onback} />
+    <BackButton label={session.activityName} onclick={onback} />
     <nav>
       <span class="grow"></span>
-      <button class="theme" onclick={onreset}>New workout</button>
-      <button class="theme" onclick={ontheme} aria-label="Toggle colour scheme">
-        {theme === "dark" ? "Light" : "Dark"}
-      </button>
+      <button class="plain" onclick={onreset}>{t("composer.newWorkout")}</button>
+
+      <Menu
+        label={t("language.label")}
+        options={localeOptions}
+        selected={locale.code}
+        onselect={(value) => locale.set(value as LocaleCode)}
+      >
+        {#snippet trigger()}
+          <Languages size={16} strokeWidth={2.2} />
+          <span class="only-wide">{locale.code.toUpperCase()}</span>
+        {/snippet}
+      </Menu>
+
+      <Menu
+        label={t("theme.label")}
+        options={themeOptions}
+        selected={themeChoice}
+        onselect={(value) => ontheme(value as ThemeChoice)}
+      >
+        {#snippet trigger()}
+          {#if themeChoice === "system"}
+            <Monitor size={16} strokeWidth={2.2} />
+          {:else if themeChoice === "light"}
+            <Sun size={16} strokeWidth={2.2} />
+          {:else}
+            <Moon size={16} strokeWidth={2.2} />
+          {/if}
+        {/snippet}
+      </Menu>
     </nav>
 
     <div class="scroll">
@@ -134,7 +165,7 @@
     </div>
 
     <footer>
-      {#each LEGEND as entry (entry.key)}
+      {#each legend as entry (entry.key)}
         <span class="legend"><Kbd label={entry.key} />{entry.what}</span>
       {/each}
     </footer>
@@ -159,8 +190,8 @@
   nav {
     display: flex;
     align-items: center;
-    gap: 6px;
-    padding: 20px 32px 0;
+    gap: 4px;
+    padding: 20px 24px 0;
     min-height: 42px;
   }
 
@@ -168,7 +199,7 @@
     flex: 1;
   }
 
-  .theme {
+  .plain {
     color: var(--text-secondary);
     font-size: 14px;
     padding: 8px 14px;
@@ -176,7 +207,7 @@
     transition: all 140ms var(--ease);
   }
 
-  .theme:hover {
+  .plain:hover {
     background: var(--bg-surface);
     color: var(--text-primary);
   }
@@ -213,6 +244,35 @@
   @media (max-width: 940px) {
     main {
       flex-direction: column;
+      overflow-y: auto;
+    }
+
+    .stage {
+      min-height: 100%;
+    }
+
+    .scroll {
+      align-content: start;
+      overflow: visible;
+      padding: 16px 18px;
+    }
+
+    footer {
+      display: none;
+    }
+  }
+
+  @media (max-width: 640px) {
+    nav {
+      padding: 18px 14px 0;
+    }
+
+    .plain {
+      display: none;
+    }
+
+    .only-wide {
+      display: none;
     }
   }
 </style>

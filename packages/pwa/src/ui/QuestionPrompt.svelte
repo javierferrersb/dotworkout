@@ -2,6 +2,8 @@
   import { fly } from "svelte/transition";
   import { Check, CornerDownLeft } from "@lucide/svelte";
   import type { Question } from "../domain/interview.js";
+  import { choiceText, questionNote, questionText } from "../i18n/format.js";
+  import { t } from "../i18n/locale.svelte.js";
   import { flashConfirm } from "./confirmFlash.js";
   import { KEY } from "./platform.js";
 
@@ -9,10 +11,11 @@
     question: Question;
     problem: string | undefined;
     chosen: string | undefined;
+    activityId: string;
     onanswer: (raw: string) => void;
     onskip: () => void;
   }
-  let { question, problem, chosen, onanswer, onskip }: Props = $props();
+  let { question, problem, chosen, activityId, onanswer, onskip }: Props = $props();
 
   let entry = $state("");
   let field = $state<HTMLInputElement | undefined>(undefined);
@@ -50,14 +53,14 @@
 
 <section class="prompt" in:fly={{ y: 10, duration: 260 }}>
   <header>
-    <h2>{question.prompt}</h2>
-    {#if question.optional}<span class="tag">optional</span>{/if}
+    <h2>{questionText(question)}</h2>
+    {#if question.optional}<span class="tag">{t("prompt.optional")}</span>{/if}
   </header>
-  {#if question.note}<p class="note">{question.note}</p>{/if}
+  {#if questionNote(question)}<p class="note">{questionNote(question)}</p>{/if}
 
   {#if question.form.type === "choice"}
     {#if question.optional}
-      <p class="hint">{KEY.enter} or {KEY.tab} to skip</p>
+      <p class="hint">{t("prompt.skipChoiceHint", { enter: KEY.enter, tab: KEY.tab })}</p>
     {/if}
     <div class="choices">
       {#each question.form.choices as choice (choice.value)}
@@ -68,8 +71,8 @@
           onclick={() => pressKey(choice.value)}
         >
           <kbd>{choice.key}</kbd>
-          <span>{choice.title}</span>
-          {#if choice.caution}<span class="flag">not verified</span>{/if}
+          <span>{choiceText(choice, activityId)}</span>
+          {#if choice.caution}<span class="flag">{t("prompt.notVerified")}</span>{/if}
           {#if chosen === choice.value}<Check class="current" size={17} strokeWidth={3} />{/if}
         </button>
       {/each}
@@ -82,14 +85,14 @@
         placeholder={question.form.type === "distance"
           ? `0 ${question.form.unit}`
           : question.form.type === "text"
-            ? "a short name"
+            ? t("prompt.namePlaceholder")
             : question.form.placeholder}
         inputmode={question.form.type === "count" ? "numeric" : "text"}
-        aria-label={question.prompt}
+        aria-label={questionText(question)}
         spellcheck="false"
       />
       {#if question.form.type === "distance"}<span class="unit">{question.form.unit}</span>{/if}
-      <button type="submit" class="go" aria-label="Confirm">
+      <button type="submit" class="go" aria-label={t("prompt.confirm")}>
         <CornerDownLeft size={15} strokeWidth={2.4} />
         {KEY.enter}
       </button>
@@ -104,7 +107,7 @@
     {/if}
 
     {#if question.optional}
-      <p class="hint">{KEY.tab} to skip</p>
+      <p class="hint">{t("prompt.skipHint", { tab: KEY.tab })}</p>
     {/if}
   {/if}
 
@@ -231,12 +234,16 @@
   }
 
   .go {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
     padding: 10px 16px;
     border-radius: 10px;
     background: var(--accent);
     color: var(--on-accent);
     font-size: 13px;
     font-weight: 600;
+    white-space: nowrap;
   }
 
   .suggestions {

@@ -109,6 +109,6 @@ export async function shareBytes(bytes: Uint8Array, title: string): Promise<Shar
 }
 
 export function whatsappLink(draft: WorkoutDraft, summary: string): string {
-  const message = `${draft.title} — ${draft.activity.title}\n${summary}\n\n${workoutLink(draft)}`;
+  const message = `${draft.title}\n${summary}\n\n${workoutLink(draft)}`;
   return `https://wa.me/?text=${encodeURIComponent(message)}`;
 }

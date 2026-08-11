@@ -3,6 +3,8 @@
   import { fly } from "svelte/transition";
   import { CornerDownLeft } from "@lucide/svelte";
   import type { Activity } from "../domain/activity.js";
+  import { activityName } from "../i18n/format.js";
+  import { t } from "../i18n/locale.svelte.js";
   import BackButton from "./BackButton.svelte";
 
   interface Props {
@@ -16,6 +18,8 @@
   let title = $state(untrack(() => initial));
   let field = $state<HTMLInputElement | undefined>(undefined);
 
+  let fallback = $derived(t("naming.defaultTitle", { activity: activityName(activity.id) }));
+
   $effect(() => {
     field?.focus();
     field?.select();
@@ -23,7 +27,7 @@
 
   function submit(event: Event) {
     event.preventDefault();
-    onconfirm(title.trim() === "" ? `${activity.title} workout` : title.trim());
+    onconfirm(title.trim() === "" ? fallback : title.trim());
   }
 
   function onKeydown(event: KeyboardEvent) {
@@ -36,30 +40,30 @@
 
 <svelte:window onkeydown={onKeydown} />
 
-<BackButton label={activity.title} onclick={onback} />
+<BackButton label={activityName(activity.id)} onclick={onback} />
 
 <div class="naming">
   <div class="panel" in:fly={{ y: 14, duration: 360 }}>
-    <p class="eyebrow">{activity.title}</p>
-    <h1>What are you calling it?</h1>
-    <p class="lede">This is the name you’ll see in the Workouts app.</p>
+    <p class="eyebrow">{activityName(activity.id)}</p>
+    <h1>{t("naming.heading")}</h1>
+    <p class="lede">{t("naming.lede")}</p>
 
     <form onsubmit={submit}>
       <input
         bind:this={field}
         bind:value={title}
-        placeholder={`${activity.title} workout`}
-        aria-label="Workout name"
+        placeholder={fallback}
+        aria-label={t("rail.name")}
         spellcheck="false"
         maxlength="60"
       />
       <button type="submit">
-        Continue
+        {t("naming.continue")}
         <CornerDownLeft size={15} strokeWidth={2.4} />
       </button>
     </form>
 
-    <p class="hint">You can change it later from the summary panel.</p>
+    <p class="hint">{t("naming.hint")}</p>
   </div>
 </div>
 
@@ -136,5 +140,22 @@
     margin: 16px 0 0;
     color: var(--text-tertiary);
     font-size: 13px;
+  }
+
+  @media (max-width: 640px) {
+    form {
+      flex-direction: column;
+      align-items: stretch;
+      padding: 14px;
+      gap: 12px;
+    }
+
+    input {
+      padding: 4px 0;
+    }
+
+    button {
+      justify-content: center;
+    }
   }
 </style>

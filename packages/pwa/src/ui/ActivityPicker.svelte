@@ -2,6 +2,8 @@
   import { fly } from "svelte/transition";
   import { Search } from "@lucide/svelte";
   import { ACTIVITY_CATALOGUE, capabilitiesOf, type Activity } from "../domain/activity.js";
+  import { activityName } from "../i18n/format.js";
+  import { t } from "../i18n/locale.svelte.js";
   import BackButton from "./BackButton.svelte";
 
   interface Props {
@@ -16,7 +18,7 @@
 
   let matches = $derived(
     ACTIVITY_CATALOGUE.filter((activity) =>
-      activity.title.toLowerCase().includes(query.trim().toLowerCase()),
+      activityName(activity.id).toLowerCase().includes(query.trim().toLowerCase()),
     ),
   );
 
@@ -50,25 +52,28 @@
   function summary(activity: Activity): string {
     const capabilities = capabilitiesOf(activity);
     const targets = capabilities.alerts.length + capabilities.unverifiedAlerts.length;
-    return `${capabilities.goals.length} goal types · ${targets} target${targets === 1 ? "" : "s"}`;
+    const goals = t("picker.goalTypes", { count: capabilities.goals.length });
+    const targetText =
+      targets === 1 ? t("picker.target", { count: targets }) : t("picker.targets", { count: targets });
+    return `${goals} · ${targetText}`;
   }
 </script>
 
 <svelte:window onkeydown={onKeydown} />
 
-<BackButton label="Back" onclick={onback} />
+<BackButton label={t("resume.ok")} onclick={onback} />
 
 <div class="picker">
   <div class="panel" in:fly={{ y: 14, duration: 360 }}>
-    <h1>What are you training?</h1>
+    <h1>{t("picker.heading")}</h1>
 
     <div class="search">
       <Search size={19} strokeWidth={2.2} />
       <input
         bind:this={field}
         bind:value={query}
-        placeholder="Search activities"
-        aria-label="Search activities"
+        placeholder={t("picker.search")}
+        aria-label={t("picker.search")}
         spellcheck="false"
       />
     </div>
@@ -82,13 +87,13 @@
             onmouseenter={() => (highlighted = index)}
             onclick={() => onpick(activity)}
           >
-            <span class="title">{activity.title}</span>
+            <span class="title">{activityName(activity.id)}</span>
             <span class="detail">{summary(activity)}</span>
           </button>
         </li>
       {/each}
       {#if matches.length === 0}
-        <li class="none">Nothing matches “{query}”</li>
+        <li class="none">{t("picker.noMatch", { query })}</li>
       {/if}
     </ul>
   </div>
@@ -109,7 +114,7 @@
 
   h1 {
     margin: 0 0 22px;
-    font-size: 30px;
+    font-size: clamp(24px, 5vw, 30px);
     font-weight: 700;
     letter-spacing: -0.8px;
   }
@@ -178,5 +183,17 @@
     padding: 14px 16px;
     color: var(--text-tertiary);
     font-size: 14px;
+  }
+
+  @media (max-width: 640px) {
+    .picker {
+      padding: 84px 18px 28px;
+    }
+
+    .row {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 3px;
+    }
   }
 </style>

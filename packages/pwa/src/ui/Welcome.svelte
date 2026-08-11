@@ -1,6 +1,7 @@
 <script lang="ts">
   import { fly } from "svelte/transition";
   import { Heart } from "@lucide/svelte";
+  import { t } from "../i18n/locale.svelte.js";
   import { KEY } from "./platform.js";
 
   interface Props {
@@ -9,50 +10,39 @@
   let { oncontinue }: Props = $props();
 
   const FIXES = [
-    {
-      title: "Series and repetitions in seconds",
-      body: "8 × 400 m with 90 seconds recovery takes four keystrokes here. On the phone it takes forty taps.",
-    },
-    {
-      title: "Target a heart-rate zone",
-      body: "Pin any interval to a zone, a pace, a cadence or a power number, and only the ones your sport actually supports are offered.",
-    },
-    {
-      title: "Straight onto the Watch",
-      body: "Get a real .workout file. Send it to yourself, open it in the Workouts app, and it syncs across.",
-    },
-  ];
+    { title: "welcome.fix1.title", body: "welcome.fix1.body" },
+    { title: "welcome.fix2.title", body: "welcome.fix2.body" },
+    { title: "welcome.fix3.title", body: "welcome.fix3.body" },
+  ] as const;
 </script>
 
 <div class="welcome">
   <div class="panel" in:fly={{ y: 16, duration: 420 }}>
-    <h1>Build <em>Apple&nbsp;Watch workouts</em> on a proper keyboard.</h1>
-    <p class="lede">
-      Apple only lets you create custom workouts by tapping them out on your phone. Build them on
-      your computer instead — intervals, repetitions and heart-rate zones — then send the file
-      straight to your watch.
-    </p>
+    <h1>
+      {t("welcome.headingBefore")}<em>{t("welcome.headingEm")}</em>{t("welcome.headingAfter")}
+    </h1>
+    <p class="lede">{t("welcome.lede")}</p>
 
     <ul>
       {#each FIXES as fix (fix.title)}
         <li>
-          <h2>{fix.title}</h2>
-          <p>{fix.body}</p>
+          <h2>{t(fix.title)}</h2>
+          <p>{t(fix.body)}</p>
         </li>
       {/each}
     </ul>
 
     <button class="start" onclick={oncontinue}>
-      Build a workout
+      {t("welcome.cta")}
       <span class="key">{KEY.enter}</span>
     </button>
 
-    <p class="privacy">
-      Runs entirely on your device. Nothing is uploaded, and it works offline once installed.
-    </p>
+    <p class="privacy">{t("welcome.privacy")}</p>
 
     <footer>
-      Made with <Heart class="heart" size={14} strokeWidth={0} fill="currentColor" /> in Spain by
+      {t("welcome.madeWith")}
+      <Heart class="heart" size={14} strokeWidth={0} fill="currentColor" />
+      {t("welcome.inSpain")}
       <a href="https://github.com/javierferrersb" target="_blank" rel="noopener noreferrer">
         javierferrersb
       </a>
@@ -75,7 +65,7 @@
 
   h1 {
     margin: 0 0 18px;
-    font-size: clamp(32px, 5vw, 48px);
+    font-size: clamp(30px, 5vw, 48px);
     line-height: 1.04;
     font-weight: 700;
     letter-spacing: -1.5px;
@@ -171,5 +161,22 @@
   a:hover {
     color: var(--accent);
     border-bottom-color: var(--accent-edge);
+  }
+
+  @media (max-width: 640px) {
+    .welcome {
+      padding: 32px 20px;
+      place-items: start center;
+    }
+
+    .lede {
+      margin-bottom: 28px;
+      font-size: 16px;
+    }
+
+    .start {
+      width: 100%;
+      justify-content: center;
+    }
   }
 </style>

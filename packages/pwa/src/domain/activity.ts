@@ -7,7 +7,6 @@ export type GoalKind = "DISTANCE" | "DISTANCE_TIME" | "TIME" | "OPEN";
 
 export interface Activity {
   readonly id: string;
-  readonly title: string;
   readonly type: CustomWorkout_ActivityType;
   readonly defaultDistanceUnit: DistanceUnit;
 }
@@ -19,23 +18,6 @@ export interface ActivityCapabilities {
   readonly enumerated: boolean;
   readonly advisory: string | undefined;
 }
-
-const TITLES: Record<string, string> = {
-  SWIMMING: "Pool Swim",
-  RUNNING: "Outdoor Run",
-  CYCLING: "Outdoor Cycle",
-  HIGH_INTENSITY_INTERVAL_TRAINING: "HIIT",
-  ROWING: "Rowing",
-  WALKING: "Outdoor Walk",
-  HIKING: "Hiking",
-  ELLIPTICAL: "Elliptical",
-  CROSS_TRAINING: "Cross Training",
-  FUNCTIONAL_STRENGTH_TRAINING: "Functional Strength",
-  TRADITIONAL_STRENGTH_TRAINING: "Traditional Strength",
-  STAIR_CLIMBING: "Stair Stepper",
-  YOGA: "Yoga",
-  CORE_TRAINING: "Core Training",
-};
 
 const DISTANCE_UNITS: Record<string, DistanceUnit> = {
   SWIMMING: "m",
@@ -53,7 +35,6 @@ function toActivity(id: string): Activity | undefined {
   if (typeof type !== "number") return undefined;
   return {
     id,
-    title: TITLES[id] ?? id.toLowerCase().replace(/_/g, " "),
     type,
     defaultDistanceUnit: DISTANCE_UNITS[id] ?? "m",
   };
@@ -96,24 +77,4 @@ export function capabilitiesOf(activity: Activity): ActivityCapabilities {
     enumerated: true,
     advisory: entry.note,
   };
-}
-
-export function alertTitle(metric: AlertMetric, activity: Activity): string {
-  if (metric === "SPEED") return activity.id === "RUNNING" ? "Pace" : "Speed";
-  if (metric === "HEART_RATE") return "Heart Rate";
-  if (metric === "CADENCE") return "Cadence";
-  return "Power";
-}
-
-export function goalTitle(kind: GoalKind): string {
-  switch (kind) {
-    case "DISTANCE":
-      return "Distance";
-    case "DISTANCE_TIME":
-      return "Send-off";
-    case "TIME":
-      return "Time";
-    case "OPEN":
-      return "Open";
-  }
 }

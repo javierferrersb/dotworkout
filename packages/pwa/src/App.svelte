@@ -6,6 +6,8 @@
   import { clearInboundWorkout, readInboundWorkout, shareBytes } from "./application/share.js";
   import { saveBytes } from "./application/workoutFile.js";
   import { ACTIVITY_CATALOGUE, type Activity } from "./domain/activity.js";
+  import { activityName } from "./i18n/format.js";
+  import { locale, t } from "./i18n/locale.svelte.js";
   import ActivityPicker from "./ui/ActivityPicker.svelte";
   import Composer from "./ui/Composer.svelte";
   import NameWorkout from "./ui/NameWorkout.svelte";
@@ -38,8 +40,27 @@
   });
 
   $effect(() => {
+    locale.apply();
+  });
+
+  $effect(() => flow.watchSystem());
+
+  const resumedSnapshot = JSON.stringify(session.snapshot);
+
+  $effect(() => {
     if (inbound !== undefined) return;
     saveSession({ ...session.snapshot, stage: flow.stage });
+  });
+
+  $effect(() => {
+    if (!restored) return;
+    if (JSON.stringify(session.snapshot) !== resumedSnapshot) restored = false;
+  });
+
+  $effect(() => {
+    if (!restored) return;
+    const timer = setTimeout(() => (restored = false), 8000);
+    return () => clearTimeout(timer);
   });
 
   async function keepInbound() {
@@ -81,7 +102,7 @@
 
   function pick(activity: Activity) {
     session.chooseActivity(activity);
-    session.title = `${activity.title} workout`;
+    session.title = t("naming.defaultTitle", { activity: activityName(activity.id) });
     flow.go("name");
   }
 
@@ -100,17 +121,15 @@
         <div class="sheet">
           <h1>{inbound.title}</h1>
           {#if handoff === "idle"}
-            <p>Someone shared this workout with you. Save it, then open it in the Workouts app.</p>
-            <button onclick={keepInbound}>Save the workout</button>
+            <p>{t("handoff.body")}</p>
+            <button onclick={keepInbound}>{t("handoff.save")}</button>
           {:else}
             <p class="done">
-              {handoff === "shared"
-                ? "Sent. Choose the Workouts app if it wasn’t already opened."
-                : "Saved to your downloads. Open it from there and the Workouts app takes over."}
+              {handoff === "shared" ? t("handoff.shared") : t("handoff.saved")}
             </p>
-            <button onclick={keepInbound}>Save it again</button>
+            <button onclick={keepInbound}>{t("handoff.again")}</button>
           {/if}
-          <button class="ghost" onclick={leaveInbound}>Build my own instead</button>
+          <button class="ghost" onclick={leaveInbound}>{t("handoff.mine")}</button>
         </div>
       </div>
     </div>
@@ -135,9 +154,9 @@
     <div class="screen">
       <Composer
         {session}
-        theme={flow.theme}
+        themeChoice={flow.themeChoice}
         onback={() => flow.go("choose")}
-        ontheme={() => flow.toggleTheme()}
+        ontheme={(choice) => flow.setTheme(choice)}
         onreset={startOver}
       />
     </div>
@@ -145,9 +164,9 @@
 
   {#if restored}
     <div class="resumed" transition:fade={{ duration: 180 }}>
-      <span>Picked up where you left off.</span>
-      <button onclick={() => (restored = false)}>Got it</button>
-      <button class="link" onclick={startOver}>Start fresh</button>
+      <span>{t("resume.text")}</span>
+      <button onclick={() => (restored = false)}>{t("resume.ok")}</button>
+      <button class="link" onclick={startOver}>{t("resume.fresh")}</button>
     </div>
   {/if}
 </div>
