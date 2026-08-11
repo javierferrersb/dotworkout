@@ -4,7 +4,7 @@
   import { ChevronUp, Download, QrCode, Share2 } from "@lucide/svelte";
   import { formatDistance } from "@dotworkout/domain";
   import type { CompositionSession } from "../application/compositionSession.svelte.js";
-  import { whatsappLink, type ShareRoute } from "../application/share.js";
+  import { shareWorkoutFile, whatsappLink, type ShareRoute } from "../application/share.js";
   import { download } from "../application/workoutFile.js";
   import { alertSummary, blockKindName, blockSummary } from "../i18n/format.js";
   import { t } from "../i18n/locale.svelte.js";
@@ -66,9 +66,14 @@
 
   function openWhatsapp() {
     if (blocked) return;
-    const summary = session.blocks.map((block) => blockSummary(block)).join(" · ");
-    window.open(whatsappLink(session.workout, summary), "_blank", "noopener");
-    offerHelp("chat");
+    shareWorkoutFile(session.workout).then((outcome) => {
+      if (outcome === "cancelled") return;
+      if (outcome === "unavailable") {
+        const summary = session.blocks.map((block) => blockSummary(block)).join(" · ");
+        window.open(whatsappLink(session.workout, summary), "_blank", "noopener");
+      }
+      offerHelp("chat");
+    });
   }
 </script>
 
