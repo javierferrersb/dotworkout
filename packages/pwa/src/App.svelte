@@ -3,7 +3,7 @@
   import { AppFlow } from "./application/appFlow.svelte.js";
   import { CompositionSession } from "./application/compositionSession.svelte.js";
   import { clearSession, loadSession, saveSession } from "./application/sessionStore.js";
-  import { clearInboundWorkout, readInboundWorkout, shareBytes } from "./application/share.js";
+  import { clearInboundWorkout, readInboundWorkout } from "./application/share.js";
   import { saveBytes } from "./application/workoutFile.js";
   import { ACTIVITY_CATALOGUE, type Activity } from "./domain/activity.js";
   import { activityName } from "./i18n/format.js";
@@ -20,7 +20,7 @@
 
   let inbound = $state(arrivedWithWorkout);
   let restored = $state(false);
-  let handoff = $state<"idle" | "saved" | "shared">("idle");
+  let handoff = $state<"idle" | "saved">("idle");
 
   if (arrivedWithWorkout === undefined) {
     const saved = loadSession();
@@ -63,14 +63,8 @@
     return () => clearTimeout(timer);
   });
 
-  async function keepInbound() {
+  function keepInbound() {
     if (inbound === undefined) return;
-    const outcome = await shareBytes(inbound.bytes, inbound.title);
-    if (outcome === "shared") {
-      handoff = "shared";
-      return;
-    }
-    if (outcome === "cancelled") return;
     saveBytes(inbound.bytes, inbound.title);
     handoff = "saved";
   }
@@ -124,9 +118,7 @@
             <p>{t("handoff.body")}</p>
             <button onclick={keepInbound}>{t("handoff.save")}</button>
           {:else}
-            <p class="done">
-              {handoff === "shared" ? t("handoff.shared") : t("handoff.saved")}
-            </p>
+            <p class="done">{t("handoff.saved")}</p>
             <button onclick={keepInbound}>{t("handoff.again")}</button>
           {/if}
           <button class="ghost" onclick={leaveInbound}>{t("handoff.mine")}</button>

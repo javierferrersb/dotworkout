@@ -138,10 +138,10 @@ const en = {
   "send.done": "Done",
 
   "install.heading": "Getting it onto your Watch",
-  "install.download.step1": "When the download appears, choose Save to Files.",
-  "install.download.step2":
-    "Open it from the Files app. Sharing straight from Safari does not offer the Workouts app.",
-  "install.download.step3": "Tap Share and choose Workout.",
+  "install.download.step1": "Open Safari’s downloads and tap the file.",
+  "install.download.step2": "It opens in the Workout app from there.",
+  "install.download.step3":
+    "If it does not, save it to Files, open it from there, then tap Share and choose Workout.",
   "install.chat.step1": "Open the file from the chat.",
   "install.chat.step2": "Tap Share and choose Workout.",
   "install.reopen": "If it does not show up, close the Workouts app and open it again.",
@@ -151,7 +151,6 @@ const en = {
   "handoff.body": "Someone shared this workout with you. Save it, then open it in the Workouts app.",
   "handoff.save": "Save the workout",
   "handoff.again": "Save it again",
-  "handoff.shared": "Sent. Choose the Workouts app if it wasn’t already opened.",
   "handoff.saved": "Saved to your downloads. Open it from there and the Workouts app takes over.",
   "handoff.mine": "Build my own instead",
 
@@ -314,10 +313,10 @@ const es: Record<MessageKey, string> = {
   "send.done": "Listo",
 
   "install.heading": "Cómo llevarlo al reloj",
-  "install.download.step1": "Cuando aparezca la descarga, elige «Guardar en Archivos».",
-  "install.download.step2":
-    "Ábrelo desde la app Archivos. Si compartes directamente desde Safari, la app Entreno no aparece.",
-  "install.download.step3": "Pulsa Compartir y elige Entreno.",
+  "install.download.step1": "Abre las descargas de Safari y pulsa el archivo.",
+  "install.download.step2": "Desde ahí se abre en la app Entreno.",
+  "install.download.step3":
+    "Si no, guárdalo en Archivos, ábrelo desde ahí y pulsa Compartir y elige Entreno.",
   "install.chat.step1": "Abre el archivo desde el chat.",
   "install.chat.step2": "Pulsa Compartir y elige Entreno.",
   "install.reopen": "Si no aparece, cierra la app Entreno y vuelve a abrirla.",
@@ -328,7 +327,6 @@ const es: Record<MessageKey, string> = {
     "Alguien ha compartido este entrenamiento contigo. Guárdalo y ábrelo en la app Entreno.",
   "handoff.save": "Guardar el entrenamiento",
   "handoff.again": "Guardar otra vez",
-  "handoff.shared": "Enviado. Elige la app Entreno si no se ha abierto ya.",
   "handoff.saved": "Guardado en tus descargas. Ábrelo desde ahí y la app Entreno se encarga.",
   "handoff.mine": "Prefiero crear el mío",
 
