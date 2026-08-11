@@ -4,6 +4,7 @@ import { compose, type WorkoutDraft } from "./workoutComposition.js";
 import { fileNameFor } from "./workoutFile.js";
 
 export type ShareOutcome = "shared" | "unavailable" | "cancelled";
+export type ShareRoute = "download" | "chat";
 
 function toBase64Url(bytes: Uint8Array): string {
   let binary = "";
@@ -57,36 +58,6 @@ export function qrMatrix(text: string): readonly (readonly boolean[])[] {
     rows.push(cells);
   }
   return rows;
-}
-
-export function canShareFiles(draft: WorkoutDraft): boolean {
-  if (typeof navigator === "undefined" || typeof navigator.canShare !== "function") return false;
-  try {
-    const bytes = encode(compose(draft));
-    const file = new File([bytes as BlobPart], fileNameFor(draft.title), {
-      type: "application/octet-stream",
-    });
-    return navigator.canShare({ files: [file] });
-  } catch {
-    return false;
-  }
-}
-
-export async function shareWorkout(draft: WorkoutDraft): Promise<ShareOutcome> {
-  if (typeof navigator === "undefined" || typeof navigator.share !== "function") {
-    return "unavailable";
-  }
-  const bytes = encode(compose(draft));
-  const file = new File([bytes as BlobPart], fileNameFor(draft.title), {
-    type: "application/octet-stream",
-  });
-  try {
-    await navigator.share({ files: [file], title: draft.title });
-    return "shared";
-  } catch (error) {
-    if (error instanceof DOMException && error.name === "AbortError") return "cancelled";
-    return "unavailable";
-  }
 }
 
 export async function shareBytes(bytes: Uint8Array, title: string): Promise<ShareOutcome> {

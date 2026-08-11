@@ -1,14 +1,24 @@
 <script lang="ts">
   import { fly } from "svelte/transition";
+  import { Info } from "@lucide/svelte";
+  import type { ShareRoute } from "../application/share.js";
   import { t } from "../i18n/locale.svelte.js";
+  import type { MessageKey } from "../i18n/messages.js";
 
   interface Props {
+    source: ShareRoute;
     onclose: (suppress: boolean) => void;
   }
-  let { onclose }: Props = $props();
+  let { source, onclose }: Props = $props();
 
   let suppress = $state(false);
-  const STEPS = ["install.step1", "install.step2", "install.step3"] as const;
+
+  const ROUTES: Record<ShareRoute, readonly MessageKey[]> = {
+    download: ["install.download.step1", "install.download.step2", "install.download.step3"],
+    chat: ["install.chat.step1", "install.chat.step2"],
+  };
+
+  let steps = $derived(ROUTES[source]);
 </script>
 
 <svelte:window onkeydown={(event) => event.key === "Escape" && onclose(suppress)} />
@@ -26,13 +36,18 @@
     <h2>{t("install.heading")}</h2>
 
     <ol>
-      {#each STEPS as step, index (step)}
+      {#each steps as step, index (step)}
         <li>
           <span class="n">{index + 1}</span>
           <span>{t(step)}</span>
         </li>
       {/each}
     </ol>
+
+    <p class="reopen">
+      <Info size={15} strokeWidth={2.2} />
+      <span>{t("install.reopen")}</span>
+    </p>
 
     <label class="suppress">
       <input type="checkbox" bind:checked={suppress} />
@@ -62,7 +77,7 @@
 
   .sheet {
     position: relative;
-    width: min(380px, 100%);
+    width: min(400px, 100%);
     background: var(--bg-surface);
     border-radius: var(--radius-card);
     padding: 24px;
@@ -106,6 +121,25 @@
     color: var(--accent);
     font-size: 12px;
     font-weight: 700;
+  }
+
+  .reopen {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin: 0;
+    padding: 11px 13px;
+    border-radius: var(--radius-control);
+    background: var(--bg-raised);
+    color: var(--text-secondary);
+    font-size: 13px;
+    line-height: 1.45;
+  }
+
+  .reopen :global(svg) {
+    flex: none;
+    margin-top: 1px;
+    color: var(--accent);
   }
 
   .suppress {

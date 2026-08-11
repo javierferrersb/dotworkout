@@ -5,7 +5,7 @@
   import { rawAnswer } from "../domain/interview.js";
   import { answerLabel, blockHeading, questionText } from "../i18n/format.js";
   import { t } from "../i18n/locale.svelte.js";
-  import { KEY } from "./platform.js";
+  import { keys } from "../i18n/keys.svelte.js";
   import QuestionPrompt from "./QuestionPrompt.svelte";
 
   interface Props {
@@ -33,7 +33,7 @@
     {#if session.complete}
       <button class="commit" onclick={() => session.commitBlock()}>
         {session.composingNew ? t("block.add") : t("block.done")}
-        <kbd>{KEY.enter}</kbd>
+        <kbd>{keys.enter}</kbd>
       </button>
     {/if}
   </header>
@@ -93,6 +93,7 @@
     font-size: 30px;
     font-weight: 700;
     letter-spacing: -0.9px;
+    overflow-wrap: anywhere;
   }
 
   .who p {
@@ -178,5 +179,25 @@
     padding: 4px 10px;
     border-radius: var(--radius-pill);
     background: var(--bg-surface);
+  }
+  @media (max-width: 640px) {
+    header {
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    h1 {
+      font-size: 24px;
+    }
+
+    .label {
+      width: 108px;
+      font-size: 13px;
+    }
+
+    .value {
+      font-size: 14px;
+      overflow-wrap: anywhere;
+    }
   }
 </style>

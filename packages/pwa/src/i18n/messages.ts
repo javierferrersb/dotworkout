@@ -111,6 +111,8 @@ const en = {
   "rail.privacy": "Nothing leaves this device unless you share it.",
   "rail.saved": "Saved {file}",
   "rail.untitled": "Untitled",
+  "rail.blockCount": "{count} block",
+  "rail.blockCountPlural": "{count} blocks",
 
   "send.heading": "Scan with your phone",
   "send.body": "The workout travels inside the link. Nothing is uploaded.",
@@ -121,9 +123,13 @@ const en = {
   "send.done": "Done",
 
   "install.heading": "Getting it onto your Watch",
-  "install.step1": "Open the file you just saved.",
-  "install.step2": "If it does not open by itself, tap Share and choose the Workouts app.",
-  "install.step3": "Close the Workouts app and open it again — the workout appears under Custom.",
+  "install.download.step1": "When the download appears, choose Save to Files.",
+  "install.download.step2":
+    "Open it from the Files app. Sharing straight from Safari does not offer the Workouts app.",
+  "install.download.step3": "Tap Share and choose Workout.",
+  "install.chat.step1": "Open the file from the chat.",
+  "install.chat.step2": "Tap Share and choose Workout.",
+  "install.reopen": "If it does not show up, close the Workouts app and open it again.",
   "install.gotIt": "Got it",
   "install.dontShow": "Don’t show this again",
 
@@ -143,6 +149,12 @@ const en = {
   "theme.light": "Light",
   "theme.dark": "Dark",
   "language.label": "Language",
+
+  "key.ctrl": "Ctrl",
+  "key.alt": "Alt",
+  "key.enter": "Enter",
+  "key.esc": "Esc",
+  "key.tab": "Tab",
 
   "activity.SWIMMING": "Pool Swim",
   "activity.RUNNING": "Outdoor Run",
@@ -259,6 +271,8 @@ const es: Record<MessageKey, string> = {
   "rail.privacy": "No sale nada de este dispositivo salvo que tú lo compartas.",
   "rail.saved": "Guardado {file}",
   "rail.untitled": "Sin nombre",
+  "rail.blockCount": "{count} bloque",
+  "rail.blockCountPlural": "{count} bloques",
 
   "send.heading": "Escanea con el móvil",
   "send.body": "El entrenamiento viaja dentro del enlace. No se sube nada.",
@@ -270,10 +284,13 @@ const es: Record<MessageKey, string> = {
   "send.done": "Listo",
 
   "install.heading": "Cómo llevarlo al reloj",
-  "install.step1": "Abre el archivo que acabas de guardar.",
-  "install.step2": "Si no se abre solo, pulsa Compartir y elige la app Entreno.",
-  "install.step3":
-    "Cierra la app Entreno y vuelve a abrirla: el entrenamiento aparece en Personalizado.",
+  "install.download.step1": "Cuando aparezca la descarga, elige «Guardar en Archivos».",
+  "install.download.step2":
+    "Ábrelo desde la app Archivos. Si compartes directamente desde Safari, la app Entreno no aparece.",
+  "install.download.step3": "Pulsa Compartir y elige Entreno.",
+  "install.chat.step1": "Abre el archivo desde el chat.",
+  "install.chat.step2": "Pulsa Compartir y elige Entreno.",
+  "install.reopen": "Si no aparece, cierra la app Entreno y vuelve a abrirla.",
   "install.gotIt": "Entendido",
   "install.dontShow": "No volver a mostrar",
 
@@ -294,6 +311,12 @@ const es: Record<MessageKey, string> = {
   "theme.light": "Claro",
   "theme.dark": "Oscuro",
   "language.label": "Idioma",
+
+  "key.ctrl": "Ctrl",
+  "key.alt": "Alt",
+  "key.enter": "Intro",
+  "key.esc": "Esc",
+  "key.tab": "Tab",
 
   "activity.SWIMMING": "Natación en piscina",
   "activity.RUNNING": "Carrera al aire libre",

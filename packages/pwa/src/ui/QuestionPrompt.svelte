@@ -5,7 +5,7 @@
   import { choiceText, questionNote, questionText } from "../i18n/format.js";
   import { t } from "../i18n/locale.svelte.js";
   import { flashConfirm } from "./confirmFlash.js";
-  import { KEY } from "./platform.js";
+  import { keys } from "../i18n/keys.svelte.js";
 
   interface Props {
     question: Question;
@@ -60,7 +60,7 @@
 
   {#if question.form.type === "choice"}
     {#if question.optional}
-      <p class="hint">{t("prompt.skipChoiceHint", { enter: KEY.enter, tab: KEY.tab })}</p>
+      <p class="hint">{t("prompt.skipChoiceHint", { enter: keys.enter, tab: keys.tab })}</p>
     {/if}
     <div class="choices">
       {#each question.form.choices as choice (choice.value)}
@@ -94,7 +94,7 @@
       {#if question.form.type === "distance"}<span class="unit">{question.form.unit}</span>{/if}
       <button type="submit" class="go" aria-label={t("prompt.confirm")}>
         <CornerDownLeft size={15} strokeWidth={2.4} />
-        {KEY.enter}
+        {keys.enter}
       </button>
     </form>
 
@@ -107,7 +107,7 @@
     {/if}
 
     {#if question.optional}
-      <p class="hint">{t("prompt.skipHint", { tab: KEY.tab })}</p>
+      <p class="hint">{t("prompt.skipHint", { tab: keys.tab })}</p>
     {/if}
   {/if}
 
@@ -278,5 +278,33 @@
 
   .problem {
     color: var(--danger);
+  }
+  @media (max-width: 640px) {
+    .prompt {
+      padding: 18px 16px 20px;
+    }
+
+    h2 {
+      font-size: 20px;
+    }
+
+    input {
+      font-size: 18px;
+    }
+
+    form {
+      padding: 4px 5px 4px 14px;
+      gap: 8px;
+    }
+
+    .go {
+      padding: 10px 12px;
+      font-size: 12px;
+    }
+
+    .choice {
+      font-size: 14px;
+      padding: 10px 14px 10px 10px;
+    }
   }
 </style>

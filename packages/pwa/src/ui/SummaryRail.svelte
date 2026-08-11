@@ -1,16 +1,16 @@
 <script lang="ts">
   import { flip } from "svelte/animate";
   import { fly } from "svelte/transition";
-  import { Download, QrCode, Share2 } from "@lucide/svelte";
+  import { ChevronUp, Download, QrCode, Share2 } from "@lucide/svelte";
   import { formatDistance } from "@dotworkout/domain";
   import type { CompositionSession } from "../application/compositionSession.svelte.js";
-  import { shareWorkout, whatsappLink } from "../application/share.js";
+  import { whatsappLink, type ShareRoute } from "../application/share.js";
   import { download } from "../application/workoutFile.js";
   import { alertSummary, blockKindName, blockSummary } from "../i18n/format.js";
   import { t } from "../i18n/locale.svelte.js";
   import InstallHelp from "./InstallHelp.svelte";
   import SendPanel from "./SendPanel.svelte";
-  import { SAVE_HINT } from "./platform.js";
+  import { keys } from "../i18n/keys.svelte.js";
 
   const HELP_KEY = "dotworkout.installHelpSeen";
 
@@ -24,80 +24,113 @@
   let blocked = $derived(session.blocks.length === 0 || (validation?.errors.length ?? 0) > 0);
   let notice = $state<string | undefined>(undefined);
   let sending = $state(false);
-  let helping = $state(false);
+  let helping = $state<ShareRoute | undefined>(undefined);
+  let expanded = $state(false);
+  let titleField = $state<HTMLTextAreaElement | undefined>(undefined);
+
+  let totalText = $derived(
+    totals === undefined || totals.total.byUnit.length === 0
+      ? "—"
+      : totals.total.byUnit.map(formatDistance).join(" + "),
+  );
+
+  $effect(() => {
+    session.title;
+    expanded;
+    const field = titleField;
+    if (field === undefined) return;
+    field.style.height = "auto";
+    field.style.height = `${field.scrollHeight}px`;
+  });
 
   function flash(message: string) {
     notice = message;
     setTimeout(() => (notice = undefined), 2600);
   }
 
-  function offerHelp() {
+  function offerHelp(source: ShareRoute) {
     if (localStorage.getItem(HELP_KEY) === "1") return;
-    helping = true;
+    helping = source;
   }
 
   function closeHelp(suppress: boolean) {
-    helping = false;
+    helping = undefined;
     if (suppress) localStorage.setItem(HELP_KEY, "1");
   }
 
   export function save() {
     if (blocked) return;
     flash(t("rail.saved", { file: download(session.workout) }));
-    offerHelp();
-  }
-
-  async function share() {
-    if (blocked) return;
-    const outcome = await shareWorkout(session.workout);
-    if (outcome === "cancelled") return;
-    if (outcome === "unavailable") {
-      download(session.workout);
-    }
-    offerHelp();
+    offerHelp("download");
   }
 
   function openWhatsapp() {
+    if (blocked) return;
     const summary = session.blocks.map((block) => blockSummary(block)).join(" · ");
     window.open(whatsappLink(session.workout, summary), "_blank", "noopener");
-    offerHelp();
+    offerHelp("chat");
   }
 </script>
 
-<aside>
-  <header>
-    <input class="title" bind:value={session.title} aria-label={t("rail.name")} />
-    <p class="activity">{session.activityName}</p>
-  </header>
+<aside class:expanded>
+  <button class="peek" onclick={() => (expanded = !expanded)} aria-expanded={expanded}>
+    <span class="peekTotal">{totalText}</span>
+    <span class="peekCount">
+      {session.blocks.length === 1
+        ? t("rail.blockCount", { count: 1 })
+        : t("rail.blockCountPlural", { count: session.blocks.length })}
+    </span>
+    <ChevronUp class="chev" size={18} strokeWidth={2.4} />
+  </button>
 
-  <div class="blocks">
-    {#each session.blocks as block, index (block)}
-      <button
-        class="card"
-        class:on={index === session.cursor}
-        onclick={() => session.goToBlock(index)}
-        animate:flip={{ duration: 260 }}
-        in:fly={{ y: 12, duration: 240 }}
-      >
-        <div class="row">
-          <span class="kind">{block.kind ? blockKindName(block.kind) : t("kind.INTERVAL")}</span>
-          {#if block.repetitions && block.repetitions > 1}
-            <span class="reps">×{block.repetitions}</span>
+  <div class="sheet">
+    <header>
+      <textarea
+        class="title"
+        bind:this={titleField}
+        bind:value={session.title}
+        rows="1"
+        spellcheck="false"
+        aria-label={t("rail.name")}
+        onkeydown={(event) => {
+          if (event.key === "Enter") {
+            event.preventDefault();
+            titleField?.blur();
+          }
+        }}
+      ></textarea>
+      <p class="activity">{session.activityName}</p>
+    </header>
+
+    <div class="blocks">
+      {#each session.blocks as block, index (block)}
+        <button
+          class="card"
+          class:on={index === session.cursor}
+          onclick={() => session.goToBlock(index)}
+          animate:flip={{ duration: 260 }}
+          in:fly={{ y: 12, duration: 240 }}
+        >
+          <div class="row">
+            <span class="kind">{block.kind ? blockKindName(block.kind) : t("kind.INTERVAL")}</span>
+            {#if block.repetitions && block.repetitions > 1}
+              <span class="reps">×{block.repetitions}</span>
+            {/if}
+          </div>
+          <div class="row">
+            {#if block.label}<span class="name">{block.label}</span>{/if}
+            <span class="measure" class:alone={!block.label}>{blockSummary(block)}</span>
+          </div>
+          {#if block.alert}
+            <div class="row"><span class="target">{alertSummary(block)}</span></div>
           {/if}
-        </div>
-        <div class="row">
-          {#if block.label}<span class="name">{block.label}</span>{/if}
-          <span class="measure" class:alone={!block.label}>{blockSummary(block)}</span>
-        </div>
-        {#if block.alert}
-          <div class="row"><span class="target">{alertSummary(block)}</span></div>
-        {/if}
-      </button>
-    {/each}
+        </button>
+      {/each}
 
-    {#if session.blocks.length === 0}
-      <p class="empty">{t("rail.empty")}</p>
-    {/if}
+      {#if session.blocks.length === 0}
+        <p class="empty">{t("rail.empty")}</p>
+      {/if}
+    </div>
   </div>
 
   <div class="foot">
@@ -107,42 +140,34 @@
       {/each}
     {/if}
 
-    {#if totals}
-      <div class="total">
-        <span class="word">{t("rail.total")}</span>
-        <span class="amount">
-          {totals.total.byUnit.length === 0
-            ? "—"
-            : totals.total.byUnit.map(formatDistance).join(" + ")}
-        </span>
+    <div class="total">
+      <span class="word">{t("rail.total")}</span>
+      <span class="amount">{totalText}</span>
+    </div>
+
+    {#if totals && totals.byLabel.length > 0}
+      <div class="chips">
+        {#each totals.byLabel as entry (entry.label)}
+          <span class="chip">{entry.label} <b>{Math.round(entry.total.meters)}</b></span>
+        {/each}
       </div>
-      {#if totals.byLabel.length > 0}
-        <div class="chips">
-          {#each totals.byLabel as entry (entry.label)}
-            <span class="chip">{entry.label} <b>{Math.round(entry.total.meters)}</b></span>
-          {/each}
-        </div>
-      {/if}
     {/if}
 
     <div class="actions">
       <button class="primary" disabled={blocked} onclick={save}>
         <Download size={17} strokeWidth={2.2} />
         {t("rail.download")}
-        <kbd>{SAVE_HINT}</kbd>
-      </button>
-
-      <button class="secondary" disabled={blocked} onclick={() => (sending = true)}>
-        <QrCode size={16} strokeWidth={2.2} />
-        {t("rail.scan")}
+        <kbd>{keys.save}</kbd>
       </button>
 
       <div class="pair">
         <button class="whatsapp" disabled={blocked} onclick={openWhatsapp}>
+          <Share2 size={16} strokeWidth={2.2} />
           {t("rail.whatsapp")}
         </button>
-        <button class="icon" disabled={blocked} onclick={share} aria-label={t("rail.share")}>
-          <Share2 size={17} strokeWidth={2.2} />
+        <button class="secondary" disabled={blocked} onclick={() => (sending = true)}>
+          <QrCode size={16} strokeWidth={2.2} />
+          <span class="scanLabel">{t("rail.scan")}</span>
         </button>
       </div>
     </div>
@@ -153,14 +178,14 @@
       <p class="privacy">{t("rail.privacy")}</p>
     {/if}
   </div>
-
-  {#if sending}
-    <SendPanel draft={session.workout} onclose={() => (sending = false)} />
-  {/if}
-  {#if helping}
-    <InstallHelp onclose={closeHelp} />
-  {/if}
 </aside>
+
+{#if sending}
+  <SendPanel draft={session.workout} onclose={() => (sending = false)} />
+{/if}
+{#if helping}
+  <InstallHelp source={helping} onclose={closeHelp} />
+{/if}
 
 <style>
   aside {
@@ -175,16 +200,40 @@
     overflow: hidden;
   }
 
+  .peek {
+    display: none;
+  }
+
+  .sheet {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    min-height: 0;
+    flex: 1;
+  }
+
   header {
     padding: 0 4px;
   }
 
   .title {
+    font: inherit;
     font-size: 24px;
     font-weight: 700;
     letter-spacing: -0.6px;
+    line-height: 1.15;
     width: 100%;
     padding: 0;
+    border: none;
+    background: none;
+    color: inherit;
+    resize: none;
+    overflow: hidden;
+    overflow-wrap: anywhere;
+  }
+
+  .title:focus {
+    outline: none;
   }
 
   .activity {
@@ -247,12 +296,14 @@
   .name {
     flex: 1;
     font-size: 15px;
+    overflow-wrap: anywhere;
   }
 
   .measure {
     font-family: var(--mono);
     font-size: 13px;
     color: var(--text-secondary);
+    white-space: nowrap;
   }
 
   .measure.alone {
@@ -289,6 +340,7 @@
     display: flex;
     align-items: baseline;
     justify-content: space-between;
+    gap: 10px;
     padding: 0 4px;
   }
 
@@ -302,6 +354,8 @@
     font-size: 26px;
     font-weight: 700;
     letter-spacing: -0.7px;
+    text-align: right;
+    overflow-wrap: anywhere;
   }
 
   .chips {
@@ -317,6 +371,7 @@
     background: var(--bg-raised);
     color: var(--text-secondary);
     font-size: 11px;
+    overflow-wrap: anywhere;
   }
 
   .chip b {
@@ -337,14 +392,14 @@
 
   .primary,
   .secondary,
-  .whatsapp,
-  .icon {
+  .whatsapp {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 9px;
     border-radius: var(--radius-pill);
     font-weight: 600;
+    white-space: nowrap;
     transition: background 140ms var(--ease);
   }
 
@@ -364,18 +419,6 @@
     font-weight: 500;
   }
 
-  .secondary {
-    padding: 11px;
-    background: var(--bg-raised);
-    color: var(--text-primary);
-    font-size: 14px;
-    font-weight: 500;
-  }
-
-  .secondary:hover:not(:disabled) {
-    background: var(--bg-surface);
-  }
-
   .whatsapp {
     flex: 1;
     padding: 11px;
@@ -388,17 +431,17 @@
     background: var(--whatsapp-hover);
   }
 
-  .icon {
-    flex: none;
-    width: 44px;
-    padding: 11px 0;
+  .secondary {
+    flex: 1;
+    padding: 11px;
     background: var(--bg-raised);
     color: var(--text-primary);
+    font-size: 14px;
+    font-weight: 500;
   }
 
-  .icon:hover:not(:disabled) {
-    background: var(--accent-soft);
-    color: var(--accent);
+  .secondary:hover:not(:disabled) {
+    background: var(--bg-surface);
   }
 
   button:disabled {
@@ -423,25 +466,85 @@
 
   @media (max-width: 940px) {
     aside {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 15;
       width: 100%;
       height: auto;
+      max-height: 88vh;
+      padding: 0;
+      gap: 0;
+      background: var(--bg-surface);
       border-top: 1px solid var(--hairline);
-      padding: 18px 16px 24px;
+      box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.22);
+      border-radius: 20px 20px 0 0;
     }
 
-    .blocks {
-      flex: none;
-      max-height: 42vh;
+    .peek {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      padding: 14px 18px;
+      text-align: left;
     }
-  }
 
-  @media (max-width: 640px) {
-    .primary kbd {
+    .peekTotal {
+      font-family: var(--mono);
+      font-size: 17px;
+      font-weight: 700;
+    }
+
+    .peekCount {
+      flex: 1;
+      color: var(--text-tertiary);
+      font-size: 13px;
+    }
+
+    .peek :global(.chev) {
+      color: var(--text-tertiary);
+      transition: transform 200ms var(--ease);
+    }
+
+    aside.expanded .peek :global(.chev) {
+      transform: rotate(180deg);
+    }
+
+    .sheet {
       display: none;
     }
 
-    .amount {
-      font-size: 22px;
+    aside.expanded .sheet {
+      display: flex;
+      padding: 0 16px;
+      max-height: 52vh;
+    }
+
+    .foot {
+      padding: 0 16px 18px;
+      gap: 8px;
+    }
+
+    .total,
+    .chips,
+    .privacy,
+    .notice {
+      display: none;
+    }
+
+    aside.expanded .total,
+    aside.expanded .chips {
+      display: flex;
+    }
+
+    .primary {
+      padding: 13px;
+    }
+
+    .primary kbd {
+      display: none;
     }
   }
 </style>

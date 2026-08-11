@@ -10,7 +10,7 @@
   import Kbd from "./Kbd.svelte";
   import Menu from "./Menu.svelte";
   import SummaryRail from "./SummaryRail.svelte";
-  import { BLOCK_DOWN_HINT, BLOCK_UP_HINT, KEY } from "./platform.js";
+  import { keys } from "../i18n/keys.svelte.js";
 
   interface Props {
     session: CompositionSession;
@@ -25,11 +25,11 @@
   let rail = $state<SummaryRail | undefined>(undefined);
 
   let legend = $derived([
-    { key: `${KEY.up} ${KEY.down}`, what: t("composer.legend.question") },
-    { key: `${BLOCK_UP_HINT} / ${BLOCK_DOWN_HINT}`, what: t("composer.legend.block") },
-    { key: KEY.enter, what: t("composer.legend.confirm") },
-    { key: KEY.tab, what: t("composer.legend.skip") },
-    { key: KEY.escape, what: t("composer.legend.deselect") },
+    { key: `${keys.up} ${keys.down}`, what: t("composer.legend.question") },
+    { key: `${keys.blockUp} / ${keys.blockDown}`, what: t("composer.legend.block") },
+    { key: keys.enter, what: t("composer.legend.confirm") },
+    { key: keys.tab, what: t("composer.legend.skip") },
+    { key: keys.escape, what: t("composer.legend.deselect") },
   ]);
 
   let themeOptions = $derived([
@@ -244,17 +244,16 @@
   @media (max-width: 940px) {
     main {
       flex-direction: column;
-      overflow-y: auto;
     }
 
     .stage {
-      min-height: 100%;
+      height: 100%;
     }
 
     .scroll {
       align-content: start;
-      overflow: visible;
-      padding: 16px 18px;
+      overflow-y: auto;
+      padding: 16px 16px 132px;
     }
 
     footer {

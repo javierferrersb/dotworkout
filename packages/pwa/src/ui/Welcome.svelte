@@ -2,7 +2,7 @@
   import { fly } from "svelte/transition";
   import { Heart } from "@lucide/svelte";
   import { t } from "../i18n/locale.svelte.js";
-  import { KEY } from "./platform.js";
+  import { keys } from "../i18n/keys.svelte.js";
 
   interface Props {
     oncontinue: () => void;
@@ -34,7 +34,7 @@
 
     <button class="start" onclick={oncontinue}>
       {t("welcome.cta")}
-      <span class="key">{KEY.enter}</span>
+      <span class="key">{keys.enter}</span>
     </button>
 
     <p class="privacy">{t("welcome.privacy")}</p>
