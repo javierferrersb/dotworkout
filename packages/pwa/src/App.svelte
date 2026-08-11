@@ -10,6 +10,8 @@
   import { locale, t } from "./i18n/locale.svelte.js";
   import ActivityPicker from "./ui/ActivityPicker.svelte";
   import Composer from "./ui/Composer.svelte";
+  import DownloadGuide from "./ui/DownloadGuide.svelte";
+  import { isIos } from "./ui/platform.js";
   import NameWorkout from "./ui/NameWorkout.svelte";
   import Welcome from "./ui/Welcome.svelte";
 
@@ -119,6 +121,9 @@
             <button onclick={keepInbound}>{t("handoff.save")}</button>
           {:else}
             <p class="done">{t("handoff.saved")}</p>
+            {#if isIos}
+              <DownloadGuide />
+            {/if}
             <button onclick={keepInbound}>{t("handoff.again")}</button>
           {/if}
           <button class="ghost" onclick={leaveInbound}>{t("handoff.mine")}</button>

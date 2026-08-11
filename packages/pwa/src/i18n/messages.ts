@@ -148,6 +148,13 @@ const en = {
   "install.gotIt": "Got it",
   "install.dontShow": "Don’t show this again",
 
+  "guide.heading": "Finding it in Safari",
+  "guide.step1": "Tap the download arrow in the address bar.",
+  "guide.step1.note": "At the bottom, or the top if you moved the bar there.",
+  "guide.step2": "If a menu opens, choose Downloads.",
+  "guide.step3": "Tap the workout in the list.",
+  "guide.step4": "The Workout app takes it from there.",
+
   "handoff.body": "Someone shared this workout with you. Save it, then open it in the Workouts app.",
   "handoff.save": "Save the workout",
   "handoff.again": "Save it again",
@@ -322,6 +329,13 @@ const es: Record<MessageKey, string> = {
   "install.reopen": "Si no aparece, cierra la app Entreno y vuelve a abrirla.",
   "install.gotIt": "Entendido",
   "install.dontShow": "No volver a mostrar",
+
+  "guide.heading": "Cómo encontrarlo en Safari",
+  "guide.step1": "Pulsa la flecha de descargas en la barra de direcciones.",
+  "guide.step1.note": "Abajo, o arriba si has movido la barra.",
+  "guide.step2": "Si se abre un menú, elige Descargas.",
+  "guide.step3": "Pulsa el entrenamiento en la lista.",
+  "guide.step4": "La app Entreno se encarga del resto.",
 
   "handoff.body":
     "Alguien ha compartido este entrenamiento contigo. Guárdalo y ábrelo en la app Entreno.",
