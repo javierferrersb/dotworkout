@@ -14,11 +14,11 @@
           <line x1="33" y1="21" x2="67" y2="21" />
           <line x1="33" y1="28" x2="55" y2="28" />
         </g>
-        <rect class="fill" x="31" y="53" width="22" height="12" rx="6" />
-        <line class="faint" x1="35" y1="59" x2="48" y2="59" />
-        <circle class="ring" cx="63" cy="59" r="8" />
-        <circle class="accent" cx="63" cy="59" r="5.5" />
-        <path class="glyph" d="M63 56.2v5m-2-2.1L63 61.3l2-2.2" />
+        <circle class="ring" cx="37" cy="59" r="8" />
+        <circle class="accent" cx="37" cy="59" r="5.5" />
+        <path class="glyph" d="M37 56.2v5m-2-2.1L37 61.3l2-2.2" />
+        <rect class="fill" x="47" y="53" width="22" height="12" rx="6" />
+        <line class="faint" x1="51" y1="59" x2="64" y2="59" />
       </svg>
       <p>
         {t("guide.step1")}

@@ -1,9 +1,7 @@
 import qrcode from "qrcode-generator";
 import { encode } from "@dotworkout/codec";
 import { compose, type WorkoutDraft } from "./workoutComposition.js";
-import { fileNameFor } from "./workoutFile.js";
 
-export type ShareOutcome = "shared" | "unavailable" | "cancelled";
 export type ShareRoute = "download" | "chat";
 
 function toBase64Url(bytes: Uint8Array): string {
@@ -58,29 +56,6 @@ export function qrMatrix(text: string): readonly (readonly boolean[])[] {
     rows.push(cells);
   }
   return rows;
-}
-
-export async function shareBytes(bytes: Uint8Array, title: string): Promise<ShareOutcome> {
-  if (typeof navigator === "undefined" || typeof navigator.share !== "function") {
-    return "unavailable";
-  }
-  const file = new File([bytes as BlobPart], fileNameFor(title), {
-    type: "application/octet-stream",
-  });
-  if (typeof navigator.canShare === "function" && !navigator.canShare({ files: [file] })) {
-    return "unavailable";
-  }
-  try {
-    await navigator.share({ files: [file], title });
-    return "shared";
-  } catch (error) {
-    if (error instanceof DOMException && error.name === "AbortError") return "cancelled";
-    return "unavailable";
-  }
-}
-
-export function shareWorkoutFile(draft: WorkoutDraft): Promise<ShareOutcome> {
-  return shareBytes(encode(compose(draft)), draft.title);
 }
 
 export function whatsappLink(draft: WorkoutDraft, summary: string): string {

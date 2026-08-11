@@ -142,8 +142,8 @@ const en = {
   "install.download.step2": "It opens in the Workout app from there.",
   "install.download.step3":
     "If it does not, save it to Files, open it from there, then tap Share and choose Workout.",
-  "install.chat.step1": "Open the file from the chat.",
-  "install.chat.step2": "Tap Share and choose Workout.",
+  "install.chat.step1": "Open the link from the chat on your phone.",
+  "install.chat.step2": "Tap Save the workout and follow the steps it shows.",
   "install.reopen": "If it does not show up, close the Workouts app and open it again.",
   "install.gotIt": "Got it",
   "install.dontShow": "Don’t show this again",
@@ -324,8 +324,8 @@ const es: Record<MessageKey, string> = {
   "install.download.step2": "Desde ahí se abre en la app Entreno.",
   "install.download.step3":
     "Si no, guárdalo en Archivos, ábrelo desde ahí y pulsa Compartir y elige Entreno.",
-  "install.chat.step1": "Abre el archivo desde el chat.",
-  "install.chat.step2": "Pulsa Compartir y elige Entreno.",
+  "install.chat.step1": "Abre el enlace desde el chat en el móvil.",
+  "install.chat.step2": "Pulsa «Guardar el entrenamiento» y sigue los pasos que aparecen.",
   "install.reopen": "Si no aparece, cierra la app Entreno y vuelve a abrirla.",
   "install.gotIt": "Entendido",
   "install.dontShow": "No volver a mostrar",

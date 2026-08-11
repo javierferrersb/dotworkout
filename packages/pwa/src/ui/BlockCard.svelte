@@ -30,12 +30,6 @@
           : t("block.editing", { index: session.cursor + 1, total: session.blocks.length })}
       </p>
     </div>
-    {#if session.complete}
-      <button class="commit" onclick={() => session.commitBlock()}>
-        {session.composingNew ? t("block.add") : t("block.done")}
-        <kbd>{keys.enter}</kbd>
-      </button>
-    {/if}
   </header>
 
   <div class="answers">
@@ -69,6 +63,15 @@
       {/each}
     </div>
   {/if}
+
+  {#if session.complete}
+    <div class="finish" transition:fly={{ y: -6, duration: 200 }}>
+      <button class="commit" onclick={() => session.commitBlock()}>
+        {session.composingNew ? t("block.add") : t("block.done")}
+        <kbd>{keys.enter}</kbd>
+      </button>
+    </div>
+  {/if}
 </article>
 
 <style>
@@ -100,6 +103,10 @@
     margin: 4px 0 0;
     color: var(--text-tertiary);
     font-size: 13px;
+  }
+
+  .finish {
+    display: flex;
   }
 
   .commit {
