@@ -10,7 +10,7 @@ which decode with zero unknown fields and re-encode byte for byte.
 [`spec/FORMAT.md`](spec/FORMAT.md) has the details.
 
 There is also a browser app for building workouts:
-<https://dotworkout.vercel.app>
+<https://workout.javierferrersb.dev>
 
 ## Packages
 
