@@ -18,11 +18,16 @@ There is also a browser app for building workouts:
 |---|---|
 | `@dotworkout/codec` | Decodes and encodes the binary format. Nothing else. |
 | `@dotworkout/domain` | Builds and validates workouts. Uses the codec. |
-| `@dotworkout/notation` | Parses sets written as text, like `8x50 on 1:00 Build`. |
-| `@dotworkout/mcp` | MCP server, so agents can build workouts. Not published yet. |
-| `@dotworkout/pwa` | The browser app. Runs entirely on the client. |
+| `@dotworkout/notation` | Parses sets written as text, like `8x50 on 1:00 Build`. Not published. |
+| `@dotworkout/mcp` | MCP server, so agents can build workouts. Not published. |
+| `@dotworkout/pwa` | The browser app. Runs entirely on the client. Not published. |
 
-These are not on npm yet. Clone the repo and run `npm install && npm test`.
+```bash
+npm install @dotworkout/domain
+```
+
+That pulls in the codec. Install `@dotworkout/codec` on its own if all you want
+is to read and write files.
 
 ## Writing a workout
 
