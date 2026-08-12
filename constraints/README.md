@@ -1,39 +1,37 @@
 # Constraints
 
-`compatibility.json` is the **single source of truth** for which goals and
-alerts each sport allows.
+`compatibility.json` says which goals and alerts each sport allows. It is the
+only place that information lives.
 
-It exists because the `.workout` format encodes none of this. You can serialise
-a power alert onto a swim step and get a well-formed file the Watch may reject.
-Validation is the library's job, not the codec's.
+The `.workout` format does not encode any of it. You can put a power alert on a
+swim step and get a well-formed file that the Watch may then refuse. Catching
+that is the library's job, not the codec's.
 
-## Why data and not prose
+## Why data instead of prose
 
-The matrix is empirically derived from a UI that Apple can change without
-notice. It needs versioning, dating, and per-entry confidence — none of which a
-markdown table carries. Keeping it as data also means the validator and the
-documentation cannot drift apart: the table in `spec/FORMAT.md` §7 is generated
-from this file, not maintained alongside it.
+The matrix comes from a UI that Apple can change whenever it likes, so it needs
+versioning, dates, and a confidence level per entry. A markdown table carries
+none of that. Keeping it as data also stops the validator and the docs drifting
+apart: the table in `spec/FORMAT.md` §7 is generated from this file.
 
-## Three tiers of rule
+## Three kinds of rule
 
-| Tier | Lives in | Example |
+| Kind | Lives in | Example |
 |---|---|---|
-| Structural invariants | `protovalidate` options in `proto/` | `iterations >= 1`; exactly one container field set |
-| Compatibility matrix | this file | swimming allows `DISTANCE_TIME`; HIIT has no distance goal |
-| Rationale and provenance | `spec/FORMAT.md` | why pace bounds read backwards |
+| Structural | protovalidate options in `proto/` | `iterations >= 1`; exactly one container field set |
+| Compatibility | this file | swimming allows `DISTANCE_TIME`; HIIT has no distance goal |
+| Reasoning and provenance | `spec/FORMAT.md` | why pace bounds read backwards |
 
 ## Confidence levels
 
-Entries carry a `confidence` field. Treat them differently:
+Every entry has a `confidence` field:
 
-- **confirmed** — enforce.
+- **confirmed** — enforce it.
 - **presumed** — allow, no warning.
-- **unknown** / `alertsUnverified` / `customWorkoutUnverifiedActivities` —
-  **allow and warn**. Never reject on these. A combination that was simply never
-  checked is not a combination known to be illegal, and rejecting it would block
-  legitimate files on the strength of a gap in our testing.
+- **unknown**, `alertsUnverified`, `customWorkoutUnverifiedActivities` — allow
+  and warn. Never reject.
 
-That asymmetry is deliberate. The cost of wrongly allowing something is a file
-the Watch declines to import. The cost of wrongly forbidding something is a
-workout the user cannot create at all, with no recourse and no obvious cause.
+Never rejecting on an unverified entry is deliberate. Something nobody tested is
+not something known to be illegal. If we wrongly allow a combination, the Watch
+declines the file. If we wrongly forbid one, the user cannot build the workout at
+all and has no way to tell why.

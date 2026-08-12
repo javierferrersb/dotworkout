@@ -1,7 +1,5 @@
 syntax = "proto3";
 
-option csharp_namespace = "DotnetWorkoutKit.Protobuf.CustomWorkout.Alert";
-
 import "buf/validate/validate.proto";
 import "SpeedAlert.proto";
 import "HeartRateRangeAlert.proto";

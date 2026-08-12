@@ -4,6 +4,12 @@
   "private": true,
   "type": "module",
   "description": "TypeScript codec and authoring library for Apple .workout files",
+  "license": "MIT",
+  "author": "Javier Ferrer Sánchez-Barcaiztegui",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/javierferrersb/dotworkout.git"
+  },
   "workspaces": [
     "packages/*"
   ],

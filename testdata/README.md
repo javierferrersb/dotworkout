@@ -11,7 +11,7 @@ every pair:
 3. **decoding yields ZERO unknown fields**
 
 Assertion 3 is not optional. Nine files here pass 1 and 2 against an incomplete
-schema, because protobuf silently preserves unrecognised fields. Only assertion
+schema, because protobuf preserves fields it does not recognise. Only assertion
 3 catches it.
 
 | File | Covers |

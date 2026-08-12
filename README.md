@@ -1,21 +1,29 @@
 # dotworkout
 
-TypeScript library for reading and authoring Apple `.workout` files — the binary
-format the iOS Workout app imports and syncs to Apple Watch.
+[![CI](https://github.com/javierferrersb/dotworkout/actions/workflows/ci.yml/badge.svg)](https://github.com/javierferrersb/dotworkout/actions/workflows/ci.yml)
 
-Separately importable:
+Read and write Apple `.workout` files in TypeScript. These are the files the iOS
+Workout app imports and syncs to an Apple Watch.
 
-| Package | What it is |
+The format is undocumented. This repo works it out from 20 real exports, all of
+which decode with zero unknown fields and re-encode byte for byte.
+[`spec/FORMAT.md`](spec/FORMAT.md) has the details.
+
+There is also a browser app for building workouts:
+<https://dotworkout.vercel.app>
+
+## Packages
+
+| Package | What it does |
 |---|---|
-| `@dotworkout/codec` | Decode/encode the wire format. No opinions, no validation, no unit conversion. |
-| `@dotworkout/domain` | Authoring API oriented around swimming, plus validation. Depends on the codec. |
-| `@dotworkout/notation` | Grammar for writing sets as text — `8x50 on 1:00 Build`. Depends on the domain. |
-| `@dotworkout/pwa` | Browser composer. Everything runs client-side; nothing is uploaded. |
+| `@dotworkout/codec` | Decodes and encodes the binary format. Nothing else. |
+| `@dotworkout/domain` | Builds and validates workouts. Uses the codec. |
+| `@dotworkout/notation` | Parses sets written as text, like `8x50 on 1:00 Build`. |
+| `@dotworkout/pwa` | The browser app. Runs entirely on the client. |
 
-The format itself is documented in [`spec/FORMAT.md`](spec/FORMAT.md), which is
-the source of truth for everything below.
+These are not on npm yet. Clone the repo and run `npm install && npm test`.
 
-## Quick start
+## Writing a workout
 
 ```ts
 import { swim } from "@dotworkout/domain";
@@ -23,16 +31,15 @@ import { swim } from "@dotworkout/domain";
 const bytes = swim("Thursday threshold")
   .warmup(400)
   .repeat(8).of(50).rest(30).label("Build")
-  .repeat(4).of(100).on("2:00")     // send-off: leave every 2:00
+  .repeat(4).of(100).on("2:00")
   .cooldown(200)
   .toBytes();
 ```
 
-`.on()` is the `DISTANCE_TIME` goal — "8 × 50 on 1:00" means leave every 60
-seconds regardless of finishing time. It is how essentially every swim set is
-written, and the composer offers it for swimming only.
+`.on("2:00")` is the `DISTANCE_TIME` goal: leave every two minutes no matter how
+fast you finish. Most swim sets are written this way. Only swimming offers it.
 
-Reading and editing an existing file:
+## Reading and editing one
 
 ```ts
 import { decode, encode } from "@dotworkout/codec";
@@ -40,22 +47,27 @@ import { editStepAt, totalDistance } from "@dotworkout/domain";
 
 const workout = decode(bytes);
 const totals = totalDistance(workout.customWorkout!);
-// totals.byLabel → per-label breakdown; labels are where stroke lives
 
-const edited = editStepAt(workout, "custom_workout.interval_blocks[0].interval_steps[0].workout_step",
-  (step) => { step.displayName = "Build (fins)"; });
-encode(edited);   // everything else is byte-for-byte what it was
+const edited = editStepAt(
+  workout,
+  "custom_workout.interval_blocks[0].interval_steps[0].workout_step",
+  (step) => { step.displayName = "Build (fins)"; },
+);
+
+encode(edited);
 ```
+
+Everything you did not touch comes back byte for byte.
 
 ## Notation
 
-`@dotworkout/notation` parses sets written as text. A bare number is a distance;
-times need a colon or a unit, because guessing wrong there silently produces a
-different workout.
+`@dotworkout/notation` parses sets written as text. A bare number is a distance.
+Times need a colon or a unit, because guessing wrong there gives you a different
+workout without telling you.
 
 ```
 400 warmup            warm up of 400 m
-8x50 on 1:00          8 × 50 m, leaving every 1:00   (send-off)
+8x50 on 1:00          8 × 50 m, leaving every 1:00
 4x100 pull rest :20   labelled "pull", 20 s rest after each
 4x1:00                4 × 1 minute
 8x50 z3               heart-rate zone 3
@@ -63,8 +75,8 @@ different workout.
 200 cd                cool down
 ```
 
-Words the grammar doesn't recognise become the step's label. That's not a
-fallback — the format has no stroke field, so stroke *is* free text (spec §3).
+Words the grammar does not recognise become the step label. The format has no
+stroke field, so stroke is free text (spec §3).
 
 ## Commands
 
@@ -72,95 +84,84 @@ fallback — the format has no stroke field, so stroke *is* free text (spec §3)
 npm test
 ```
 
-Builds the packages and runs the full suite. Other scripts:
+Builds the packages and runs the suite on Node's test runner. Also:
 
-- `npm run generate` — regenerate protobuf bindings from `proto/` and the
-  compatibility data from `constraints/compatibility.json`. Both outputs are
-  **checked in**, so an ordinary build needs neither protoc nor the buf CLI.
 - `npm run build` — TypeScript only.
+- `npm run generate` — regenerate the protobuf bindings from `proto/` and the
+  compatibility data from `constraints/compatibility.json`. Both outputs are
+  checked in, so a normal build needs neither protoc nor the buf CLI.
 - `npm run check` — regenerate, then build and test.
-
-Tests run on Node's built-in test runner (`node --test`), so the only
-dependencies are the protobuf tooling and TypeScript.
 
 ## The conformance suite
 
-`packages/codec/test/conformance.test.ts` asserts three things for each of the
-20 real files in `testdata/`:
+For each of the 20 files in `testdata/`, three assertions:
 
-1. `decode(bytes)` deep-equals the paired `.json`
-2. `encode(decode(bytes))` is byte-identical to the original
-3. decoding yields **zero unknown fields**
+1. `decode(bytes)` matches the paired `.json`
+2. `encode(decode(bytes))` is byte-identical to the input
+3. decoding produces zero unknown fields
 
-Assertion 3 is the one that matters. Nine of these files round-trip
-byte-identically against an *incomplete* schema, because protobuf runtimes
-silently retain and re-emit fields they do not recognise — which is exactly how
-ten real bugs hid in the upstream library this schema came from (spec §8).
-Byte-identical round-tripping is not evidence of a complete schema; only the
-absence of unknown fields is.
+The third one is the point. Protobuf keeps fields it does not recognise and
+writes them back out, so nine of these files round-trip perfectly against a
+schema that is missing fields. Byte-identical output is not evidence of a
+correct schema. Checking for unknown fields is.
 
-protobuf-es v2 stores unrecognised fields per-message on `$unknown` (v1's
-`getUnknownFields()` was removed), so `findUnknownFields()` walks the whole tree
-— every nested message, every element of every repeated field. Checking only the
-root `WorkoutBinary` would miss all ten: `SpeedAlert.speed_target` sits four
+protobuf-es v2 puts unrecognised fields on each message's `$unknown` property, so
+`findUnknownFields()` walks the whole tree rather than just the root. Checking
+only the root would miss every one of them — `SpeedAlert.speed_target` sits four
 levels down.
 
-`packages/codec/test/unknown-fields.test.ts` is the negative control. It
-reconstructs six of the ten historical schema gaps by editing descriptors at
-runtime, then asserts for each that the file **still round-trips byte-identically
-against the broken schema** while assertion 3 catches it. Without that, a green
-assertion 3 only proves the schema agrees with itself.
+`packages/codec/test/unknown-fields.test.ts` is the control. It breaks the schema
+at runtime in six of the ten ways the upstream schema was actually broken, then
+checks that each broken version still round-trips byte-identically while
+assertion 3 catches it. Without that, a passing assertion 3 only proves the
+schema agrees with itself.
 
-## Where each rule lives
+## Where the rules live
 
-Three different sources of truth, deliberately kept apart:
+| Kind of rule | Lives in |
+|---|---|
+| Wire structure | `proto/`, as protovalidate options |
+| Which goals and alerts each sport allows | `constraints/compatibility.json` |
+| Everything else | `spec/FORMAT.md` |
 
-| Kind of rule | Lives in | Example |
-|---|---|---|
-| Wire structure | `proto/` as protovalidate CEL options | `iterations >= 1`; `goal_type` matching its payload; range bounds ordered; exactly one container field |
-| Sport compatibility | `constraints/compatibility.json` | which goals and alerts each sport offers |
-| Everything else | `spec/FORMAT.md` | provenance, open questions |
-
-The compatibility matrix is loaded at **build time** into
-`packages/domain/src/generated/compatibility-data.ts` and is never restated in
+The compatibility matrix is read at build time into
+`packages/domain/src/generated/compatibility-data.ts`. It is never restated in
 TypeScript or in prose. A test recomputes the source file's SHA-256 and fails if
-the JSON changed without regeneration, so the two cannot drift.
+the JSON changed without regenerating.
 
-Confidence levels are honoured as `constraints/README.md` specifies:
+Entries in the matrix carry a confidence level. Confirmed ones are enforced: a
+power alert on a swim is an error. Unverified ones warn and are still allowed.
+The matrix came off one device on one day, so a combination nobody tested is not
+a combination known to be illegal. Getting it wrong the permissive way costs you
+a file the Watch declines to import. Getting it wrong the strict way costs you a
+workout you cannot create at all. `validateWorkout(msg, { downgradeToWarning })`
+takes a list of issue codes, so you do not have to edit the library when the
+matrix is wrong.
 
-- **confirmed** → enforce. A power alert on a swim is an error.
-- **unverified / unknown** → allow, and warn. A heart-rate alert on a bike is a
-  warning, never a rejection.
+## What this does not do
 
-A combination nobody checked is not a combination known to be illegal. The cost
-of wrongly allowing one is a file the Watch declines to import; the cost of
-wrongly forbidding one is a workout the user cannot create at all. Every issue
-also carries a stable `code`, and `validateWorkout(msg, { downgradeToWarning })`
-demotes any of them — because the matrix was read off one device on one day, and
-when it is wrong the way through must not be "edit the library".
+- **Convert units.** 100 m written as miles is 0.06 mi, which is 96.6 m.
+  Conversion loses data, so authored units are kept as they are. `toMeters()`
+  exists for display and is never written back.
+- **Count laps.** Pool length is chosen on the Watch when the workout starts and
+  is not in the file.
+- **Assume a container.** `decode()` branches on field 10 (`SingleGoalWorkout`)
+  against field 11 (`CustomWorkout`) and fails with a clear message on anything
+  else. Pacer and swim-bike-run workouts probably use further fields; when one
+  turns up, the error asks for a corpus file.
 
-## Deliberate non-features
+## Still unknown
 
-- **No unit canonicalisation.** 100 m authored as miles becomes 0.06 mi, which
-  is 96.6 m. Authored units survive untouched; `toMeters()` exists for display
-  and is never written back.
-- **No lap counts.** Pool length is chosen when the workout starts on the Watch
-  and is not in the file, so laps are unknowable at authoring time.
-- **No assumed container.** `decode()` branches on field 10
-  (`SingleGoalWorkout`) vs field 11 (`CustomWorkout`) and fails with a clear
-  message on anything else, rather than assuming field 11. Pacer and
-  swim-bike-run workouts most likely occupy further sibling fields (spec §9);
-  when one turns up, the error says so and asks for a corpus file.
+`spec/FORMAT.md` §9 lists what has not been verified. The two that would change
+this library most:
 
-## Open questions
+- **Pacer and swim-bike-run containers.** Structure unknown. The decoder fails
+  loudly rather than guess.
+- **`PowerAlert.PowerBound.unit`.** Only ever seen as `1`, assumed to be watts.
 
-`spec/FORMAT.md` §9 lists what is still unverified. The two that would most
-change this library:
+Every question settled so far was settled by exporting another `.workout` from
+the phone and adding it to `testdata/`.
 
-- **Pacer / swim-bike-run containers.** Structurally unknown. The decoder is
-  written to fail loudly rather than guess.
-- **`PowerAlert.PowerBound.unit`.** Observed only as `1`, presumed watts.
+## Licence
 
-Every open question so far has been settled empirically by exporting a new
-`.workout` file from the phone and adding it to `testdata/`. That remains the
-way to settle the rest.
+MIT. See [LICENSE](LICENSE).

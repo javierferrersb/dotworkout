@@ -8,3 +8,5 @@ dist/
 #   packages/domain/src/generated/
 
 .vercel
+
+.claude/

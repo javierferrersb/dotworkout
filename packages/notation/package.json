@@ -4,6 +4,12 @@
   "type": "module",
   "description": "Swim notation grammar — parses `8x50 on 1:00` into workout blocks",
   "license": "MIT",
+  "author": "Javier Ferrer Sánchez-Barcaiztegui",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/javierferrersb/dotworkout.git",
+    "directory": "packages/notation"
+  },
   "exports": {
     ".": {
       "types": "./dist/src/index.d.ts",

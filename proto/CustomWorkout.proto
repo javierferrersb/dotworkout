@@ -1,7 +1,5 @@
 syntax = "proto3";
 
-option csharp_namespace = "DotnetWorkoutKit.Protobuf.CustomWorkout";
-
 import "buf/validate/validate.proto";
 import "WorkoutStep.proto";
 import "IntervalBlock.proto";

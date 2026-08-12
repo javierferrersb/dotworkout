@@ -15,7 +15,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file WorkoutStep.proto.
  */
 export const file_WorkoutStep: GenFile = /*@__PURE__*/
-  fileDesc("ChFXb3Jrb3V0U3RlcC5wcm90byKiAQoLV29ya291dFN0ZXASKgoMd29ya291dF9nb2FsGAEgASgLMgwuV29ya291dEdvYWxCBrpIA8gBARIpCg13b3Jrb3V0X2FsZXJ0GAIgASgLMg0uV29ya291dEFsZXJ0SACIAQESGQoMZGlzcGxheV9uYW1lGAMgASgJSAGIAQFCEAoOX3dvcmtvdXRfYWxlcnRCDwoNX2Rpc3BsYXlfbmFtZUIqqgInRG90bmV0V29ya291dEtpdC5Qcm90b2J1Zi5DdXN0b21Xb3Jrb3V0YgZwcm90bzM", [file_buf_validate_validate, file_WorkoutAlert, file_WorkoutGoal]);
+  fileDesc("ChFXb3Jrb3V0U3RlcC5wcm90byKiAQoLV29ya291dFN0ZXASKgoMd29ya291dF9nb2FsGAEgASgLMgwuV29ya291dEdvYWxCBrpIA8gBARIpCg13b3Jrb3V0X2FsZXJ0GAIgASgLMg0uV29ya291dEFsZXJ0SACIAQESGQoMZGlzcGxheV9uYW1lGAMgASgJSAGIAQFCEAoOX3dvcmtvdXRfYWxlcnRCDwoNX2Rpc3BsYXlfbmFtZWIGcHJvdG8z", [file_buf_validate_validate, file_WorkoutAlert, file_WorkoutGoal]);
 
 /**
  * @generated from message WorkoutStep

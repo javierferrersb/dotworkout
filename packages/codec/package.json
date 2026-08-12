@@ -4,6 +4,12 @@
   "type": "module",
   "description": "Decoder/encoder for the Apple .workout binary format",
   "license": "MIT",
+  "author": "Javier Ferrer Sánchez-Barcaiztegui",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/javierferrersb/dotworkout.git",
+    "directory": "packages/codec"
+  },
   "exports": {
     ".": {
       "types": "./dist/src/index.d.ts",
