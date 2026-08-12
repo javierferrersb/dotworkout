@@ -3,13 +3,14 @@
 TypeScript library for reading and authoring Apple `.workout` files — the binary
 format the iOS Workout app imports and syncs to Apple Watch.
 
-Two packages, separately importable:
+Separately importable:
 
 | Package | What it is |
 |---|---|
 | `@dotworkout/codec` | Decode/encode the wire format. No opinions, no validation, no unit conversion. |
 | `@dotworkout/domain` | Authoring API oriented around swimming, plus validation. Depends on the codec. |
-| `@dotworkout/cli` | Keyboard-first terminal composer. Depends on both. |
+| `@dotworkout/notation` | Grammar for writing sets as text — `8x50 on 1:00 Build`. Depends on the domain. |
+| `@dotworkout/pwa` | Browser composer. Everything runs client-side; nothing is uploaded. |
 
 The format itself is documented in [`spec/FORMAT.md`](spec/FORMAT.md), which is
 the source of truth for everything below.
@@ -46,36 +47,11 @@ const edited = editStepAt(workout, "custom_workout.interval_blocks[0].interval_s
 encode(edited);   // everything else is byte-for-byte what it was
 ```
 
-## The CLI
+## Notation
 
-```bash
-npm run build && npm run cli
-```
-
-Opens the composer: type a set, see it parsed live, press enter to add it.
-Empty enter finishes and writes the file.
-
-```
-  Thursday threshold                            swimming · outdoor
-
-  1     400 m  warm up                            400 m
-  2  8× 50 m   on 1:00    Build                   400 m
-  3  4× 100 m  rest :20   pull                    400 m
-  ────────────────────────────────────────────────────────────────
-  total  1,200 m
-  Build 400 m · pull 400 m
-
-› 6x75 on 1:15 kick
-  ✓ 6 × 75 m · leaving every 1:15 · “kick”
-  enter to add · empty enter to finish · ^Z undo · ^O keys
-```
-
-Keys: `↑ ↓` edit an earlier line, `^Z` undo, `^W`/`^U` delete word/line,
-`^A`/`^E` line start/end, `esc` cancel an edit, `^O` help, `^C` quit.
-Commands: `:name <text>`, `:drop <n>`, `:save`, `:q`.
-
-**Notation.** A bare number is a distance; times need a colon or a unit, because
-guessing wrong there silently produces a different workout.
+`@dotworkout/notation` parses sets written as text. A bare number is a distance;
+times need a colon or a unit, because guessing wrong there silently produces a
+different workout.
 
 ```
 400 warmup            warm up of 400 m
@@ -90,26 +66,13 @@ guessing wrong there silently produces a different workout.
 Words the grammar doesn't recognise become the step's label. That's not a
 fallback — the format has no stroke field, so stroke *is* free text (spec §3).
 
-Non-interactive, for scripts:
-
-```bash
-dotworkout build -n "Thursday threshold" "400 warmup" "8x50 on 1:00 Build" "200 cd"
-```
-
-```bash
-dotworkout show testdata/PoolSwim_2.workout
-```
-
-`show` is the quickest way to check whether this codebase understands a file
-straight off your phone — it reports unknown fields explicitly.
-
 ## Commands
 
 ```bash
 npm test
 ```
 
-Builds both packages and runs the full suite. Other scripts:
+Builds the packages and runs the full suite. Other scripts:
 
 - `npm run generate` — regenerate protobuf bindings from `proto/` and the
   compatibility data from `constraints/compatibility.json`. Both outputs are

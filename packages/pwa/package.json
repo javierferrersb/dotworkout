@@ -13,7 +13,6 @@
   "dependencies": {
     "@dotworkout/codec": "0.1.0",
     "@dotworkout/domain": "0.1.0",
-    "@dotworkout/notation": "0.1.0",
     "@lucide/svelte": "^1.31.0",
     "qrcode-generator": "^2.0.4"
   },
