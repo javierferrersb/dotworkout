@@ -3,6 +3,9 @@
 Parses swim sets written as text into workout blocks. Sits on
 [`@dotworkout/domain`](https://www.npmjs.com/package/@dotworkout/domain).
 
+Not published to npm. Nothing in the repo consumes it since the terminal
+composer was removed, so it is not being shipped until something does.
+
 ```ts
 import { parseLine, applyLines } from "@dotworkout/notation";
 

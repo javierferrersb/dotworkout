@@ -10,6 +10,12 @@
     "url": "git+https://github.com/javierferrersb/dotworkout.git",
     "directory": "packages/codec"
   },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "prepublishOnly": "tsc -b"
+  },
   "exports": {
     ".": {
       "types": "./dist/src/index.d.ts",

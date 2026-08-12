@@ -1,6 +1,7 @@
 {
   "name": "@dotworkout/notation",
   "version": "0.1.0",
+  "private": true,
   "type": "module",
   "description": "Swim notation grammar — parses `8x50 on 1:00` into workout blocks",
   "license": "MIT",
