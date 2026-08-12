@@ -162,6 +162,16 @@ this library most:
 Every question settled so far was settled by exporting another `.workout` from
 the phone and adding it to `testdata/`.
 
+## Credits
+
+The protobuf schema started from
+[changeforan/DotnetWorkoutKit](https://github.com/changeforan/DotnetWorkoutKit)
+(MIT), which covers steps, blocks, activities, locations and the
+time/distance/open goals. Ten fields and enum values were missing; those
+corrections are listed in `spec/FORMAT.md` §8. No code was taken.
+
+Not affiliated with Apple.
+
 ## Licence
 
 MIT. See [LICENSE](LICENSE).
