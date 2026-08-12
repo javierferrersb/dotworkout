@@ -148,6 +148,14 @@ const en = {
   "install.gotIt": "Got it",
   "install.dontShow": "Don’t show this again",
 
+  "welcome.headingAfter.touch": " without the endless tapping.",
+  "welcome.lede.touch":
+    "Apple buries custom workouts deep in the Watch app and makes you tap out every interval by hand. Answer one question at a time here — intervals, repetitions and heart-rate zones — then send the file straight to your watch.",
+  "welcome.fix1.title.touch": "One question at a time",
+  "welcome.fix1.body.touch":
+    "8 × 400 m with 90 seconds recovery is a handful of taps here, instead of a trip through four nested screens.",
+  "welcome.desktopHint": "On a computer it is quicker still — the whole workout is keyboard-driven.",
+
   "guide.heading": "Finding it in Safari",
   "guide.step1": "Tap the download arrow in the address bar.",
   "guide.step1.note": "At the bottom, or the top if you moved the bar there.",
@@ -329,6 +337,14 @@ const es: Record<MessageKey, string> = {
   "install.reopen": "Si no aparece, cierra la app Entreno y vuelve a abrirla.",
   "install.gotIt": "Entendido",
   "install.dontShow": "No volver a mostrar",
+
+  "welcome.headingAfter.touch": " sin dar mil toques.",
+  "welcome.lede.touch":
+    "Apple esconde los entrenamientos personalizados en la app del reloj y te obliga a picar cada intervalo a mano. Aquí respondes una pregunta cada vez — series, repeticiones y zonas de frecuencia cardíaca — y envías el archivo directo al reloj.",
+  "welcome.fix1.title.touch": "Una pregunta cada vez",
+  "welcome.fix1.body.touch":
+    "8 × 400 m con 90 segundos de recuperación son unos pocos toques aquí, en vez de un paseo por cuatro pantallas anidadas.",
+  "welcome.desktopHint": "En el ordenador es aún más rápido: se hace entero con el teclado.",
 
   "guide.heading": "Cómo encontrarlo en Safari",
   "guide.step1": "Pulsa la flecha de descargas en la barra de direcciones.",

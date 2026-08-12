@@ -3,28 +3,38 @@
   import { Heart } from "@lucide/svelte";
   import { t } from "../i18n/locale.svelte.js";
   import { keys } from "../i18n/keys.svelte.js";
+  import { pointer } from "./pointer.svelte.js";
 
   interface Props {
     oncontinue: () => void;
   }
   let { oncontinue }: Props = $props();
 
-  const FIXES = [
-    { title: "welcome.fix1.title", body: "welcome.fix1.body" },
+  let touch = $derived(pointer.coarse);
+
+  let fixes = $derived([
+    {
+      title: touch ? "welcome.fix1.title.touch" : "welcome.fix1.title",
+      body: touch ? "welcome.fix1.body.touch" : "welcome.fix1.body",
+    },
     { title: "welcome.fix2.title", body: "welcome.fix2.body" },
     { title: "welcome.fix3.title", body: "welcome.fix3.body" },
-  ] as const;
+  ] as const);
+
+  $effect(() => pointer.watch());
 </script>
 
 <div class="welcome">
   <div class="panel" in:fly={{ y: 16, duration: 420 }}>
     <h1>
-      {t("welcome.headingBefore")}<em>{t("welcome.headingEm")}</em>{t("welcome.headingAfter")}
+      {t("welcome.headingBefore")}<em>{t("welcome.headingEm")}</em>{touch
+        ? t("welcome.headingAfter.touch")
+        : t("welcome.headingAfter")}
     </h1>
-    <p class="lede">{t("welcome.lede")}</p>
+    <p class="lede">{touch ? t("welcome.lede.touch") : t("welcome.lede")}</p>
 
     <ul>
-      {#each FIXES as fix (fix.title)}
+      {#each fixes as fix (fix.title)}
         <li>
           <h2>{t(fix.title)}</h2>
           <p>{t(fix.body)}</p>
@@ -34,8 +44,10 @@
 
     <button class="start" onclick={oncontinue}>
       {t("welcome.cta")}
-      <span class="key">{keys.enter}</span>
+      {#if !touch}<span class="key">{keys.enter}</span>{/if}
     </button>
+
+    {#if touch}<p class="desktopHint">{t("welcome.desktopHint")}</p>{/if}
 
     <p class="privacy">{t("welcome.privacy")}</p>
 
@@ -131,6 +143,13 @@
     border-radius: 6px;
     background: rgba(255, 255, 255, 0.22);
     font-size: 12px;
+  }
+
+  .desktopHint {
+    margin: 16px 0 0;
+    color: var(--text-secondary);
+    font-size: 14px;
+    line-height: 1.5;
   }
 
   .privacy {

@@ -121,6 +121,7 @@
     border-radius: var(--radius-card);
     padding: 22px 24px 24px;
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     gap: 14px;
     box-shadow: var(--shadow);
   }

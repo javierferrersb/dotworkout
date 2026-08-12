@@ -58,6 +58,11 @@
       session.commitBlock();
       return;
     }
+    if (event.key === "Enter" && !typing(event.target) && session.current?.optional === true) {
+      event.preventDefault();
+      session.skip(session.current.id);
+      return;
+    }
     if (
       event.key === "Enter" &&
       !event.shiftKey &&
@@ -219,6 +224,7 @@
     min-height: 0;
     overflow-y: auto;
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     align-content: center;
     padding: 24px 32px;
   }
