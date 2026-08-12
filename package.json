@@ -20,8 +20,8 @@
     "generate": "npm run generate:proto && npm run generate:constraints",
     "generate:proto": "buf generate",
     "generate:constraints": "node scripts/gen-compatibility.mjs",
-    "build": "tsc -b packages/codec packages/domain packages/notation",
-    "clean": "tsc -b --clean packages/codec packages/domain packages/notation",
+    "build": "tsc -b packages/codec packages/domain packages/notation packages/mcp",
+    "clean": "tsc -b --clean packages/codec packages/domain packages/notation packages/mcp",
     "test": "npm run build && node --test \"packages/*/dist/test/*.test.js\"",
     "check": "npm run generate && npm run test"
   },
