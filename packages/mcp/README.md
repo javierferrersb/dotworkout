@@ -2,15 +2,16 @@
 
 An MCP server that lets an agent build Apple `.workout` files.
 
-Not published to npm yet. See below for running it from a clone.
+Not published to npm. Run it from a clone — see below.
 
 ## Why
 
-No model knows this format — it is undocumented binary protobuf. It also does
-not know which goals and alerts each sport actually offers, because that was
-read off a real device and lives in `constraints/compatibility.json`. Ask for a
-power target on a swim and you get a file the Watch rejects. These tools hand
-the agent the real answer instead.
+No model knows this format. It is undocumented binary protobuf, so an agent
+cannot write one from memory. It also does not know which goals and alerts each
+sport offers, because that was read off a real device and lives in
+`constraints/compatibility.json` — ask for a power target on a swim and you get
+a file the Watch rejects. These tools give the agent the real answer, and a
+validator that says what is wrong.
 
 ## Tools
 
@@ -26,7 +27,9 @@ the agent the real answer instead.
 are strings the library parses: `"400"`, `"1.2 km"`, `"0.5mi"`, `"1:00"`,
 `":20"`, `"90s"`.
 
-## Running it from a clone
+## Setup
+
+Build it first:
 
 ```bash
 git clone https://github.com/javierferrersb/dotworkout
@@ -35,29 +38,48 @@ npm install
 npm run build
 ```
 
-Then point your client at the built entry point.
-
-**Claude Code**
+### Claude Code
 
 ```bash
-claude mcp add dotworkout -- node /absolute/path/to/dotworkout/packages/mcp/dist/src/index.js
+claude mcp add -s user dotworkout -- node /absolute/path/to/dotworkout/packages/mcp/dist/src/index.js
 ```
 
-**Claude Desktop** — add to `claude_desktop_config.json`:
+`-s user` matters. Without it the server is registered against the current
+directory only, so it disappears the moment you work anywhere else.
+
+Check it took:
+
+```bash
+claude mcp list
+```
+
+It should print `dotworkout: … ✔ Connected`.
+
+### Claude Desktop
+
+Add to `claude_desktop_config.json`, alongside the keys already there
+(`%APPDATA%\Claude\` on Windows, `~/Library/Application Support/Claude/` on
+macOS):
 
 ```json
-{
-  "mcpServers": {
-    "dotworkout": {
-      "command": "node",
-      "args": ["/absolute/path/to/dotworkout/packages/mcp/dist/src/index.js"]
-    }
+"mcpServers": {
+  "dotworkout": {
+    "command": "node",
+    "args": ["C:\\path\\to\\dotworkout\\packages\\mcp\\dist\\src\\index.js"]
   }
 }
 ```
 
-Restart the client. Then ask for something like *"build me an 8×100 swim on
-1:45 with a 400 warm up, save it to my desktop"*.
+Then quit Desktop completely — from the system tray or menu bar, not by closing
+the window — and reopen it.
+
+## Using it
+
+Ask for a workout in plain language:
+
+> build me an 8×100 swim on 1:45 with a 400 warm up, save it to my desktop
+
+Then send the file to your phone and open it in the Workout app.
 
 Everything runs on your machine. Nothing is uploaded.
 

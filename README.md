@@ -84,6 +84,26 @@ workout without telling you.
 Words the grammar does not recognise become the step label. The format has no
 stroke field, so stroke is free text (spec §3).
 
+## Building workouts with an agent
+
+`@dotworkout/mcp` is an MCP server, so Claude and other agents can build these
+files. It exposes five tools: list and describe activities, validate a workout,
+write one to disk, and inspect an existing file.
+
+The activity tools are the useful part. A model cannot write this format from
+memory, and it has no idea which goals and alerts each sport offers — that came
+off a real device and lives in `constraints/compatibility.json`. Asking gets you
+a file the Watch accepts; guessing gets you one it rejects.
+
+It is not on npm. Build the repo, then:
+
+```bash
+claude mcp add -s user dotworkout -- node /absolute/path/to/dotworkout/packages/mcp/dist/src/index.js
+```
+
+Setup for Claude Desktop, and the reason `-s user` matters, are in
+[`packages/mcp/README.md`](packages/mcp/README.md).
+
 ## Commands
 
 ```bash
