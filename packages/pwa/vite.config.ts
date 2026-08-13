@@ -8,18 +8,19 @@ export default defineConfig({
     svelte(),
     VitePWA({
       registerType: "autoUpdate",
-      includeAssets: ["favicon.svg"],
+      includeAssets: ["favicon.svg", "favicon-96.png", "apple-touch-icon.png"],
       manifest: {
         name: "Dot Workout",
         short_name: "Dot Workout",
         description: "Compose Apple .workout files from the keyboard",
-        theme_color: "#000000",
-        background_color: "#000000",
+        theme_color: "#101013",
+        background_color: "#101013",
         display: "standalone",
         orientation: "any",
         start_url: "./",
         scope: "./",
         icons: [
+          { src: "favicon-96.png", sizes: "96x96", type: "image/png" },
           { src: "icon-192.png", sizes: "192x192", type: "image/png" },
           { src: "icon-512.png", sizes: "512x512", type: "image/png" },
           { src: "icon-512-maskable.png", sizes: "512x512", type: "image/png", purpose: "maskable" },

@@ -12,12 +12,14 @@ const PALETTES = {
   apple: ["#fa114f", "#a6ee2a", "#22e0e0"],
 };
 
-const GRID = 25;
-const RINGS = [
-  { outer: 12.3, inner: 9.9 },
-  { outer: 8.4, inner: 6.0 },
-  { outer: 4.7, inner: 2.4 },
+const GRID = Number(process.argv[3] ?? 10);
+const R = (GRID - 1) / 2;
+const BANDS = [
+  [0.98, 0.7],
+  [0.7, 0.44],
+  [0.44, 0.17],
 ];
+const RINGS = BANDS.map(([outer, inner]) => ({ outer: outer * R, inner: inner * R }));
 
 const crcTable = Array.from({ length: 256 }, (_, n) => {
   let c = n;
@@ -197,17 +199,19 @@ function svg(palette) {
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${GRID} ${GRID}">${layers}</svg>\n`;
 }
 
-const which = process.argv[2] ?? "blue";
+const which = process.argv[2] ?? "apple";
 const palette = PALETTES[which];
 if (palette === undefined) throw new Error(`unknown palette: ${which}`);
 
+const CANVAS = "#101013";
+
 mkdirSync(outDir, { recursive: true });
+
+writeFileSync(resolve(outDir, "favicon.svg"), svg(palette));
+writeFileSync(resolve(outDir, "favicon-96.png"), render(96, palette, undefined, 0.94));
 writeFileSync(resolve(outDir, "icon-192.png"), render(192, palette, undefined, 0.94));
 writeFileSync(resolve(outDir, "icon-512.png"), render(512, palette, undefined, 0.94));
-writeFileSync(
-  resolve(outDir, "icon-512-maskable.png"),
-  render(512, palette, "#101013", 0.62),
-);
-writeFileSync(resolve(outDir, "favicon.svg"), svg(palette));
+writeFileSync(resolve(outDir, "icon-512-maskable.png"), render(512, palette, CANVAS, 0.62));
+writeFileSync(resolve(outDir, "apple-touch-icon.png"), render(180, palette, CANVAS, 0.76));
 
 console.log(`wrote ${which} icons to packages/pwa/public`);
