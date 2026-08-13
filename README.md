@@ -19,7 +19,7 @@ There is also a browser app for building workouts:
 | `@dotworkout/codec` | Decodes and encodes the binary format. Nothing else. |
 | `@dotworkout/domain` | Builds and validates workouts. Uses the codec. |
 | `@dotworkout/notation` | Parses sets written as text, like `8x50 on 1:00 Build`. Not published. |
-| `@dotworkout/mcp` | MCP server, so agents can build workouts. Not published. |
+| `@dotworkout/mcp` | MCP server, so agents can build workouts. |
 | `@dotworkout/pwa` | The browser app. Runs entirely on the client. Not published. |
 
 ```bash
@@ -95,10 +95,8 @@ memory, and it has no idea which goals and alerts each sport offers — that cam
 off a real device and lives in `constraints/compatibility.json`. Asking gets you
 a file the Watch accepts; guessing gets you one it rejects.
 
-It is not on npm. Build the repo, then:
-
 ```bash
-claude mcp add -s user dotworkout -- node /absolute/path/to/dotworkout/packages/mcp/dist/src/index.js
+claude mcp add -s user dotworkout -- npx -y @dotworkout/mcp
 ```
 
 The tools, and the reason `-s user` matters, are in

@@ -2,8 +2,6 @@
 
 An MCP server that lets an agent build Apple `.workout` files.
 
-Not published to npm. Run it from a clone — see below.
-
 ## Why
 
 No model knows this format. It is undocumented binary protobuf, so an agent
@@ -29,20 +27,12 @@ are strings the library parses: `"400"`, `"1.2 km"`, `"0.5mi"`, `"1:00"`,
 
 ## Setup
 
-Build it first:
-
 ```bash
-git clone https://github.com/javierferrersb/dotworkout
-cd dotworkout
-npm install
-npm run build
+claude mcp add -s user dotworkout -- npx -y @dotworkout/mcp
 ```
 
-Then register it:
-
-```bash
-claude mcp add -s user dotworkout -- node /absolute/path/to/dotworkout/packages/mcp/dist/src/index.js
-```
+Nothing to install first. `npx` fetches the package on the first run and caches
+it.
 
 `-s user` matters. Without it the server is registered against the current
 directory only, so it disappears the moment you work anywhere else.
