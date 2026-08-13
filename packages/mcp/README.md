@@ -38,7 +38,7 @@ npm install
 npm run build
 ```
 
-### Claude Code
+Then register it:
 
 ```bash
 claude mcp add -s user dotworkout -- node /absolute/path/to/dotworkout/packages/mcp/dist/src/index.js
@@ -54,24 +54,6 @@ claude mcp list
 ```
 
 It should print `dotworkout: … ✔ Connected`.
-
-### Claude Desktop
-
-Add to `claude_desktop_config.json`, alongside the keys already there
-(`%APPDATA%\Claude\` on Windows, `~/Library/Application Support/Claude/` on
-macOS):
-
-```json
-"mcpServers": {
-  "dotworkout": {
-    "command": "node",
-    "args": ["C:\\path\\to\\dotworkout\\packages\\mcp\\dist\\src\\index.js"]
-  }
-}
-```
-
-Then quit Desktop completely — from the system tray or menu bar, not by closing
-the window — and reopen it.
 
 ## Using it
 

@@ -101,7 +101,7 @@ It is not on npm. Build the repo, then:
 claude mcp add -s user dotworkout -- node /absolute/path/to/dotworkout/packages/mcp/dist/src/index.js
 ```
 
-Setup for Claude Desktop, and the reason `-s user` matters, are in
+The tools, and the reason `-s user` matters, are in
 [`packages/mcp/README.md`](packages/mcp/README.md).
 
 ## Commands
