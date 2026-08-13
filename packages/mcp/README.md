@@ -51,7 +51,8 @@ Ask for a workout in plain language:
 
 > build me an 8×100 swim on 1:45 with a 400 warm up, save it to my desktop
 
-Then send the file to your phone and open it in the Workout app.
+Then send the file to your phone and open it there; it lands in the Workout app
+on your Watch.
 
 Everything runs on your machine. Nothing is uploaded.
 

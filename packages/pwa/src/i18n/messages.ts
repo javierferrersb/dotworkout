@@ -10,7 +10,7 @@ const en = {
   "welcome.headingEm": "Apple .workout",
   "welcome.headingAfter": " creator.",
   "welcome.lede":
-    "Build custom Apple Watch workouts in your browser and get a real .workout file — the format the iOS Workout app imports and syncs to your watch. Intervals, repetitions and heart-rate zones, with nothing to install.",
+    "Build custom Apple Watch workouts in your browser and get a real .workout file — the format that syncs straight to the Workout app on your Apple Watch. Intervals, repetitions and heart-rate zones, with nothing to install.",
   "welcome.fix0.title": "Made for a keyboard",
   "welcome.fix0.body":
     "Every question answers with a keystroke, so a whole session is typed without reaching for the mouse.",
@@ -22,7 +22,7 @@ const en = {
     "Pin any interval to a zone, a pace, a cadence or a power number, and only the ones your sport actually supports are offered.",
   "welcome.fix3.title": "Straight onto the Watch",
   "welcome.fix3.body":
-    "Get a real .workout file. Send it to yourself, open it in the Workouts app, and it syncs across.",
+    "Get a real .workout file. Send it to yourself, open it on your phone, and it lands in the Workout app on your Watch.",
   "welcome.cta": "Build a workout",
   "welcome.privacy": "Runs entirely on your device. Nothing is uploaded.",
   "welcome.source": "View source and contribute on GitHub",
@@ -30,7 +30,7 @@ const en = {
   "about.open": "About Dot Workout",
   "about.heading": "About",
   "about.what":
-    "A composer for Apple .workout files — the ones the iOS Workout app imports and syncs to an Apple Watch. Build a workout here, send the file to your phone, open it in the Workout app.",
+    "A composer for Apple .workout files — the custom workouts the Workout app on Apple Watch runs. Build one here, send the file to your phone, and open it there.",
   "about.format.title": "The format",
   "about.format.body":
     "Apple does not document it. It was worked out from 20 real exports, all of which decode with zero unknown fields and re-encode byte for byte.",
@@ -52,7 +52,7 @@ const en = {
   "picker.noMatch": "Nothing matches “{query}”",
 
   "naming.heading": "What are you calling it?",
-  "naming.lede": "This is the name you’ll see in the Workouts app.",
+  "naming.lede": "This is the name you’ll see in the Workout app on your Watch.",
   "naming.continue": "Continue",
   "naming.hint": "You can change it later from the summary panel.",
   "naming.defaultTitle": "{activity} workout",
@@ -161,7 +161,7 @@ const en = {
     "If it does not, save it to Files, open it from there, then tap Share and choose Workout.",
   "install.chat.step1": "Open the link from the chat on your phone.",
   "install.chat.step2": "Tap Save the workout and follow the steps it shows.",
-  "install.reopen": "If it does not show up, close the Workouts app and open it again.",
+  "install.reopen": "If it does not show up, close the Workout app on your Watch and open it again.",
   "install.gotIt": "Got it",
   "install.dontShow": "Don’t show this again",
 
@@ -179,10 +179,10 @@ const en = {
   "guide.step3": "Tap the workout in the list.",
   "guide.step4": "The Workout app takes it from there.",
 
-  "handoff.body": "Someone shared this workout with you. Save it, then open it in the Workouts app.",
+  "handoff.body": "Someone shared this workout with you. Save it, then open it in the Workout app.",
   "handoff.save": "Save the workout",
   "handoff.again": "Save it again",
-  "handoff.saved": "Saved to your downloads. Open it from there and the Workouts app takes over.",
+  "handoff.saved": "Saved to your downloads. Open it from there and the Workout app takes over.",
   "handoff.mine": "Build my own instead",
 
   "resume.text": "Picked up where you left off.",
@@ -214,7 +214,7 @@ const es: Record<MessageKey, string> = {
   "welcome.headingEm": "entrenamientos .workout",
   "welcome.headingAfter": " de Apple.",
   "welcome.lede":
-    "Crea entrenamientos para el Apple Watch desde el navegador y obtén un archivo .workout real, el formato que la app Entreno importa y sincroniza con el reloj. Series, repeticiones y zonas de frecuencia cardíaca, sin instalar nada.",
+    "Crea entrenamientos para el Apple Watch desde el navegador y obtén un archivo .workout real, el formato que se sincroniza directamente con la app Entreno del Apple Watch. Series, repeticiones y zonas de frecuencia cardíaca, sin instalar nada.",
   "welcome.fix0.title": "Pensado para el teclado",
   "welcome.fix0.body":
     "Cada pregunta se responde con una tecla, así que un entrenamiento entero se escribe sin tocar el ratón.",
@@ -226,7 +226,7 @@ const es: Record<MessageKey, string> = {
     "Asigna a cualquier intervalo una zona, un ritmo, una cadencia o una potencia. Solo aparecen las que tu deporte admite de verdad.",
   "welcome.fix3.title": "Directo al reloj",
   "welcome.fix3.body":
-    "Obtienes un archivo .workout real. Envíatelo, ábrelo en la app Entreno y se sincroniza con el reloj.",
+    "Obtienes un archivo .workout real. Envíatelo, ábrelo en el móvil y llega a la app Entreno del reloj.",
   "welcome.cta": "Crear un entrenamiento",
   "welcome.privacy": "Funciona por completo en tu dispositivo. No se sube nada.",
   "welcome.source": "Mira el código y contribuye en GitHub",
@@ -234,7 +234,7 @@ const es: Record<MessageKey, string> = {
   "about.open": "Acerca de Dot Workout",
   "about.heading": "Acerca de",
   "about.what":
-    "Un editor de archivos .workout de Apple, los que la app Entreno importa y sincroniza con el Apple Watch. Crea el entrenamiento aquí, envíate el archivo al móvil y ábrelo en la app Entreno.",
+    "Un editor de archivos .workout de Apple, los entrenamientos personalizados que ejecuta la app Entreno del Apple Watch. Crea uno aquí, envíate el archivo al móvil y ábrelo ahí.",
   "about.format.title": "El formato",
   "about.format.body":
     "Apple no lo documenta. Se dedujo a partir de 20 archivos reales, que se decodifican sin campos desconocidos y se vuelven a codificar byte a byte.",
@@ -256,7 +256,7 @@ const es: Record<MessageKey, string> = {
   "picker.noMatch": "No hay nada que coincida con «{query}»",
 
   "naming.heading": "¿Cómo lo vas a llamar?",
-  "naming.lede": "Este es el nombre que verás en la app Entreno.",
+  "naming.lede": "Este es el nombre que verás en la app Entreno del reloj.",
   "naming.continue": "Continuar",
   "naming.hint": "Puedes cambiarlo después desde el panel de resumen.",
   "naming.defaultTitle": "Entrenamiento de {activity}",
@@ -367,7 +367,7 @@ const es: Record<MessageKey, string> = {
     "Si no, guárdalo en Archivos, ábrelo desde ahí y pulsa Compartir y elige Entreno.",
   "install.chat.step1": "Abre el enlace desde el chat en el móvil.",
   "install.chat.step2": "Pulsa «Guardar el entrenamiento» y sigue los pasos que aparecen.",
-  "install.reopen": "Si no aparece, cierra la app Entreno y vuelve a abrirla.",
+  "install.reopen": "Si no aparece, cierra la app Entreno del reloj y vuelve a abrirla.",
   "install.gotIt": "Entendido",
   "install.dontShow": "No volver a mostrar",
 

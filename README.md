@@ -2,8 +2,8 @@
 
 [![CI](https://github.com/javierferrersb/dotworkout/actions/workflows/ci.yml/badge.svg)](https://github.com/javierferrersb/dotworkout/actions/workflows/ci.yml)
 
-Read and write Apple `.workout` files in TypeScript. These are the files the iOS
-Workout app imports and syncs to an Apple Watch.
+Read and write Apple `.workout` files in TypeScript. These are the custom
+workouts the Workout app on an Apple Watch runs.
 
 The format is undocumented. This repo works it out from 20 real exports, all of
 which decode with zero unknown fields and re-encode byte for byte.
