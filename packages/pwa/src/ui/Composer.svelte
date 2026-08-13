@@ -129,6 +129,7 @@
     <BackButton label={session.activityName} onclick={onback} />
     <nav>
       <span class="grow"></span>
+      <img class="mark" src="/favicon.svg" alt="" width="22" height="22" />
       <button class="plain" onclick={onreset}>{t("composer.newWorkout")}</button>
 
       <Menu
@@ -232,6 +233,13 @@
   .column {
     width: min(680px, 100%);
     margin: 0 auto;
+  }
+
+  .mark {
+    display: block;
+    flex: none;
+    margin-right: 8px;
+    opacity: 0.9;
   }
 
   footer {

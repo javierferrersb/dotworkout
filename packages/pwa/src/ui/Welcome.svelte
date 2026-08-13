@@ -26,6 +26,8 @@
 
 <div class="welcome">
   <div class="panel" in:fly={{ y: 16, duration: 420 }}>
+    <img class="mark" src="/favicon.svg" alt="" width="76" height="76" />
+
     <h1>
       {t("welcome.headingBefore")}<em>{t("welcome.headingEm")}</em>{touch
         ? t("welcome.headingAfter.touch")
@@ -73,6 +75,11 @@
 
   .panel {
     width: min(580px, 100%);
+  }
+
+  .mark {
+    display: block;
+    margin: 0 0 20px;
   }
 
   h1 {
@@ -186,6 +193,12 @@
     .welcome {
       padding: 32px 20px;
       place-items: start center;
+    }
+
+    .mark {
+      width: 60px;
+      height: 60px;
+      margin-bottom: 16px;
     }
 
     .lede {
