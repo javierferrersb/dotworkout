@@ -15,14 +15,20 @@
 
   let touch = $derived(pointer.coarse);
 
-  let fixes = $derived([
-    {
-      title: touch ? "welcome.fix1.title.touch" : "welcome.fix1.title",
-      body: touch ? "welcome.fix1.body.touch" : "welcome.fix1.body",
-    },
-    { title: "welcome.fix2.title", body: "welcome.fix2.body" },
-    { title: "welcome.fix3.title", body: "welcome.fix3.body" },
-  ] as const);
+  let fixes = $derived(
+    touch
+      ? ([
+          { title: "welcome.fix1.title.touch", body: "welcome.fix1.body.touch" },
+          { title: "welcome.fix2.title", body: "welcome.fix2.body" },
+          { title: "welcome.fix3.title", body: "welcome.fix3.body" },
+        ] as const)
+      : ([
+          { title: "welcome.fix0.title", body: "welcome.fix0.body" },
+          { title: "welcome.fix1.title", body: "welcome.fix1.body" },
+          { title: "welcome.fix2.title", body: "welcome.fix2.body" },
+          { title: "welcome.fix3.title", body: "welcome.fix3.body" },
+        ] as const),
+  );
 
   $effect(() => pointer.watch());
 </script>
@@ -34,9 +40,7 @@
     </button>
 
     <h1>
-      {t("welcome.headingBefore")}<em>{t("welcome.headingEm")}</em>{touch
-        ? t("welcome.headingAfter.touch")
-        : t("welcome.headingAfter")}
+      {t("welcome.headingBefore")}<em>{t("welcome.headingEm")}</em>{t("welcome.headingAfter")}
     </h1>
     <p class="lede">{touch ? t("welcome.lede.touch") : t("welcome.lede")}</p>
 

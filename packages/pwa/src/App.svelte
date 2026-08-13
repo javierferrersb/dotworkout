@@ -154,7 +154,6 @@
         themeChoice={flow.themeChoice}
         onback={() => flow.go("choose")}
         ontheme={(choice) => flow.setTheme(choice)}
-        onreset={startOver}
       />
     </div>
   {/if}

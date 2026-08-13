@@ -1,6 +1,6 @@
 <script lang="ts">
   import { fly } from "svelte/transition";
-  import { Languages, Monitor, Moon, Sun } from "@lucide/svelte";
+  import { Info, Languages, Monitor, Moon, Sun } from "@lucide/svelte";
   import type { ThemeChoice } from "../application/appFlow.svelte.js";
   import type { CompositionSession } from "../application/compositionSession.svelte.js";
   import { choiceKey } from "../i18n/format.js";
@@ -20,9 +20,8 @@
     themeChoice: ThemeChoice;
     onback: () => void;
     ontheme: (choice: ThemeChoice) => void;
-    onreset: () => void;
   }
-  let { session, themeChoice, onback, ontheme, onreset }: Props = $props();
+  let { session, themeChoice, onback, ontheme }: Props = $props();
 
   let card = $state<BlockCard | undefined>(undefined);
   let rail = $state<SummaryRail | undefined>(undefined);
@@ -130,13 +129,9 @@
 
 <main>
   <section class="stage">
-    <BackButton label={session.activityName} onclick={onback} />
+    <BackButton label={t("composer.newWorkout")} onclick={onback} />
     <nav>
       <span class="grow"></span>
-      <button class="mark" onclick={() => (about = true)} aria-label={t("about.open")}>
-        <img src="/favicon.svg" alt="" width="22" height="22" />
-      </button>
-      <button class="plain" onclick={onreset}>{t("composer.newWorkout")}</button>
 
       <Menu
         label={t("language.label")}
@@ -166,6 +161,11 @@
           {/if}
         {/snippet}
       </Menu>
+
+      <button class="mark" onclick={() => (about = true)} aria-label={t("about.open")}>
+        <img src="/favicon.svg" alt="" width="20" height="20" />
+        <Info size={13} strokeWidth={2.6} />
+      </button>
     </nav>
 
     <div class="scroll">
@@ -217,19 +217,6 @@
     flex: 1;
   }
 
-  .plain {
-    color: var(--text-secondary);
-    font-size: 14px;
-    padding: 8px 14px;
-    border-radius: var(--radius-pill);
-    transition: all 140ms var(--ease);
-  }
-
-  .plain:hover {
-    background: var(--bg-surface);
-    color: var(--text-primary);
-  }
-
   .scroll {
     flex: 1;
     min-height: 0;
@@ -246,17 +233,20 @@
   }
 
   .mark {
-    display: block;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
     flex: none;
-    padding: 0;
-    margin-right: 8px;
-    opacity: 0.9;
-    border-radius: 6px;
-    transition: opacity 120ms var(--ease);
+    padding: 5px 8px 5px 6px;
+    margin-left: 4px;
+    border-radius: var(--radius-pill);
+    color: var(--text-tertiary);
+    transition: all 140ms var(--ease);
   }
 
   .mark:hover {
-    opacity: 1;
+    background: var(--bg-surface);
+    color: var(--text-primary);
   }
 
   .mark img {
@@ -301,10 +291,6 @@
   @media (max-width: 640px) {
     nav {
       padding: 18px 14px 0;
-    }
-
-    .plain {
-      display: none;
     }
 
     .only-wide {

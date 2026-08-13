@@ -5,7 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#101013" />
     <meta name="color-scheme" content="dark light" />
-    <meta name="description" content="Build Apple Watch workouts on a proper keyboard." />
+
+    <title>Dot Workout — Online Apple .workout creator for Apple Watch</title>
+    <meta
+      name="description"
+      content="Free online creator for Apple .workout files. Build custom Apple Watch workouts with intervals, repetitions, send-offs and heart-rate zones in your browser, then send the file to your phone. Nothing to install, nothing uploaded."
+    />
+    <link rel="canonical" href="https://workout.javierferrersb.dev/" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Dot Workout" />
+    <meta property="og:url" content="https://workout.javierferrersb.dev/" />
+    <meta property="og:title" content="Dot Workout — Online Apple .workout creator" />
+    <meta
+      property="og:description"
+      content="Build custom Apple Watch workouts in your browser and get a real .workout file. Intervals, repetitions and heart-rate zones. Nothing to install."
+    />
+    <meta property="og:image" content="https://workout.javierferrersb.dev/icon-512.png" />
+    <meta property="og:image:width" content="512" />
+    <meta property="og:image:height" content="512" />
+
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Dot Workout — Online Apple .workout creator" />
+    <meta
+      name="twitter:description"
+      content="Build custom Apple Watch workouts in your browser and get a real .workout file."
+    />
+    <meta name="twitter:image" content="https://workout.javierferrersb.dev/icon-512.png" />
 
     <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="./favicon-96.png" sizes="96x96" type="image/png" />
@@ -16,7 +42,27 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="Dot Workout" />
 
-    <title>Dot Workout</title>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Dot Workout",
+        "url": "https://workout.javierferrersb.dev/",
+        "description": "Free online creator for Apple .workout files. Build custom Apple Watch workouts with intervals, repetitions and heart-rate zones in the browser.",
+        "applicationCategory": "HealthApplication",
+        "operatingSystem": "Any",
+        "browserRequirements": "Requires JavaScript",
+        "isAccessibleForFree": true,
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" },
+        "featureList": [
+          "Create Apple .workout files online",
+          "Intervals, repetitions and send-offs",
+          "Heart-rate zone, pace, cadence and power targets",
+          "Swimming, running, cycling and HIIT",
+          "Runs entirely client-side"
+        ]
+      }
+    </script>
   </head>
   <body>
     <div id="app"></div>

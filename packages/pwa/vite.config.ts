@@ -12,7 +12,8 @@ export default defineConfig({
       manifest: {
         name: "Dot Workout",
         short_name: "Dot Workout",
-        description: "Compose Apple .workout files from the keyboard",
+        description:
+          "Online creator for Apple .workout files. Build custom Apple Watch workouts with intervals, repetitions and heart-rate zones.",
         theme_color: "#101013",
         background_color: "#101013",
         display: "standalone",

@@ -6,11 +6,14 @@ export const LOCALES: readonly { code: LocaleCode; label: string }[] = [
 ];
 
 const en = {
-  "welcome.headingBefore": "Build ",
-  "welcome.headingEm": "Apple Watch workouts",
-  "welcome.headingAfter": " on a proper keyboard.",
+  "welcome.headingBefore": "The online ",
+  "welcome.headingEm": "Apple .workout",
+  "welcome.headingAfter": " creator.",
   "welcome.lede":
-    "Apple only lets you create custom workouts by tapping them out on your phone. Build them on your computer instead — intervals, repetitions and heart-rate zones — then send the file straight to your watch.",
+    "Build custom Apple Watch workouts in your browser and get a real .workout file — the format the iOS Workout app imports and syncs to your watch. Intervals, repetitions and heart-rate zones, with nothing to install.",
+  "welcome.fix0.title": "Made for a keyboard",
+  "welcome.fix0.body":
+    "Every question answers with a keystroke, so a whole session is typed without reaching for the mouse.",
   "welcome.fix1.title": "Series and repetitions in seconds",
   "welcome.fix1.body":
     "8 × 400 m with 90 seconds recovery takes four keystrokes here. On the phone it takes forty taps.",
@@ -131,7 +134,7 @@ const en = {
   "alert.watts": "{value} W",
 
   "rail.name": "Workout name",
-  "rail.empty": "Your blocks will appear here as you answer.",
+  "rail.empty": "Your blocks will appear here as you build your workout.",
   "rail.total": "Total",
   "rail.download": "Download",
   "rail.scan": "Scan to phone",
@@ -162,9 +165,8 @@ const en = {
   "install.gotIt": "Got it",
   "install.dontShow": "Don’t show this again",
 
-  "welcome.headingAfter.touch": " without the endless tapping.",
   "welcome.lede.touch":
-    "Apple buries custom workouts deep in the Watch app and makes you tap out every interval by hand. Answer one question at a time here — intervals, repetitions and heart-rate zones — then send the file straight to your watch.",
+    "Build custom Apple Watch workouts in your browser and get a real .workout file. Apple buries custom workouts deep in the Watch app; here you answer one question at a time, with nothing to install.",
   "welcome.fix1.title.touch": "One question at a time",
   "welcome.fix1.body.touch":
     "8 × 400 m with 90 seconds recovery is a handful of taps here, instead of a trip through four nested screens.",
@@ -208,11 +210,14 @@ const en = {
 export type MessageKey = keyof typeof en;
 
 const es: Record<MessageKey, string> = {
-  "welcome.headingBefore": "Crea ",
-  "welcome.headingEm": "entrenamientos para el Apple Watch",
-  "welcome.headingAfter": " con un teclado de verdad.",
+  "welcome.headingBefore": "El creador online de ",
+  "welcome.headingEm": "entrenamientos .workout",
+  "welcome.headingAfter": " de Apple.",
   "welcome.lede":
-    "Apple solo te deja crear entrenamientos personalizados tocando la pantalla del móvil. Créalos en el ordenador — series, repeticiones y zonas de frecuencia cardíaca — y envía el archivo directamente al reloj.",
+    "Crea entrenamientos para el Apple Watch desde el navegador y obtén un archivo .workout real, el formato que la app Entreno importa y sincroniza con el reloj. Series, repeticiones y zonas de frecuencia cardíaca, sin instalar nada.",
+  "welcome.fix0.title": "Pensado para el teclado",
+  "welcome.fix0.body":
+    "Cada pregunta se responde con una tecla, así que un entrenamiento entero se escribe sin tocar el ratón.",
   "welcome.fix1.title": "Series y repeticiones en segundos",
   "welcome.fix1.body":
     "8 × 400 m con 90 segundos de recuperación son cuatro pulsaciones aquí. En el móvil son cuarenta toques.",
@@ -334,7 +339,7 @@ const es: Record<MessageKey, string> = {
   "alert.watts": "{value} W",
 
   "rail.name": "Nombre del entrenamiento",
-  "rail.empty": "Tus bloques aparecerán aquí según vayas respondiendo.",
+  "rail.empty": "Tus bloques aparecerán aquí según construyes el entrenamiento.",
   "rail.total": "Total",
   "rail.download": "Descargar",
   "rail.scan": "Escanear en el móvil",
@@ -366,9 +371,8 @@ const es: Record<MessageKey, string> = {
   "install.gotIt": "Entendido",
   "install.dontShow": "No volver a mostrar",
 
-  "welcome.headingAfter.touch": " sin dar mil toques.",
   "welcome.lede.touch":
-    "Apple esconde los entrenamientos personalizados en la app del reloj y te obliga a picar cada intervalo a mano. Aquí respondes una pregunta cada vez — series, repeticiones y zonas de frecuencia cardíaca — y envías el archivo directo al reloj.",
+    "Crea entrenamientos para el Apple Watch desde el navegador y obtén un archivo .workout real. Apple los esconde en la app del reloj; aquí respondes una pregunta cada vez, sin instalar nada.",
   "welcome.fix1.title.touch": "Una pregunta cada vez",
   "welcome.fix1.body.touch":
     "8 × 400 m con 90 segundos de recuperación son unos pocos toques aquí, en vez de un paseo por cuatro pantallas anidadas.",
