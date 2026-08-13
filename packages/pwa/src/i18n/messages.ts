@@ -21,10 +21,24 @@ const en = {
   "welcome.fix3.body":
     "Get a real .workout file. Send it to yourself, open it in the Workouts app, and it syncs across.",
   "welcome.cta": "Build a workout",
-  "welcome.privacy":
-    "Runs entirely on your device. Nothing is uploaded, and it works offline once installed.",
-  "welcome.madeWith": "Made with",
-  "welcome.inSpain": "in Spain by",
+  "welcome.privacy": "Runs entirely on your device. Nothing is uploaded.",
+  "welcome.source": "View source and contribute on GitHub",
+
+  "about.open": "About Dot Workout",
+  "about.heading": "About",
+  "about.what":
+    "A composer for Apple .workout files — the ones the iOS Workout app imports and syncs to an Apple Watch. Build a workout here, send the file to your phone, open it in the Workout app.",
+  "about.format.title": "The format",
+  "about.format.body":
+    "Apple does not document it. It was worked out from 20 real exports, all of which decode with zero unknown fields and re-encode byte for byte.",
+  "about.privacy.title": "Your workouts",
+  "about.privacy.body":
+    "Everything happens in this browser. Nothing is uploaded, and a shared link carries the workout inside the link itself.",
+  "about.open.source": "Source code",
+  "about.open.packages": "Packages on npm",
+  "about.open.mcp": "MCP server for agents",
+  "about.notApple": "Not affiliated with Apple.",
+  "about.close": "Close",
 
   "nav.back": "Back",
   "picker.heading": "What are you training?",
@@ -209,10 +223,24 @@ const es: Record<MessageKey, string> = {
   "welcome.fix3.body":
     "Obtienes un archivo .workout real. Envíatelo, ábrelo en la app Entreno y se sincroniza con el reloj.",
   "welcome.cta": "Crear un entrenamiento",
-  "welcome.privacy":
-    "Funciona por completo en tu dispositivo. No se sube nada y funciona sin conexión una vez instalado.",
-  "welcome.madeWith": "Hecho con",
-  "welcome.inSpain": "en España por",
+  "welcome.privacy": "Funciona por completo en tu dispositivo. No se sube nada.",
+  "welcome.source": "Mira el código y contribuye en GitHub",
+
+  "about.open": "Acerca de Dot Workout",
+  "about.heading": "Acerca de",
+  "about.what":
+    "Un editor de archivos .workout de Apple, los que la app Entreno importa y sincroniza con el Apple Watch. Crea el entrenamiento aquí, envíate el archivo al móvil y ábrelo en la app Entreno.",
+  "about.format.title": "El formato",
+  "about.format.body":
+    "Apple no lo documenta. Se dedujo a partir de 20 archivos reales, que se decodifican sin campos desconocidos y se vuelven a codificar byte a byte.",
+  "about.privacy.title": "Tus entrenamientos",
+  "about.privacy.body":
+    "Todo ocurre en este navegador. No se sube nada, y un enlace compartido lleva el entrenamiento dentro del propio enlace.",
+  "about.open.source": "Código fuente",
+  "about.open.packages": "Paquetes en npm",
+  "about.open.mcp": "Servidor MCP para agentes",
+  "about.notApple": "Sin relación con Apple.",
+  "about.close": "Cerrar",
 
   "nav.back": "Atrás",
   "picker.heading": "¿Qué vas a entrenar?",

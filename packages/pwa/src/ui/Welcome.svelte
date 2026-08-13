@@ -1,14 +1,17 @@
 <script lang="ts">
   import { fly } from "svelte/transition";
-  import { Heart } from "@lucide/svelte";
+  import { Code } from "@lucide/svelte";
   import { t } from "../i18n/locale.svelte.js";
   import { keys } from "../i18n/keys.svelte.js";
+  import About from "./About.svelte";
   import { pointer } from "./pointer.svelte.js";
 
   interface Props {
     oncontinue: () => void;
   }
   let { oncontinue }: Props = $props();
+
+  let about = $state(false);
 
   let touch = $derived(pointer.coarse);
 
@@ -26,7 +29,9 @@
 
 <div class="welcome">
   <div class="panel" in:fly={{ y: 16, duration: 420 }}>
-    <img class="mark" src="/favicon.svg" alt="" width="76" height="76" />
+    <button class="mark" onclick={() => (about = true)} aria-label={t("about.open")}>
+      <img src="/favicon.svg" alt="" width="76" height="76" />
+    </button>
 
     <h1>
       {t("welcome.headingBefore")}<em>{t("welcome.headingEm")}</em>{touch
@@ -54,15 +59,21 @@
     <p class="privacy">{t("welcome.privacy")}</p>
 
     <footer>
-      {t("welcome.madeWith")}
-      <Heart class="heart" size={14} strokeWidth={0} fill="currentColor" />
-      {t("welcome.inSpain")}
-      <a href="https://github.com/javierferrersb" target="_blank" rel="noopener noreferrer">
-        javierferrersb
+      <a
+        href="https://github.com/javierferrersb/dotworkout"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <Code size={15} strokeWidth={2} />
+        {t("welcome.source")}
       </a>
     </footer>
   </div>
 </div>
+
+{#if about}
+  <About onclose={() => (about = false)} />
+{/if}
 
 <style>
   .welcome {
@@ -79,7 +90,18 @@
 
   .mark {
     display: block;
+    padding: 0;
     margin: 0 0 20px;
+    border-radius: 12px;
+    transition: transform 140ms var(--ease);
+  }
+
+  .mark:hover {
+    transform: translateY(-2px);
+  }
+
+  .mark img {
+    display: block;
   }
 
   h1 {
@@ -173,20 +195,17 @@
     font-size: 13px;
   }
 
-  footer :global(.heart) {
-    color: var(--accent);
-    vertical-align: -2px;
-  }
-
   a {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
     color: var(--text-secondary);
     text-decoration: none;
-    border-bottom: 1px solid var(--hairline);
+    transition: color 120ms var(--ease);
   }
 
   a:hover {
     color: var(--accent);
-    border-bottom-color: var(--accent-edge);
   }
 
   @media (max-width: 640px) {
