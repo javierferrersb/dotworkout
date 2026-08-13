@@ -199,6 +199,10 @@
     font-size: 13px;
   }
 
+  footer a :global(svg) {
+    transform: translateY(2px);
+  }
+
   a {
     display: inline-flex;
     align-items: center;

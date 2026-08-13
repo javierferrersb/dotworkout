@@ -276,8 +276,9 @@ function alertAllowedForActivity(
 ): Issue[] {
   if (includes(entry.alerts, kind)) return [];
 
-  const unverified = "alertsUnverified" in entry ? entry.alertsUnverified : undefined;
-  if (unverified !== undefined && includes(unverified, kind)) {
+  const raw = "alertsUnverified" in entry ? entry.alertsUnverified : undefined;
+  const unverified: readonly string[] = Array.isArray(raw) ? raw : [];
+  if (includes(unverified, kind)) {
     return [
       {
         severity: "warning",
