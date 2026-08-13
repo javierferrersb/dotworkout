@@ -6,11 +6,11 @@ export const LOCALES: readonly { code: LocaleCode; label: string }[] = [
 ];
 
 const en = {
-  "welcome.headingBefore": "The online ",
-  "welcome.headingEm": "Apple .workout",
-  "welcome.headingAfter": " creator.",
+  "welcome.headingBefore": "Create ",
+  "welcome.headingEm": "Apple Watch workouts",
+  "welcome.headingAfter": " online.",
   "welcome.lede":
-    "Build custom Apple Watch workouts in your browser and get a real .workout file — the format that syncs straight to the Workout app on your Apple Watch. Intervals, repetitions and heart-rate zones, with nothing to install.",
+    "Put the whole session together in your browser and get a real .workout file — the format that syncs straight to the Workout app on your Watch. Intervals, repetitions and heart-rate zones, with nothing to install.",
   "welcome.fix0.title": "Made for a keyboard",
   "welcome.fix0.body":
     "Every question answers with a keystroke, so a whole session is typed without reaching for the mouse.",
@@ -24,7 +24,7 @@ const en = {
   "welcome.fix3.body":
     "Get a real .workout file. Send it to yourself, open it on your phone, and it lands in the Workout app on your Watch.",
   "welcome.cta": "Build a workout",
-  "welcome.privacy": "Runs entirely on your device. Nothing is uploaded.",
+  "welcome.privacy": "Runs entirely on your device. Nothing is uploaded, so your workouts stay yours.",
   "welcome.source": "View source and contribute on GitHub",
 
   "about.open": "About Dot Workout",
@@ -75,7 +75,7 @@ const en = {
   "prompt.skipHint": "{tab} to skip",
   "prompt.skipChoiceHint": "{enter} or {tab} to skip",
   "prompt.confirm": "Confirm",
-  "prompt.namePlaceholder": "a short name",
+  "prompt.namePlaceholder": "Block name",
 
   "question.kind": "What are you adding?",
   "question.goal": "Measured by",
@@ -95,7 +95,26 @@ const en = {
   "question.watts": "Target watts",
   "question.cadence": "Target cadence",
   "question.label": "Name it",
-  "question.label.note": "Stroke, equipment, or how it should feel",
+  "question.label.note": "Stroke, equipment or intensity",
+
+  "stroke.free": "Free",
+  "stroke.back": "Back",
+  "stroke.breast": "Breast",
+  "stroke.fly": "Fly",
+  "stroke.im": "IM",
+  "stroke.kick": "Kick",
+  "stroke.drill": "Drill",
+  "stroke.pull": "Pull",
+  "stroke.build": "Build",
+
+  "effort.easy": "Easy",
+  "effort.steady": "Steady",
+  "effort.tempo": "Tempo",
+  "effort.threshold": "Threshold",
+  "effort.hard": "Hard",
+  "effort.sprint": "Sprint",
+  "effort.recovery": "Recovery",
+
 
   "kind.WARMUP": "Warm up",
   "kind.INTERVAL": "Set",
@@ -166,7 +185,7 @@ const en = {
   "install.dontShow": "Don’t show this again",
 
   "welcome.lede.touch":
-    "Build custom Apple Watch workouts in your browser and get a real .workout file. Apple buries custom workouts deep in the Watch app; here you answer one question at a time, with nothing to install.",
+    "Put the whole session together in your browser and get a real .workout file. Apple buries custom workouts deep in the Watch app; here you answer one question at a time, with nothing to install.",
   "welcome.fix1.title.touch": "One question at a time",
   "welcome.fix1.body.touch":
     "8 × 400 m with 90 seconds recovery is a handful of taps here, instead of a trip through four nested screens.",
@@ -210,14 +229,14 @@ const en = {
 export type MessageKey = keyof typeof en;
 
 const es: Record<MessageKey, string> = {
-  "welcome.headingBefore": "El creador online de ",
-  "welcome.headingEm": "entrenamientos .workout",
-  "welcome.headingAfter": " de Apple.",
+  "welcome.headingBefore": "Crea ",
+  "welcome.headingEm": "entrenamientos para el Apple Watch",
+  "welcome.headingAfter": " online.",
   "welcome.lede":
-    "Crea entrenamientos para el Apple Watch desde el navegador y obtén un archivo .workout real, el formato que se sincroniza directamente con la app Entreno del Apple Watch. Series, repeticiones y zonas de frecuencia cardíaca, sin instalar nada.",
+    "Monta el entrenamiento entero en el navegador y obtén un archivo .workout real, el formato que se sincroniza directamente con la app Entreno del reloj. Series, repeticiones y zonas de frecuencia cardíaca, sin instalar nada.",
   "welcome.fix0.title": "Pensado para el teclado",
   "welcome.fix0.body":
-    "Cada pregunta se responde con una tecla, así que un entrenamiento entero se escribe sin tocar el ratón.",
+    "Todo tiene atajos de teclado, así que puedes montar un entrenamiento entero sin tocar el ratón.",
   "welcome.fix1.title": "Series y repeticiones en segundos",
   "welcome.fix1.body":
     "8 × 400 m con 90 segundos de recuperación son cuatro pulsaciones aquí. En el móvil son cuarenta toques.",
@@ -228,7 +247,7 @@ const es: Record<MessageKey, string> = {
   "welcome.fix3.body":
     "Obtienes un archivo .workout real. Envíatelo, ábrelo en el móvil y llega a la app Entreno del reloj.",
   "welcome.cta": "Crear un entrenamiento",
-  "welcome.privacy": "Funciona por completo en tu dispositivo. No se sube nada.",
+  "welcome.privacy": "Todo ocurre en tu dispositivo. No se sube nada a internet, así que tus entrenamientos son solo tuyos.",
   "welcome.source": "Mira el código y contribuye en GitHub",
 
   "about.open": "Acerca de Dot Workout",
@@ -279,7 +298,7 @@ const es: Record<MessageKey, string> = {
   "prompt.skipHint": "{tab} para omitir",
   "prompt.skipChoiceHint": "{enter} o {tab} para omitir",
   "prompt.confirm": "Confirmar",
-  "prompt.namePlaceholder": "un nombre corto",
+  "prompt.namePlaceholder": "Nombre del bloque",
 
   "question.kind": "¿Qué quieres añadir?",
   "question.goal": "Medido por",
@@ -300,7 +319,26 @@ const es: Record<MessageKey, string> = {
   "question.watts": "Vatios objetivo",
   "question.cadence": "Cadencia objetivo",
   "question.label": "Ponle nombre",
-  "question.label.note": "Estilo, material o cómo debería sentirse",
+  "question.label.note": "Estilo, material o intensidad",
+
+  "stroke.free": "Crol",
+  "stroke.back": "Espalda",
+  "stroke.breast": "Braza",
+  "stroke.fly": "Mariposa",
+  "stroke.im": "Estilos",
+  "stroke.kick": "Pies",
+  "stroke.drill": "Técnica",
+  "stroke.pull": "Brazos",
+  "stroke.build": "Progresivo",
+
+  "effort.easy": "Suave",
+  "effort.steady": "Medio",
+  "effort.tempo": "Tempo",
+  "effort.threshold": "Umbral",
+  "effort.hard": "Fuerte",
+  "effort.sprint": "Sprint",
+  "effort.recovery": "Recuperación",
+
 
   "kind.WARMUP": "Calentamiento",
   "kind.INTERVAL": "Serie",
@@ -372,7 +410,7 @@ const es: Record<MessageKey, string> = {
   "install.dontShow": "No volver a mostrar",
 
   "welcome.lede.touch":
-    "Crea entrenamientos para el Apple Watch desde el navegador y obtén un archivo .workout real. Apple los esconde en la app del reloj; aquí respondes una pregunta cada vez, sin instalar nada.",
+    "Monta el entrenamiento entero en el navegador y obtén un archivo .workout real. Apple los esconde en la app del reloj; aquí respondes una pregunta cada vez, sin instalar nada.",
   "welcome.fix1.title.touch": "Una pregunta cada vez",
   "welcome.fix1.body.touch":
     "8 × 400 m con 90 segundos de recuperación son unos pocos toques aquí, en vez de un paseo por cuatro pantallas anidadas.",

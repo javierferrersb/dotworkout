@@ -100,8 +100,8 @@
 
     {#if question.form.type === "text"}
       <div class="suggestions">
-        {#each question.form.suggestions as word (word)}
-          <button class="suggestion" onclick={() => useSuggestion(word)}>{word}</button>
+        {#each question.form.suggestions as key (key)}
+          <button class="suggestion" onclick={() => useSuggestion(t(key))}>{t(key)}</button>
         {/each}
       </div>
     {/if}

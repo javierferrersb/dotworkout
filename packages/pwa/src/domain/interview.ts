@@ -27,7 +27,7 @@ export type QuestionForm =
   | { readonly type: "distance"; readonly unit: string }
   | { readonly type: "duration"; readonly placeholder: string }
   | { readonly type: "count"; readonly placeholder: string }
-  | { readonly type: "text"; readonly suggestions: readonly string[] };
+  | { readonly type: "text"; readonly suggestions: readonly MessageKey[] };
 
 export interface Question {
   readonly id: QuestionId;
@@ -43,8 +43,26 @@ export interface BlockContext {
   readonly position: number;
 }
 
-const STROKE_SUGGESTIONS = ["Free", "Back", "Breast", "Fly", "IM", "Kick", "Drill", "Pull", "Build"];
-const EFFORT_SUGGESTIONS = ["Easy", "Steady", "Tempo", "Threshold", "Hard", "Sprint", "Recovery"];
+const STROKE_SUGGESTIONS: readonly MessageKey[] = [
+  "stroke.free",
+  "stroke.back",
+  "stroke.breast",
+  "stroke.fly",
+  "stroke.im",
+  "stroke.kick",
+  "stroke.drill",
+  "stroke.pull",
+  "stroke.build",
+];
+const EFFORT_SUGGESTIONS: readonly MessageKey[] = [
+  "effort.easy",
+  "effort.steady",
+  "effort.tempo",
+  "effort.threshold",
+  "effort.hard",
+  "effort.sprint",
+  "effort.recovery",
+];
 
 function blockKindChoices(draft: BlockDraft, context: BlockContext): readonly Choice[] {
   const choices: Choice[] = [];

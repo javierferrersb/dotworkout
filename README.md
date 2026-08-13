@@ -1,3 +1,5 @@
+<img src="packages/pwa/public/icon-192.png" width="96" alt="" />
+
 # dotworkout
 
 [![CI](https://github.com/javierferrersb/dotworkout/actions/workflows/ci.yml/badge.svg)](https://github.com/javierferrersb/dotworkout/actions/workflows/ci.yml)
