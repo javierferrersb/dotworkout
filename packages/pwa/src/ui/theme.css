@@ -67,6 +67,7 @@ body {
   font-family: var(--sans);
   -webkit-font-smoothing: antialiased;
   font-variant-numeric: tabular-nums;
+  -webkit-tap-highlight-color: transparent;
 }
 
 #app {
@@ -79,6 +80,10 @@ button {
   border: none;
   background: none;
   cursor: pointer;
+}
+
+button:active:not(:disabled) {
+  opacity: 0.72;
 }
 
 input {
