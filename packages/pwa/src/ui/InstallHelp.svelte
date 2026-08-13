@@ -3,6 +3,7 @@
   import { Info } from "@lucide/svelte";
   import type { ShareRoute } from "../application/share.js";
   import { t } from "../i18n/locale.svelte.js";
+  import { modals } from "./modal.svelte.js";
   import type { MessageKey } from "../i18n/messages.js";
 
   interface Props {
@@ -19,6 +20,8 @@
   };
 
   let steps = $derived(ROUTES[source]);
+
+  $effect(() => modals.enter());
 </script>
 
 <svelte:window onkeydown={(event) => event.key === "Escape" && onclose(suppress)} />

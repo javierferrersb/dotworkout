@@ -4,6 +4,7 @@
   import { qrMatrix, workoutLink } from "../application/share.js";
   import type { WorkoutDraft } from "../application/workoutComposition.js";
   import { t } from "../i18n/locale.svelte.js";
+  import { modals } from "./modal.svelte.js";
 
   interface Props {
     draft: WorkoutDraft;
@@ -27,6 +28,8 @@
     copied = true;
     setTimeout(() => (copied = false), 2000);
   }
+
+  $effect(() => modals.enter());
 </script>
 
 <svelte:window onkeydown={(event) => event.key === "Escape" && onclose()} />

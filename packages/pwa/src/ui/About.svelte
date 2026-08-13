@@ -2,6 +2,7 @@
   import { fly } from "svelte/transition";
   import { ExternalLink } from "@lucide/svelte";
   import { t } from "../i18n/locale.svelte.js";
+  import { modals } from "./modal.svelte.js";
 
   interface Props {
     onclose: () => void;
@@ -21,6 +22,8 @@
     { title: "about.format.title", body: "about.format.body" },
     { title: "about.privacy.title", body: "about.privacy.body" },
   ] as const;
+
+  $effect(() => modals.enter());
 </script>
 
 <svelte:window onkeydown={(event) => event.key === "Escape" && onclose()} />

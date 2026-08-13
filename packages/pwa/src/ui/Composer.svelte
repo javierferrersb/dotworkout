@@ -7,10 +7,12 @@
   import { locale, t } from "../i18n/locale.svelte.js";
   import { LOCALES, type LocaleCode } from "../i18n/messages.js";
   import BackButton from "./BackButton.svelte";
+  import About from "./About.svelte";
   import BlockCard from "./BlockCard.svelte";
   import Kbd from "./Kbd.svelte";
   import Menu from "./Menu.svelte";
   import SummaryRail from "./SummaryRail.svelte";
+  import { modals } from "./modal.svelte.js";
   import { keys } from "../i18n/keys.svelte.js";
 
   interface Props {
@@ -24,6 +26,7 @@
 
   let card = $state<BlockCard | undefined>(undefined);
   let rail = $state<SummaryRail | undefined>(undefined);
+  let about = $state(false);
 
   let legend = $derived([
     { key: `${keys.up} ${keys.down}`, what: t("composer.legend.question") },
@@ -46,6 +49,7 @@
   }
 
   function onKeydown(event: KeyboardEvent) {
+    if (modals.any) return;
     const meta = event.metaKey || event.ctrlKey;
 
     if (meta && event.key.toLowerCase() === "s") {
@@ -129,7 +133,9 @@
     <BackButton label={session.activityName} onclick={onback} />
     <nav>
       <span class="grow"></span>
-      <img class="mark" src="/favicon.svg" alt="" width="22" height="22" />
+      <button class="mark" onclick={() => (about = true)} aria-label={t("about.open")}>
+        <img src="/favicon.svg" alt="" width="22" height="22" />
+      </button>
       <button class="plain" onclick={onreset}>{t("composer.newWorkout")}</button>
 
       <Menu
@@ -181,6 +187,10 @@
 
   <SummaryRail bind:this={rail} {session} />
 </main>
+
+{#if about}
+  <About onclose={() => (about = false)} />
+{/if}
 
 <style>
   main {
@@ -238,8 +248,19 @@
   .mark {
     display: block;
     flex: none;
+    padding: 0;
     margin-right: 8px;
     opacity: 0.9;
+    border-radius: 6px;
+    transition: opacity 120ms var(--ease);
+  }
+
+  .mark:hover {
+    opacity: 1;
+  }
+
+  .mark img {
+    display: block;
   }
 
   footer {
