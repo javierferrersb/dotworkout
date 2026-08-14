@@ -236,7 +236,7 @@ export function questionSequence(
     }
   }
 
-  if (draft.kind === "INTERVAL") questions.push(labelQuestion(activity));
+  questions.push(labelQuestion(activity));
   return questions;
 }
 
@@ -275,7 +275,7 @@ function boundQuestion(
   promptKey: MessageKey,
 ): Question {
   if (metric === "SPEED") {
-    const running = activity.id === "RUNNING";
+    const running = activity.sport === "RUNNING";
     return {
       id,
       promptKey,
@@ -314,7 +314,7 @@ function alertValueQuestion(metric: AlertMetric, activity: Activity): Question {
     };
   }
   if (metric === "SPEED") {
-    const running = activity.id === "RUNNING";
+    const running = activity.sport === "RUNNING";
     return {
       id: "alertValue",
       promptKey: running ? "question.pace" : "question.speed",
@@ -333,7 +333,7 @@ function alertValueQuestion(metric: AlertMetric, activity: Activity): Question {
 }
 
 function labelQuestion(activity: Activity): Question {
-  const swimming = activity.id === "SWIMMING";
+  const swimming = activity.sport === "SWIMMING";
   return {
     id: "label",
     promptKey: "question.label",

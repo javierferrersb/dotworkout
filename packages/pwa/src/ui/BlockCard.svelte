@@ -37,7 +37,7 @@
       <button class="answered" onclick={() => session.focus(question.id)} transition:fly={{ y: -6, duration: 200 }}>
         <Check class="tick" size={15} strokeWidth={3} />
         <span class="label">{questionText(question)}</span>
-        <span class="value">{answerLabel(session.draft, question.id, session.activity.id)}</span>
+        <span class="value">{answerLabel(session.draft, question.id, session.activity.sport)}</span>
       </button>
     {/each}
   </div>
@@ -49,7 +49,7 @@
         question={session.current}
         problem={session.problem}
         chosen={rawAnswer(session.draft, session.current.id)}
-        activityId={session.activity.id}
+        activityId={session.activity.sport}
         onanswer={(raw) => session.answer(session.current!.id, raw)}
         onskip={() => session.skip(session.current!.id)}
       />

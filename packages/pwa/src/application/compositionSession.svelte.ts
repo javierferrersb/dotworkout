@@ -278,7 +278,7 @@ function applyAnswer(
  */
 function boundValue(metric: BlockDraft["alertMetric"], raw: string, activity: Activity): number {
   if (metric !== "SPEED") return Number(raw);
-  return activity.id === "RUNNING"
+  return activity.sport === "RUNNING"
     ? paceToMetersPerSecond(raw)
     : speedToMetersPerSecond(Number(raw));
 }

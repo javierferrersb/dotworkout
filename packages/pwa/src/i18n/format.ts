@@ -17,9 +17,9 @@ export function goalName(kind: GoalKind): string {
   return t(`goal.${kind}` as MessageKey);
 }
 
-export function alertName(metric: AlertMetric | "NONE", activityId: string): string {
+export function alertName(metric: AlertMetric | "NONE", sport: string): string {
   if (metric === "SPEED") {
-    return activityId === "RUNNING" ? t("alert.SPEED.pace") : t("alert.SPEED.speed");
+    return showsPace(sport) ? t("alert.SPEED.pace") : t("alert.SPEED.speed");
   }
   return t(`alert.${metric}` as MessageKey);
 }
@@ -32,20 +32,20 @@ export function questionNote(question: Question): string | undefined {
   return question.noteKey === undefined ? undefined : t(question.noteKey);
 }
 
-export function choiceText(choice: Choice, activityId: string): string {
+export function choiceText(choice: Choice, sport: string): string {
   if (choice.group === "kind") return blockKindName(choice.value as BlockKind);
   if (choice.group === "goal") return goalName(choice.value as GoalKind);
-  if (choice.group === "alert") return alertName(choice.value as AlertMetric | "NONE", activityId);
+  if (choice.group === "alert") return alertName(choice.value as AlertMetric | "NONE", sport);
   if (choice.group === "zone") return t("alert.zone", { n: choice.value });
   if (choice.group === "reading") return t(`reading.${choice.value}` as MessageKey);
   if (choice.group === "style") return t(`style.${choice.value}` as MessageKey);
   return choice.value;
 }
 
-export function choiceKey(choice: Choice, activityId: string): string {
+export function choiceKey(choice: Choice, sport: string): string {
   if (choice.group === "zone") return choice.value;
   if (choice.group === "alert" && choice.value === "SPEED") {
-    return activityId === "RUNNING" ? t("alertKey.SPEED.pace") : t("alertKey.SPEED.speed");
+    return showsPace(sport) ? t("alertKey.SPEED.pace") : t("alertKey.SPEED.speed");
   }
   const prefix =
     choice.group === "kind"
@@ -60,20 +60,47 @@ export function choiceKey(choice: Choice, activityId: string): string {
   return t(`${prefix}.${choice.value}` as MessageKey);
 }
 
-export function alertSummary(draft: BlockDraft): string {
+/** Sports whose speed target is entered and read back as a pace, not a speed. */
+const PACE_SPORTS = new Set(["RUNNING", "WALKING", "HIKING"]);
+
+export function showsPace(sport: string): boolean {
+  return PACE_SPORTS.has(sport);
+}
+
+/** Metres per second as minutes and seconds per kilometre. */
+export function formatPace(metersPerSecond: number): string {
+  const seconds = Math.round(1000 / metersPerSecond);
+  return `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`;
+}
+
+function formatSpeed(metersPerSecond: number): string {
+  const kmh = metersPerSecond * 3.6;
+  return Number.isInteger(kmh) ? String(kmh) : kmh.toFixed(1);
+}
+
+export function alertSummary(draft: BlockDraft, sport: string): string {
   const alert = draft.alert;
   if (alert === undefined) return "";
+  const pace = showsPace(sport);
   switch (alert.metric) {
     case "HEART_RATE":
       return alert.style === "ZONE"
         ? t("alert.zone", { n: alert.zone })
         : t("alert.bpm", { from: alert.from, to: alert.to });
     case "SPEED":
-      return alert.style === "VALUE"
-        ? t("alert.mps", { value: alert.metersPerSecond.toFixed(2) })
-        : t("alert.mpsRange", {
-            from: alert.slower.toFixed(2),
-            to: alert.faster.toFixed(2),
+      if (alert.style === "VALUE") {
+        return pace
+          ? t("alert.pace", { value: formatPace(alert.metersPerSecond) })
+          : t("alert.speed", { value: formatSpeed(alert.metersPerSecond) });
+      }
+      return pace
+        ? t("alert.paceRange", {
+            from: formatPace(alert.faster),
+            to: formatPace(alert.slower),
+          })
+        : t("alert.speedRange", {
+            from: formatSpeed(alert.slower),
+            to: formatSpeed(alert.faster),
           });
     case "CADENCE":
       return alert.style === "VALUE"
@@ -90,7 +117,7 @@ function round(value: number): string {
   return Number.isInteger(value) ? String(value) : value.toFixed(2);
 }
 
-export function answerLabel(draft: BlockDraft, id: QuestionId, activityId: string): string {
+export function answerLabel(draft: BlockDraft, id: QuestionId, sport: string): string {
   switch (id) {
     case "kind":
       return draft.kind === undefined ? "" : blockKindName(draft.kind);
@@ -107,17 +134,22 @@ export function answerLabel(draft: BlockDraft, id: QuestionId, activityId: strin
     case "recovery":
       return draft.recovery === undefined ? t("alert.NONE") : formatDuration(draft.recovery);
     case "alert":
-      return alertName(draft.alertMetric ?? "NONE", activityId);
+      return alertName(draft.alertMetric ?? "NONE", sport);
     case "alertReading":
       return draft.alertReading === undefined
         ? ""
         : t(`reading.${draft.alertReading}` as MessageKey);
     case "alertStyle":
       return draft.alertStyle === undefined ? "" : t(`style.${draft.alertStyle}` as MessageKey);
-    case "alertFrom":
-      return draft.alertFrom === undefined ? "" : `${round(draft.alertFrom)}`;
+    case "alertFrom": {
+      if (draft.alertFrom === undefined) return "";
+      if (draft.alertMetric !== "SPEED") return round(draft.alertFrom);
+      return showsPace(sport)
+        ? formatPace(draft.alertFrom)
+        : `${(draft.alertFrom * 3.6).toFixed(1)}`;
+    }
     case "alertValue":
-      return alertSummary(draft);
+      return alertSummary(draft, sport);
     case "label":
       return draft.label === undefined || draft.label === "" ? t("rail.untitled") : draft.label;
   }

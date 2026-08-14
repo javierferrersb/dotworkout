@@ -48,10 +48,14 @@ function alertSpec(alert: AlertDraft): AlertSpec {
 export function compose(draft: WorkoutDraft): WorkoutBinary {
   const builder = custom(draft.activity.type, draft.title, {
     defaultUnit: draft.activity.defaultDistanceUnit,
+    location: draft.activity.location,
   });
 
   for (const block of draft.blocks) {
-    const extras = block.alert === undefined ? {} : { alert: alertSpec(block.alert) };
+    const extras = {
+      ...(block.alert === undefined ? {} : { alert: alertSpec(block.alert) }),
+      ...(block.label === undefined || block.label === "" ? {} : { label: block.label }),
+    };
 
     if (block.kind === "WARMUP") {
       builder.warmup(stepInput(block), extras);

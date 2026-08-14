@@ -116,7 +116,7 @@
     if (meta || event.altKey) return;
     const choice = question.form.choices.find(
       (candidate) =>
-        choiceKey(candidate, session.activity.id).toLowerCase() === event.key.toLowerCase(),
+        choiceKey(candidate, session.activity.sport).toLowerCase() === event.key.toLowerCase(),
     );
     if (choice !== undefined) {
       event.preventDefault();

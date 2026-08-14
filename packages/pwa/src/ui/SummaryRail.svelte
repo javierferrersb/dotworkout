@@ -122,7 +122,7 @@
             <span class="measure" class:alone={!block.label}>{blockSummary(block)}</span>
           </div>
           {#if block.alert}
-            <div class="row"><span class="target">{alertSummary(block)}</span></div>
+            <div class="row"><span class="target">{alertSummary(block, session.activity.sport)}</span></div>
           {/if}
         </button>
       {/each}
