@@ -4,6 +4,8 @@ import type { DistanceUnit } from "@dotworkout/domain";
 
 export type AlertMetric = "HEART_RATE" | "SPEED" | "CADENCE" | "POWER";
 export type GoalKind = "DISTANCE" | "DISTANCE_TIME" | "TIME" | "OPEN";
+export type AlertStyle = "ZONE" | "VALUE" | "RANGE";
+export type AlertReading = "current" | "average";
 
 export interface Activity {
   readonly id: string;
@@ -76,5 +78,25 @@ export function capabilitiesOf(activity: Activity): ActivityCapabilities {
     unverifiedAlerts: ALL_ALERTS.filter((metric) => (entry.alertsUnverified ?? []).includes(metric)),
     enumerated: true,
     advisory: entry.note,
+  };
+}
+
+const STYLE_ORDER: readonly AlertStyle[] = ["ZONE", "VALUE", "RANGE"];
+
+export interface AlertShape {
+  readonly styles: readonly AlertStyle[];
+  readonly readings: boolean;
+}
+
+export function alertShapeOf(metric: AlertMetric): AlertShape {
+  const table = COMPATIBILITY.alertStyles as Record<
+    string,
+    { styles: readonly string[]; currentAverageToggle: boolean }
+  >;
+  const entry = Object.hasOwn(table, metric) ? table[metric] : undefined;
+
+  return {
+    styles: STYLE_ORDER.filter((style) => (entry?.styles ?? ["VALUE"]).includes(style)),
+    readings: entry?.currentAverageToggle === true,
   };
 }

@@ -31,11 +31,17 @@ function alertSpec(alert: AlertDraft): AlertSpec {
         ? { kind: "heartRateZone", zone: alert.zone }
         : { kind: "heartRateRange", from: alert.from, to: alert.to };
     case "SPEED":
-      return { kind: "speed", metersPerSecond: alert.metersPerSecond };
+      return alert.style === "VALUE"
+        ? { kind: "speed", metersPerSecond: alert.metersPerSecond, metric: alert.reading }
+        : { kind: "speedRange", slower: alert.slower, faster: alert.faster, metric: alert.reading };
     case "CADENCE":
-      return { kind: "cadence", perMinute: alert.perMinute };
+      return alert.style === "VALUE"
+        ? { kind: "cadence", perMinute: alert.perMinute }
+        : { kind: "cadenceRange", from: alert.from, to: alert.to };
     case "POWER":
-      return { kind: "power", watts: alert.watts };
+      return alert.style === "VALUE"
+        ? { kind: "power", watts: alert.watts, metric: alert.reading }
+        : { kind: "powerRange", from: alert.from, to: alert.to, metric: alert.reading };
   }
 }
 

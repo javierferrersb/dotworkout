@@ -1,5 +1,11 @@
 import type { MessageKey } from "../i18n/messages.js";
-import type { Activity, ActivityCapabilities, AlertMetric, GoalKind } from "./activity.js";
+import {
+  alertShapeOf,
+  type Activity,
+  type ActivityCapabilities,
+  type AlertMetric,
+  type GoalKind,
+} from "./activity.js";
 import { repeats, type BlockDraft, type BlockKind } from "./block.js";
 
 export type QuestionId =
@@ -11,10 +17,13 @@ export type QuestionId =
   | "repetitions"
   | "recovery"
   | "alert"
+  | "alertReading"
+  | "alertStyle"
+  | "alertFrom"
   | "alertValue"
   | "label";
 
-export type ChoiceGroup = "kind" | "goal" | "alert" | "zone";
+export type ChoiceGroup = "kind" | "goal" | "alert" | "zone" | "reading" | "style";
 
 export interface Choice {
   readonly value: string;
@@ -177,8 +186,54 @@ export function questionSequence(
 
   questions.push(alertQuestion(capabilities));
 
-  if (draft.alertMetric !== undefined && draft.alertMetric !== "NONE") {
-    questions.push(alertValueQuestion(draft.alertMetric, activity));
+  const metric = draft.alertMetric;
+  if (metric !== undefined && metric !== "NONE") {
+    const shape = alertShapeOf(metric);
+
+    if (shape.readings) {
+      questions.push({
+        id: "alertReading",
+        promptKey: "question.reading",
+        noteKey: "question.reading.note",
+        optional: false,
+        form: {
+          type: "choice",
+          choices: ["current", "average"].map((value) => ({
+            value,
+            group: "reading" as const,
+            caution: false,
+          })),
+        },
+      });
+      if (draft.alertReading === undefined) return questions;
+    }
+
+    if (shape.styles.length > 1) {
+      questions.push({
+        id: "alertStyle",
+        promptKey: "question.style",
+        noteKey: undefined,
+        optional: false,
+        form: {
+          type: "choice",
+          choices: shape.styles.map((value) => ({
+            value,
+            group: "style" as const,
+            caution: false,
+          })),
+        },
+      });
+    }
+
+    const style = shape.styles.length > 1 ? draft.alertStyle : shape.styles[0];
+    if (style === undefined) return questions;
+
+    if (style === "RANGE") {
+      questions.push(boundQuestion("alertFrom", metric, activity, "question.from"));
+      questions.push(boundQuestion("alertValue", metric, activity, "question.to"));
+    } else {
+      questions.push(alertValueQuestion(metric, activity));
+    }
   }
 
   if (draft.kind === "INTERVAL") questions.push(labelQuestion(activity));
@@ -209,6 +264,34 @@ function alertQuestion(capabilities: ActivityCapabilities): Question {
         ...offered,
         ...unverified,
       ],
+    },
+  };
+}
+
+function boundQuestion(
+  id: QuestionId,
+  metric: AlertMetric,
+  activity: Activity,
+  promptKey: MessageKey,
+): Question {
+  if (metric === "SPEED") {
+    const running = activity.id === "RUNNING";
+    return {
+      id,
+      promptKey,
+      noteKey: running ? "question.pace.note" : "question.speed.note",
+      optional: false,
+      form: { type: "duration", placeholder: running ? "5:00" : "25" },
+    };
+  }
+  return {
+    id,
+    promptKey,
+    noteKey: undefined,
+    optional: false,
+    form: {
+      type: "count",
+      placeholder: metric === "HEART_RATE" ? "140" : metric === "POWER" ? "250" : "90",
     },
   };
 }
@@ -282,6 +365,12 @@ export function isAnswered(draft: BlockDraft, id: QuestionId): boolean {
       return draft.recovery !== undefined;
     case "alert":
       return draft.alertMetric !== undefined;
+    case "alertReading":
+      return draft.alertReading !== undefined;
+    case "alertStyle":
+      return draft.alertStyle !== undefined;
+    case "alertFrom":
+      return draft.alertFrom !== undefined;
     case "alertValue":
       return draft.alert !== undefined;
     case "label":
@@ -307,6 +396,12 @@ export function rawAnswer(draft: BlockDraft, id: QuestionId): string | undefined
       return draft.recovery === undefined ? undefined : String(draft.recovery.value);
     case "alert":
       return draft.alertMetric;
+    case "alertReading":
+      return draft.alertReading;
+    case "alertStyle":
+      return draft.alertStyle;
+    case "alertFrom":
+      return draft.alertFrom === undefined ? undefined : String(draft.alertFrom);
     case "alertValue":
       return draft.alert?.metric === "HEART_RATE" && draft.alert.style === "ZONE"
         ? String(draft.alert.zone)

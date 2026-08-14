@@ -37,6 +37,8 @@ export function choiceText(choice: Choice, activityId: string): string {
   if (choice.group === "goal") return goalName(choice.value as GoalKind);
   if (choice.group === "alert") return alertName(choice.value as AlertMetric | "NONE", activityId);
   if (choice.group === "zone") return t("alert.zone", { n: choice.value });
+  if (choice.group === "reading") return t(`reading.${choice.value}` as MessageKey);
+  if (choice.group === "style") return t(`style.${choice.value}` as MessageKey);
   return choice.value;
 }
 
@@ -45,20 +47,47 @@ export function choiceKey(choice: Choice, activityId: string): string {
   if (choice.group === "alert" && choice.value === "SPEED") {
     return activityId === "RUNNING" ? t("alertKey.SPEED.pace") : t("alertKey.SPEED.speed");
   }
-  const prefix = choice.group === "kind" ? "kindKey" : choice.group === "goal" ? "goalKey" : "alertKey";
+  const prefix =
+    choice.group === "kind"
+      ? "kindKey"
+      : choice.group === "goal"
+        ? "goalKey"
+        : choice.group === "reading"
+          ? "readingKey"
+          : choice.group === "style"
+            ? "styleKey"
+            : "alertKey";
   return t(`${prefix}.${choice.value}` as MessageKey);
 }
 
 export function alertSummary(draft: BlockDraft): string {
   const alert = draft.alert;
   if (alert === undefined) return "";
-  if (alert.metric === "HEART_RATE" && alert.style === "ZONE") {
-    return t("alert.zone", { n: alert.zone });
+  switch (alert.metric) {
+    case "HEART_RATE":
+      return alert.style === "ZONE"
+        ? t("alert.zone", { n: alert.zone })
+        : t("alert.bpm", { from: alert.from, to: alert.to });
+    case "SPEED":
+      return alert.style === "VALUE"
+        ? t("alert.mps", { value: alert.metersPerSecond.toFixed(2) })
+        : t("alert.mpsRange", {
+            from: alert.slower.toFixed(2),
+            to: alert.faster.toFixed(2),
+          });
+    case "CADENCE":
+      return alert.style === "VALUE"
+        ? t("alert.spm", { value: alert.perMinute })
+        : t("alert.spmRange", { from: alert.from, to: alert.to });
+    case "POWER":
+      return alert.style === "VALUE"
+        ? t("alert.watts", { value: alert.watts })
+        : t("alert.wattsRange", { from: alert.from, to: alert.to });
   }
-  if (alert.metric === "HEART_RATE") return t("alert.bpm", { from: alert.from, to: alert.to });
-  if (alert.metric === "SPEED") return t("alert.mps", { value: alert.metersPerSecond.toFixed(2) });
-  if (alert.metric === "CADENCE") return t("alert.spm", { value: alert.perMinute });
-  return t("alert.watts", { value: alert.watts });
+}
+
+function round(value: number): string {
+  return Number.isInteger(value) ? String(value) : value.toFixed(2);
 }
 
 export function answerLabel(draft: BlockDraft, id: QuestionId, activityId: string): string {
@@ -79,6 +108,14 @@ export function answerLabel(draft: BlockDraft, id: QuestionId, activityId: strin
       return draft.recovery === undefined ? t("alert.NONE") : formatDuration(draft.recovery);
     case "alert":
       return alertName(draft.alertMetric ?? "NONE", activityId);
+    case "alertReading":
+      return draft.alertReading === undefined
+        ? ""
+        : t(`reading.${draft.alertReading}` as MessageKey);
+    case "alertStyle":
+      return draft.alertStyle === undefined ? "" : t(`style.${draft.alertStyle}` as MessageKey);
+    case "alertFrom":
+      return draft.alertFrom === undefined ? "" : `${round(draft.alertFrom)}`;
     case "alertValue":
       return alertSummary(draft);
     case "label":

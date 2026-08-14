@@ -1,10 +1,18 @@
-import { parseDistance, parseDuration } from "@dotworkout/domain";
+import {
+  paceToMetersPerSecond,
+  parseDistance,
+  parseDuration,
+  speedToMetersPerSecond,
+} from "@dotworkout/domain";
 import {
   ACTIVITY_CATALOGUE,
+  alertShapeOf,
   capabilitiesOf,
   type Activity,
   type ActivityCapabilities,
   type AlertMetric,
+  type AlertReading,
+  type AlertStyle,
 } from "../domain/activity.js";
 import type { AlertDraft, BlockDraft, BlockKind } from "../domain/block.js";
 import {
@@ -238,30 +246,80 @@ function applyAnswer(
     case "recovery":
       return { ...draft, recovery: parseDuration(raw) };
     case "alert":
-      return { ...draft, alertMetric: raw as AlertMetric | "NONE", alert: undefined };
+      return {
+        ...draft,
+        alertMetric: raw as AlertMetric | "NONE",
+        alertReading: undefined,
+        alertStyle: undefined,
+        alertFrom: undefined,
+        alert: undefined,
+      };
+    case "alertReading":
+      return { ...draft, alertReading: raw as AlertReading, alert: undefined };
+    case "alertStyle":
+      return {
+        ...draft,
+        alertStyle: raw as AlertStyle,
+        alertFrom: undefined,
+        alert: undefined,
+      };
+    case "alertFrom":
+      return { ...draft, alertFrom: boundValue(draft.alertMetric, raw, activity), alert: undefined };
     case "alertValue":
-      return { ...draft, alert: buildAlert(draft.alertMetric, raw) };
+      return { ...draft, alert: buildAlert(draft, raw, activity) };
     case "label":
       return { ...draft, label: raw.trim() };
   }
 }
 
-function buildAlert(metric: BlockDraft["alertMetric"], raw: string): AlertDraft {
-  const value = Number(raw);
+/**
+ * Running enters a pace — minutes per kilometre — and everything else enters
+ * the number it is displayed as. Both end up as metres per second.
+ */
+function boundValue(metric: BlockDraft["alertMetric"], raw: string, activity: Activity): number {
+  if (metric !== "SPEED") return Number(raw);
+  return activity.id === "RUNNING"
+    ? paceToMetersPerSecond(raw)
+    : speedToMetersPerSecond(Number(raw));
+}
+
+function buildAlert(draft: BlockDraft, raw: string, activity: Activity): AlertDraft {
+  const metric = draft.alertMetric;
+  if (metric === undefined || metric === "NONE") throw new Error("Choose a target first");
+
+  const shape = alertShapeOf(metric);
+  const style = (shape.styles.length > 1 ? draft.alertStyle : shape.styles[0]) ?? "VALUE";
+  const reading = draft.alertReading ?? "current";
+  const value = boundValue(metric, raw, activity);
+
+  if (style === "ZONE") return { metric: "HEART_RATE", style: "ZONE", zone: Number(raw) };
+
+  if (style === "RANGE") {
+    const other = draft.alertFrom;
+    if (other === undefined) throw new Error("Give the other end of the range first");
+    const low = Math.min(other, value);
+    const high = Math.max(other, value);
+
+    switch (metric) {
+      case "HEART_RATE":
+        return { metric, style: "RANGE", from: low, to: high };
+      case "SPEED":
+        return { metric, style: "RANGE", slower: low, faster: high, reading };
+      case "CADENCE":
+        return { metric, style: "RANGE", from: low, to: high };
+      case "POWER":
+        return { metric, style: "RANGE", from: low, to: high, reading };
+    }
+  }
+
   switch (metric) {
     case "HEART_RATE":
-      return { metric: "HEART_RATE", style: "ZONE", zone: value };
-    case "SPEED": {
-      const seconds = raw.includes(":")
-        ? raw.split(":").reduce((total, part) => total * 60 + Number(part), 0)
-        : value;
-      return { metric: "SPEED", style: "VALUE", metersPerSecond: 1000 / seconds };
-    }
+      return { metric, style: "ZONE", zone: Number(raw) };
+    case "SPEED":
+      return { metric, style: "VALUE", metersPerSecond: value, reading };
     case "CADENCE":
-      return { metric: "CADENCE", style: "VALUE", perMinute: value };
+      return { metric, style: "VALUE", perMinute: value };
     case "POWER":
-      return { metric: "POWER", style: "VALUE", watts: value };
-    default:
-      throw new Error("Choose a target first");
+      return { metric, style: "VALUE", watts: value, reading };
   }
 }
