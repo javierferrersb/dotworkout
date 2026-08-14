@@ -228,3 +228,51 @@ describe("other sports", () => {
     );
   });
 });
+
+describe("warm ups and cool downs carry targets", () => {
+  // The Watch accepts them: ProbeAlertsRange, Swim_HR and
+  // Probe_Alert_Range_Zone_2_HR all came off the device with an alert on their
+  // warm up. The authoring API used to drop it silently.
+  it("keeps a heart-rate range on the warm up", () => {
+    const workout = run("hr warm up")
+      .warmup("1km", { alert: { kind: "heartRateRange", from: 120, to: 140 } })
+      .set("5km")
+      .build().customWorkout!;
+
+    const alert = workout.warmup?.workoutAlert;
+    strictEqual(alert?.alertStyle, WorkoutAlert_AlertStyle.RANGE);
+    strictEqual(alert?.heartRateRangeAlert?.heartRateRange?.lowerBound?.value, 120);
+    strictEqual(alert?.heartRateRangeAlert?.heartRateRange?.upperBound?.value, 140);
+  });
+
+  it("keeps a zone on the cool down", () => {
+    const workout = swim("zone cool down")
+      .set(100)
+      .cooldown(200, { alert: { kind: "heartRateZone", zone: 2 } })
+      .build().customWorkout!;
+
+    const alert = workout.cooldown?.workoutAlert;
+    strictEqual(alert?.alertStyle, WorkoutAlert_AlertStyle.ZONE);
+    strictEqual(alert?.heartRateRangeAlert?.heartRateZone?.zone, 2);
+  });
+
+  it("survives a round trip", () => {
+    const bytes = run("round trip")
+      .warmup("1km", { alert: { kind: "heartRateZone", zone: 3 }, label: "easy" })
+      .set("5km")
+      .toBytes();
+
+    const warmup = decode(bytes).customWorkout?.warmup;
+    strictEqual(warmup?.displayName, "easy");
+    strictEqual(warmup?.workoutAlert?.heartRateRangeAlert?.heartRateZone?.zone, 3);
+  });
+
+  it("still validates against the sport", () => {
+    const result = swim("bad")
+      .warmup(200, { alert: { kind: "power", watts: 250 } })
+      .set(100)
+      .validate();
+    strictEqual(result.ok, false);
+    strictEqual(result.errors[0]?.code, "compat.alert_not_offered");
+  });
+});

@@ -45,12 +45,14 @@ export function compose(draft: WorkoutDraft): WorkoutBinary {
   });
 
   for (const block of draft.blocks) {
+    const extras = block.alert === undefined ? {} : { alert: alertSpec(block.alert) };
+
     if (block.kind === "WARMUP") {
-      builder.warmup(stepInput(block));
+      builder.warmup(stepInput(block), extras);
       continue;
     }
     if (block.kind === "COOLDOWN") {
-      builder.cooldown(stepInput(block));
+      builder.cooldown(stepInput(block), extras);
       continue;
     }
     if (block.kind === "RECOVERY") {

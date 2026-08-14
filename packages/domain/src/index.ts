@@ -40,6 +40,7 @@ export {
   type WorkoutOptions,
   type SingleGoalOptions,
   type StepInput,
+  type StepExtras,
 } from "./builder.js";
 
 export {

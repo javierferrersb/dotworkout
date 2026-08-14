@@ -74,6 +74,18 @@ export interface WorkoutOptions {
 }
 
 /** A distance goal, or `{ time }` / `"open"` where a step is not distance-based. */
+/**
+ * Anything a warm up or cool down carries besides its goal.
+ *
+ * The Watch accepts a target on either — `ProbeAlertsRange`, `Swim_HR` and
+ * `Probe_Alert_Range_Zone_2_HR` in the corpus all put one on their warm up —
+ * so both steps take the same extras a set does.
+ */
+export interface StepExtras {
+  readonly alert?: AlertSpec;
+  readonly label?: string;
+}
+
 export type StepInput =
   | DistanceInput
   | { readonly time: DurationInput }
@@ -152,13 +164,13 @@ export class WorkoutBuilder {
     return this;
   }
 
-  warmup(input: StepInput): this {
-    this.#warmup = { goal: this.#goal(input) };
+  warmup(input: StepInput, extras: StepExtras = {}): this {
+    this.#warmup = { goal: this.#goal(input), ...extras };
     return this;
   }
 
-  cooldown(input: StepInput): this {
-    this.#cooldown = { goal: this.#goal(input) };
+  cooldown(input: StepInput, extras: StepExtras = {}): this {
+    this.#cooldown = { goal: this.#goal(input), ...extras };
     return this;
   }
 
@@ -369,11 +381,11 @@ export class SetBuilder {
   name(value: string): WorkoutBuilder {
     return this.#parent.name(value);
   }
-  warmup(input: StepInput): WorkoutBuilder {
-    return this.#parent.warmup(input);
+  warmup(input: StepInput, extras: StepExtras = {}): WorkoutBuilder {
+    return this.#parent.warmup(input, extras);
   }
-  cooldown(input: StepInput): WorkoutBuilder {
-    return this.#parent.cooldown(input);
+  cooldown(input: StepInput, extras: StepExtras = {}): WorkoutBuilder {
+    return this.#parent.cooldown(input, extras);
   }
   repeat(times: number): PendingRepeat {
     return this.#parent.repeat(times);
