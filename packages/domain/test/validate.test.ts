@@ -136,15 +136,19 @@ describe("compatibility: unverified entries warn and never reject", () => {
     );
   });
 
-  it("allows anything on an activity whose composer options were never enumerated", () => {
-    // ROWING is in customWorkoutUnverifiedActivities.
+  it("enforces a sport once its options have been read off the device", () => {
+    // Rowing used to be in customWorkoutUnverifiedActivities, so anything went
+    // with a warning. The composer has since been checked: heart rate only.
     const result = custom(CustomWorkout_ActivityType.ROWING, "erg")
       .repeat(4)
       .of("500m")
       .alert({ kind: "power", watts: 220 })
       .validate();
-    ok(result.ok, JSON.stringify(result.errors));
-    ok(result.warnings.some((w) => w.code === "compat.activity_unverified"));
+    strictEqual(result.ok, false);
+    ok(
+      result.errors.some((e) => e.code === "compat.alert_not_offered"),
+      JSON.stringify(result.errors),
+    );
   });
 
   it("allows an activity outside the known permission list, with a warning", () => {
@@ -220,6 +224,39 @@ describe("structural invariants come from protovalidate, not hand-written checks
     binary.singleGoalWorkout = other.singleGoalWorkout;
     const result = validateWorkout(binary);
     strictEqual(result.ok, false);
+  });
+});
+
+describe("a sport can offer less indoors than out", () => {
+  it("keeps speed off an indoor bike", () => {
+    const result = bike("turbo", { location: "indoor" })
+      .repeat(3)
+      .of({ time: 300 })
+      .alert({ kind: "speed", metersPerSecond: 8 })
+      .validate();
+    strictEqual(result.ok, false);
+    strictEqual(result.errors[0]?.code, "compat.alert_not_offered");
+  });
+
+  it("still takes power there, which the trainer does measure", () => {
+    const result = bike("turbo", { location: "indoor" })
+      .repeat(3)
+      .of({ time: 300 })
+      .alert({ kind: "power", watts: 220 })
+      .validate();
+    ok(result.ok, JSON.stringify(result.errors));
+  });
+
+  it("drops the distance goal indoors and keeps it outdoors", () => {
+    const inside = bike("turbo", { location: "indoor" }).repeat(1).of("5km").validate();
+    strictEqual(inside.ok, false);
+    strictEqual(inside.errors[0]?.code, "compat.goal_not_offered");
+
+    ok(bike("road").repeat(1).of("5km").validate().ok);
+  });
+
+  it("leaves a sport without an indoor block alone", () => {
+    ok(swim("pool").repeat(4).of(100).hrZone(3).validate().ok);
   });
 });
 

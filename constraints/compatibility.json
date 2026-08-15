@@ -110,7 +110,20 @@
         "POWER"
       ],
       "confidence": "confirmed",
-      "note": "Outdoor cycle offers all four. Speed carries the current/average axis and both a single value and a range, displayed in km/h. Indoor cycle was not checked."
+      "note": "Outdoor cycle offers all four. Speed carries the current/average axis and both a single value and a range, displayed in km/h. Indoors differs; see indoor.",
+      "indoor": {
+        "goalTypes": [
+          "TIME",
+          "OPEN"
+        ],
+        "alerts": [
+          "HEART_RATE",
+          "CADENCE",
+          "POWER"
+        ],
+        "confidence": "confirmed",
+        "note": "Indoor cycle drops speed and the distance goal. Cadence and power remain."
+      }
     },
     "HIGH_INTENSITY_INTERVAL_TRAINING": {
       "goalTypes": [
@@ -122,22 +135,125 @@
       ],
       "confidence": "confirmed",
       "note": "No distance goal, as expected for a non-distance sport."
+    },
+    "WALKING": {
+      "goalTypes": [
+        "DISTANCE",
+        "TIME",
+        "OPEN"
+      ],
+      "alerts": [
+        "HEART_RATE"
+      ],
+      "confidence": "confirmed"
+    },
+    "HIKING": {
+      "goalTypes": [
+        "DISTANCE",
+        "TIME",
+        "OPEN"
+      ],
+      "alerts": [
+        "HEART_RATE"
+      ],
+      "confidence": "confirmed"
+    },
+    "ROWING": {
+      "goalTypes": [
+        "DISTANCE",
+        "TIME",
+        "OPEN"
+      ],
+      "alerts": [
+        "HEART_RATE"
+      ],
+      "confidence": "confirmed",
+      "note": "Outdoor rowing keeps the distance goal; indoors it goes.",
+      "indoor": {
+        "goalTypes": [
+          "TIME",
+          "OPEN"
+        ],
+        "alerts": [
+          "HEART_RATE"
+        ],
+        "confidence": "confirmed"
+      }
+    },
+    "ELLIPTICAL": {
+      "goalTypes": [
+        "TIME",
+        "OPEN"
+      ],
+      "alerts": [
+        "HEART_RATE"
+      ],
+      "confidence": "confirmed"
+    },
+    "STAIR_CLIMBING": {
+      "goalTypes": [
+        "TIME",
+        "OPEN"
+      ],
+      "alerts": [
+        "HEART_RATE"
+      ],
+      "confidence": "confirmed"
+    },
+    "CROSS_TRAINING": {
+      "goalTypes": [
+        "TIME",
+        "OPEN"
+      ],
+      "alerts": [
+        "HEART_RATE"
+      ],
+      "confidence": "confirmed"
+    },
+    "FUNCTIONAL_STRENGTH_TRAINING": {
+      "goalTypes": [
+        "TIME",
+        "OPEN"
+      ],
+      "alerts": [
+        "HEART_RATE"
+      ],
+      "confidence": "confirmed"
+    },
+    "TRADITIONAL_STRENGTH_TRAINING": {
+      "goalTypes": [
+        "TIME",
+        "OPEN"
+      ],
+      "alerts": [
+        "HEART_RATE"
+      ],
+      "confidence": "confirmed"
+    },
+    "CORE_TRAINING": {
+      "goalTypes": [
+        "TIME",
+        "OPEN"
+      ],
+      "alerts": [
+        "HEART_RATE"
+      ],
+      "confidence": "confirmed"
+    },
+    "YOGA": {
+      "goalTypes": [
+        "TIME",
+        "OPEN"
+      ],
+      "alerts": [
+        "HEART_RATE"
+      ],
+      "confidence": "confirmed"
     }
   },
   "customWorkoutUnverifiedActivities": {
-    "_note": "WorkoutKit accepts these for custom workouts but their composer options were never enumerated. The validator should permit any goal or alert for these and emit a warning, rather than guessing a restriction.",
-    "activities": [
-      "CROSS_TRAINING",
-      "ELLIPTICAL",
-      "FUNCTIONAL_STRENGTH_TRAINING",
-      "HIKING",
-      "ROWING",
-      "STAIR_CLIMBING",
-      "TRADITIONAL_STRENGTH_TRAINING",
-      "WALKING",
-      "YOGA",
-      "CORE_TRAINING"
-    ],
+    "_note": "All fourteen activities WorkoutKit accepts for custom workouts have now been enumerated against the composer. Nothing is left half-known; the list stays so the validator keeps a home for the next activity that turns up unchecked.",
+    "activities": [],
     "confidence": "unknown"
   },
   "singleGoalWorkout": {

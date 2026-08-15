@@ -47,7 +47,8 @@ const CATALOGUE: readonly {
   { id: "WALKING_INDOOR", sport: "WALKING", location: "indoor", unit: "km" },
   { id: "HIKING", sport: "HIKING", location: "outdoor", unit: "km" },
   { id: "HIGH_INTENSITY_INTERVAL_TRAINING", sport: "HIGH_INTENSITY_INTERVAL_TRAINING", location: "outdoor", unit: "m" },
-  { id: "ROWING", sport: "ROWING", location: "indoor", unit: "m" },
+  { id: "ROWING", sport: "ROWING", location: "outdoor", unit: "m" },
+  { id: "ROWING_INDOOR", sport: "ROWING", location: "indoor", unit: "m" },
   { id: "ELLIPTICAL", sport: "ELLIPTICAL", location: "indoor", unit: "m" },
   { id: "STAIR_CLIMBING", sport: "STAIR_CLIMBING", location: "indoor", unit: "m" },
   { id: "CROSS_TRAINING", sport: "CROSS_TRAINING", location: "indoor", unit: "m" },
@@ -88,7 +89,7 @@ export function capabilitiesOf(activity: Activity): ActivityCapabilities {
       alerts: readonly string[];
       alertsUnverified?: readonly string[];
       note?: string;
-      indoor?: { alerts: readonly string[]; note?: string };
+      indoor?: { goalTypes?: readonly string[]; alerts?: readonly string[]; note?: string };
     }
   >;
   const entry = Object.hasOwn(table, activity.sport) ? table[activity.sport] : undefined;
@@ -103,13 +104,14 @@ export function capabilitiesOf(activity: Activity): ActivityCapabilities {
     };
   }
 
-  // A sport can offer fewer targets indoors than out: an indoor run drops
-  // cadence and power, which the treadmill cannot measure.
+  // Indoors a sport can offer less of both: a treadmill measures no cadence or
+  // power, and a stationary bike covers no distance.
   const override = activity.location === "indoor" ? entry.indoor : undefined;
+  const goalTypes = override?.goalTypes ?? entry.goalTypes;
   const alerts = override?.alerts ?? entry.alerts;
 
   return {
-    goals: ALL_GOALS.filter((goal) => entry.goalTypes.includes(goal)),
+    goals: ALL_GOALS.filter((goal) => goalTypes.includes(goal)),
     alerts: ALL_ALERTS.filter((metric) => alerts.includes(metric)),
     unverifiedAlerts: ALL_ALERTS.filter((metric) => (entry.alertsUnverified ?? []).includes(metric)),
     enumerated: true,
