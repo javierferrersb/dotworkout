@@ -84,6 +84,17 @@ export interface WorkoutOptions {
 export interface StepExtras {
   readonly alert?: AlertSpec;
   readonly label?: string;
+  /**
+   * Turns the distance into a send-off, the way `.on()` does for a set: leave
+   * every so often however fast you finish.
+   *
+   * No corpus file has a send-off on a warm up or a cool down — the device has
+   * only ever been seen writing distance, time or open there — so this is
+   * unverified rather than confirmed. It is allowed because the composer
+   * offers it, and silently dropping an answer someone gave is worse than
+   * writing a combination the Watch might decline.
+   */
+  readonly sendOff?: DurationInput;
 }
 
 export type StepInput =
@@ -165,12 +176,14 @@ export class WorkoutBuilder {
   }
 
   warmup(input: StepInput, extras: StepExtras = {}): this {
-    this.#warmup = { goal: this.#goal(input), ...extras };
+    const { sendOff, ...rest } = extras;
+    this.#warmup = { goal: this.#edgeGoal(input, sendOff), ...rest };
     return this;
   }
 
   cooldown(input: StepInput, extras: StepExtras = {}): this {
-    this.#cooldown = { goal: this.#goal(input), ...extras };
+    const { sendOff, ...rest } = extras;
+    this.#cooldown = { goal: this.#edgeGoal(input, sendOff), ...rest };
     return this;
   }
 
@@ -214,6 +227,17 @@ export class WorkoutBuilder {
   /** @internal */
   toGoal(input: StepInput): GoalSpec {
     return this.#goal(input);
+  }
+
+  #edgeGoal(input: StepInput, sendOff: DurationInput | undefined): GoalSpec {
+    const goal = this.#goal(input);
+    if (sendOff === undefined) return goal;
+    if (goal.kind !== "distance") {
+      throw new TypeError(
+        `a send-off turns a distance into one you leave on the clock, but this step's goal is "${goal.kind}".`,
+      );
+    }
+    return { kind: "distanceTime", distance: goal.distance, duration: parseDuration(sendOff) };
   }
 
   #goal(input: StepInput): GoalSpec {

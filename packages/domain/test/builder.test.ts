@@ -276,3 +276,42 @@ describe("warm ups and cool downs carry targets", () => {
     strictEqual(result.errors[0]?.code, "compat.alert_not_offered");
   });
 });
+
+describe("a send-off on a warm up or a cool down", () => {
+  it("survives, rather than being quietly dropped to a plain distance", () => {
+    const workout = swim("edges")
+      .warmup(50, { sendOff: "1:00", label: "Easy" })
+      .repeat(8)
+      .of(50)
+      .cooldown(200, { sendOff: "4:00" })
+      .build();
+
+    const custom = workout.customWorkout;
+    strictEqual(custom?.warmup?.workoutGoal?.goalType, WorkoutGoal_GoalType.DISTANCE_TIME);
+    strictEqual(custom?.warmup?.workoutGoal?.distanceTimeGoal?.time?.unitValue, 60);
+    strictEqual(custom?.cooldown?.workoutGoal?.goalType, WorkoutGoal_GoalType.DISTANCE_TIME);
+    strictEqual(custom?.cooldown?.workoutGoal?.distanceTimeGoal?.time?.unitValue, 240);
+  });
+
+  it("keeps the label and the target alongside it", () => {
+    const custom = swim("edges")
+      .warmup(50, { sendOff: "1:00", label: "Easy", alert: { kind: "heartRateZone", zone: 2 } })
+      .repeat(4)
+      .of(100)
+      .build().customWorkout;
+
+    strictEqual(custom?.warmup?.displayName, "Easy");
+    strictEqual(custom?.warmup?.workoutAlert?.alertStyle, WorkoutAlert_AlertStyle.ZONE);
+    strictEqual(custom?.warmup?.workoutGoal?.goalType, WorkoutGoal_GoalType.DISTANCE_TIME);
+  });
+
+  it("leaves a warm up without one as a plain distance", () => {
+    const custom = swim("edges").warmup(400).repeat(4).of(100).build().customWorkout;
+    strictEqual(custom?.warmup?.workoutGoal?.goalType, WorkoutGoal_GoalType.DISTANCE);
+  });
+
+  it("refuses a send-off on a goal that is not a distance", () => {
+    throws(() => swim("edges").warmup({ time: "10:00" }, { sendOff: "1:00" }), /send-off/);
+    throws(() => swim("edges").cooldown({ open: true }, { sendOff: "1:00" }), /send-off/);
+  });
+});

@@ -5,6 +5,7 @@ import {
   custom,
   type AlertSpec,
   type DistanceUnit,
+  type StepExtras,
   type StepInput,
   type WorkoutBuilder,
 } from "@dotworkout/domain";
@@ -44,10 +45,17 @@ const block = z.object({
   alert: alert.optional(),
 });
 
-/** A warm up or cool down carries the same target and label a set does. */
+/** A warm up or cool down carries the same target, label and send-off a set does. */
 const edgeStep = z.intersection(
   step,
-  z.object({ alert: alert.optional(), label: z.string().optional() }),
+  z.object({
+    alert: alert.optional(),
+    label: z.string().optional(),
+    sendOff: z
+      .string()
+      .optional()
+      .describe('leave on the clock, e.g. "2:00"; needs a distance goal'),
+  }),
 );
 
 export const workoutShape = {
@@ -66,10 +74,11 @@ const workoutSchema = z.object(workoutShape);
 
 export type WorkoutSpec = z.infer<typeof workoutSchema>;
 
-function extrasOf(value: z.infer<typeof edgeStep>): { alert?: AlertSpec; label?: string } {
+function extrasOf(value: z.infer<typeof edgeStep>): StepExtras {
   return {
     ...(value.alert === undefined ? {} : { alert: value.alert as AlertSpec }),
     ...(value.label === undefined ? {} : { label: value.label }),
+    ...(value.sendOff === undefined ? {} : { sendOff: value.sendOff }),
   };
 }
 

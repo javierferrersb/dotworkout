@@ -55,6 +55,7 @@ export function compose(draft: WorkoutDraft): WorkoutBinary {
     const extras = {
       ...(block.alert === undefined ? {} : { alert: alertSpec(block.alert) }),
       ...(block.label === undefined || block.label === "" ? {} : { label: block.label }),
+      ...(block.sendOff === undefined ? {} : { sendOff: block.sendOff }),
     };
 
     if (block.kind === "WARMUP") {
