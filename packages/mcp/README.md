@@ -27,6 +27,9 @@ are strings the library parses: `"400"`, `"1.2 km"`, `"0.5mi"`, `"1:00"`,
 
 ## Setup
 
+Needs [Claude Code](https://claude.com/claude-code) — the CLI, not the Claude
+website or the desktop chat. Register the server once:
+
 ```bash
 claude mcp add -s user dotworkout -- npx -y @dotworkout/mcp
 ```
@@ -47,9 +50,20 @@ It should print `dotworkout: … ✔ Connected`.
 
 ## Using it
 
-Ask for a workout in plain language:
+Ask in plain language, and end with **use dotworkout** so Claude reaches for
+these tools instead of answering from memory:
 
-> build me an 8×100 swim on 1:45 with a 400 warm up, save it to my desktop
+> Build me a swimming pyramid workout and save it to my desktop. Use dotworkout.
+
+> Make me a Norwegian 4×4 — four by four minutes in zone 4 with three minute
+> jogs between — and put it on my desktop. Use dotworkout.
+
+> What targets does an indoor cycle actually support? Build me a 45 minute
+> session using them. Use dotworkout.
+
+That last one is the point of the server. Which goals and alerts each sport
+offers was read off a real device, so Claude can ask rather than guess — and
+guessing produces a file the Watch rejects.
 
 Then send the file to your phone and open it there; it lands in the Workout app
 on your Watch.

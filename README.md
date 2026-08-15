@@ -97,9 +97,23 @@ memory, and it has no idea which goals and alerts each sport offers — that cam
 off a real device and lives in `constraints/compatibility.json`. Asking gets you
 a file the Watch accepts; guessing gets you one it rejects.
 
+It needs [Claude Code](https://claude.com/claude-code) — the CLI, not the Claude
+website. Register it once:
+
 ```bash
 claude mcp add -s user dotworkout -- npx -y @dotworkout/mcp
 ```
+
+Then ask, ending with **use dotworkout** so Claude reaches for the tools rather
+than answering from memory:
+
+> Build me a swimming pyramid workout and save it to my desktop. Use dotworkout.
+
+> Make me a Norwegian 4×4 — four by four minutes in zone 4 with three minute
+> jogs between — and put it on my desktop. Use dotworkout.
+
+> What targets does an indoor cycle actually support? Build me a 45 minute
+> session using them. Use dotworkout.
 
 The tools, and the reason `-s user` matters, are in
 [`packages/mcp/README.md`](packages/mcp/README.md).
