@@ -1,6 +1,6 @@
 {
   "$schema": "./compatibility.schema.json",
-  "_about": "Single source of truth for sport/goal/alert compatibility. The .workout format itself encodes NONE of these constraints - a power alert on a swim step serialises fine and produces a file the Watch may reject. This file is data, not schema: the validator reads it, and the table in spec/FORMAT.md §7 is generated from it. Do not hand-edit that table.",
+  "_about": "Single source of truth for which sports exist, where they are offered, and which goals and alerts each allows. The .workout format itself encodes NONE of these constraints - a power alert on a swim step serialises fine and produces a file the Watch may reject. This file is data, not schema: the validator reads it, and the table in spec/FORMAT.md §7 is generated from it. Do not hand-edit that table.",
   "_provenance": "Read off the iOS Workout app composer UI, August 2026, by a single user on one device with metric units. Apple can change this in any OS update, and regional or unit settings may vary it. Treat every entry as provisional and dated, not as a specification.",
   "_confidence": {
     "confirmed": "Observed directly in the composer UI or in a corpus file.",
@@ -68,6 +68,9 @@
         "OPEN",
         "DISTANCE_TIME"
       ],
+      "locations": [
+        "outdoor"
+      ],
       "alerts": [
         "HEART_RATE"
       ],
@@ -79,6 +82,10 @@
         "DISTANCE",
         "TIME",
         "OPEN"
+      ],
+      "locations": [
+        "outdoor",
+        "indoor"
       ],
       "alerts": [
         "SPEED",
@@ -102,6 +109,10 @@
         "TIME",
         "DISTANCE",
         "OPEN"
+      ],
+      "locations": [
+        "outdoor",
+        "indoor"
       ],
       "alerts": [
         "SPEED",
@@ -130,6 +141,9 @@
         "TIME",
         "OPEN"
       ],
+      "locations": [
+        "outdoor"
+      ],
       "alerts": [
         "HEART_RATE"
       ],
@@ -142,6 +156,10 @@
         "TIME",
         "OPEN"
       ],
+      "locations": [
+        "outdoor",
+        "indoor"
+      ],
       "alerts": [
         "HEART_RATE"
       ],
@@ -153,6 +171,9 @@
         "TIME",
         "OPEN"
       ],
+      "locations": [
+        "outdoor"
+      ],
       "alerts": [
         "HEART_RATE"
       ],
@@ -163,6 +184,10 @@
         "DISTANCE",
         "TIME",
         "OPEN"
+      ],
+      "locations": [
+        "outdoor",
+        "indoor"
       ],
       "alerts": [
         "HEART_RATE"
@@ -185,6 +210,9 @@
         "TIME",
         "OPEN"
       ],
+      "locations": [
+        "indoor"
+      ],
       "alerts": [
         "HEART_RATE"
       ],
@@ -194,6 +222,9 @@
       "goalTypes": [
         "TIME",
         "OPEN"
+      ],
+      "locations": [
+        "indoor"
       ],
       "alerts": [
         "HEART_RATE"
@@ -205,6 +236,9 @@
         "TIME",
         "OPEN"
       ],
+      "locations": [
+        "indoor"
+      ],
       "alerts": [
         "HEART_RATE"
       ],
@@ -214,6 +248,9 @@
       "goalTypes": [
         "TIME",
         "OPEN"
+      ],
+      "locations": [
+        "indoor"
       ],
       "alerts": [
         "HEART_RATE"
@@ -225,6 +262,9 @@
         "TIME",
         "OPEN"
       ],
+      "locations": [
+        "indoor"
+      ],
       "alerts": [
         "HEART_RATE"
       ],
@@ -235,6 +275,9 @@
         "TIME",
         "OPEN"
       ],
+      "locations": [
+        "indoor"
+      ],
       "alerts": [
         "HEART_RATE"
       ],
@@ -244,6 +287,9 @@
       "goalTypes": [
         "TIME",
         "OPEN"
+      ],
+      "locations": [
+        "indoor"
       ],
       "alerts": [
         "HEART_RATE"

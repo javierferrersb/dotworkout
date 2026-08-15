@@ -1,22 +1,19 @@
 import { z } from "zod";
 import {
-  bike,
-  hiit,
-  run,
-  swim,
+  SPORTS,
+  findSport,
+  custom,
   type AlertSpec,
+  type DistanceUnit,
   type StepInput,
   type WorkoutBuilder,
 } from "@dotworkout/domain";
 
-export const ACTIVITIES = [
-  "SWIMMING",
-  "RUNNING",
-  "CYCLING",
-  "HIGH_INTENSITY_INTERVAL_TRAINING",
-] as const;
+/** Every sport WorkoutKit accepts, straight from the library catalogue. */
+const NAMES = SPORTS.map((sport) => sport.name);
+export const ACTIVITIES = [NAMES[0]!, ...NAMES.slice(1)] as [string, ...string[]];
 
-export type Activity = (typeof ACTIVITIES)[number];
+export type Activity = string;
 
 const step = z.union([
   z.object({ distance: z.string().describe('e.g. "400", "1.2 km", "0.5mi"') }),
@@ -47,24 +44,34 @@ const block = z.object({
   alert: alert.optional(),
 });
 
+/** A warm up or cool down carries the same target and label a set does. */
+const edgeStep = z.intersection(
+  step,
+  z.object({ alert: alert.optional(), label: z.string().optional() }),
+);
+
 export const workoutShape = {
   activity: z.enum(ACTIVITIES),
+  location: z
+    .enum(["outdoor", "indoor"])
+    .optional()
+    .describe("indoor changes what a sport offers: a stationary bike has no speed or distance"),
   name: z.string().optional(),
-  warmup: step.optional(),
+  warmup: edgeStep.optional(),
   blocks: z.array(block).min(1),
-  cooldown: step.optional(),
+  cooldown: edgeStep.optional(),
 };
 
 const workoutSchema = z.object(workoutShape);
 
 export type WorkoutSpec = z.infer<typeof workoutSchema>;
 
-const STARTERS: Record<Activity, (name?: string) => WorkoutBuilder> = {
-  SWIMMING: swim,
-  RUNNING: run,
-  CYCLING: bike,
-  HIGH_INTENSITY_INTERVAL_TRAINING: hiit,
-};
+function extrasOf(value: z.infer<typeof edgeStep>): { alert?: AlertSpec; label?: string } {
+  return {
+    ...(value.alert === undefined ? {} : { alert: value.alert as AlertSpec }),
+    ...(value.label === undefined ? {} : { label: value.label }),
+  };
+}
 
 function toStepInput(value: z.infer<typeof step>): StepInput {
   if ("distance" in value) return value.distance;
@@ -73,9 +80,15 @@ function toStepInput(value: z.infer<typeof step>): StepInput {
 }
 
 export function buildWorkout(spec: WorkoutSpec): WorkoutBuilder {
-  const builder = STARTERS[spec.activity](spec.name);
+  const sport = findSport(spec.activity);
+  if (sport === undefined) throw new Error(`Unknown activity ${spec.activity}`);
 
-  if (spec.warmup !== undefined) builder.warmup(toStepInput(spec.warmup));
+  const builder: WorkoutBuilder = custom(sport.type, spec.name, {
+    defaultUnit: sport.defaultUnit,
+    location: spec.location ?? sport.locations[0] ?? "outdoor",
+  });
+
+  if (spec.warmup !== undefined) builder.warmup(toStepInput(spec.warmup), extrasOf(spec.warmup));
 
   for (const entry of spec.blocks) {
     const set = builder.repeat(entry.repeat).of(toStepInput(entry.work));
@@ -85,7 +98,8 @@ export function buildWorkout(spec: WorkoutSpec): WorkoutBuilder {
     if (entry.alert !== undefined) set.alert(entry.alert as AlertSpec);
   }
 
-  if (spec.cooldown !== undefined) builder.cooldown(toStepInput(spec.cooldown));
+  if (spec.cooldown !== undefined)
+    builder.cooldown(toStepInput(spec.cooldown), extrasOf(spec.cooldown));
 
   return builder;
 }

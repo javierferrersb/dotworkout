@@ -110,6 +110,20 @@ export {
   type TimeUnit,
 } from "./units.js";
 
+export { SPORTS, findSport, showsPace, type Sport } from "./sports.js";
+
+export {
+  capabilitiesFor,
+  alertShapeFor,
+  resolveEntry,
+  type SportCapabilities,
+  type AlertShape,
+  type WorkoutLocation,
+  type GoalName,
+  type AlertMetricName,
+  type AlertStyleName,
+} from "./capabilities.js";
+
 export {
   COMPATIBILITY,
   COMPATIBILITY_SOURCE_PATH,

@@ -1,4 +1,4 @@
-import { formatDistance, formatDuration } from "@dotworkout/domain";
+import { formatDistance, formatDuration, showsPace } from "@dotworkout/domain";
 import type { AlertMetric, GoalKind } from "../domain/activity.js";
 import type { BlockDraft, BlockKind } from "../domain/block.js";
 import type { Choice, Question, QuestionId } from "../domain/interview.js";
@@ -58,13 +58,6 @@ export function choiceKey(choice: Choice, sport: string): string {
             ? "styleKey"
             : "alertKey";
   return t(`${prefix}.${choice.value}` as MessageKey);
-}
-
-/** Sports whose speed target is entered and read back as a pace, not a speed. */
-const PACE_SPORTS = new Set(["RUNNING", "WALKING", "HIKING"]);
-
-export function showsPace(sport: string): boolean {
-  return PACE_SPORTS.has(sport);
 }
 
 /** Metres per second as minutes and seconds per kilometre. */

@@ -36,6 +36,7 @@ import {
   type WorkoutBinary,
 } from "@dotworkout/codec";
 import { COMPATIBILITY, COMPATIBILITY_SOURCE_PATH } from "./generated/compatibility-data.js";
+import { resolveEntry } from "./capabilities.js";
 import { alertKind, type AlertKind } from "./alerts.js";
 import { steps } from "./inspect.js";
 
@@ -221,7 +222,9 @@ function customWorkoutIssues(workout: CustomWorkout): Issue[] {
   const activity = activityName(workout.activityType);
   const indoors = workout.locationType === CustomWorkout_LocationType.INDOOR;
   const entry =
-    activity === undefined ? undefined : indoorView(lookupActivity(activity), indoors);
+    activity === undefined
+      ? undefined
+      : (resolveEntry(activity, indoors ? "indoor" : "outdoor") as ActivityEntry | undefined);
 
   if (entry === undefined) {
     // Unverified or entirely unmodelled activity: allow everything, warn once.
@@ -384,31 +387,6 @@ function unverifiedActivityIssue(
 
 type ActivityTable = typeof COMPATIBILITY.customWorkout;
 type ActivityEntry = ActivityTable[keyof ActivityTable];
-
-/**
- * A sport can offer less indoors than out: a treadmill measures no cadence or
- * power, and a stationary bike covers no distance. Entries carry an `indoor`
- * block for that; folding it in here keeps every caller honest rather than
- * leaving each UI to remember.
- */
-function indoorView(entry: ActivityEntry | undefined, indoors: boolean): ActivityEntry | undefined {
-  if (entry === undefined || !indoors) return entry;
-  const override = ("indoor" in entry ? entry.indoor : undefined) as
-    | { goalTypes?: readonly string[]; alerts?: readonly string[] }
-    | undefined;
-  if (override === undefined) return entry;
-  return {
-    ...entry,
-    ...(override.goalTypes === undefined ? {} : { goalTypes: override.goalTypes }),
-    ...(override.alerts === undefined ? {} : { alerts: override.alerts }),
-  } as ActivityEntry;
-}
-
-function lookupActivity(activity: string): ActivityEntry | undefined {
-  return Object.hasOwn(COMPATIBILITY.customWorkout, activity)
-    ? COMPATIBILITY.customWorkout[activity as keyof ActivityTable]
-    : undefined;
-}
 
 /**
  * The provenance note on a matrix entry, if it has one.

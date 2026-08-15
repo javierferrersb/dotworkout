@@ -11,7 +11,8 @@ import {
   findUnknownFields,
 } from "@dotworkout/codec";
 import {
-  COMPATIBILITY,
+  alertShapeFor,
+  capabilitiesFor,
   formatDistance,
   formatDuration,
   steps,
@@ -20,14 +21,6 @@ import {
   type Issue,
 } from "@dotworkout/domain";
 import { ACTIVITIES, buildWorkout, workoutShape, type Activity } from "./workout.js";
-
-interface MatrixEntry {
-  readonly goalTypes: readonly string[];
-  readonly alerts: readonly string[];
-  readonly alertsUnverified?: readonly string[];
-  readonly confidence: string;
-  readonly note?: string;
-}
 
 function text(body: string) {
   return { content: [{ type: "text" as const, text: body }] };
@@ -38,22 +31,31 @@ function issueLines(issues: readonly Issue[]): string {
 }
 
 function describe(activity: Activity): string {
-  const entry: MatrixEntry = COMPATIBILITY.customWorkout[activity];
-  const unverified: readonly string[] =
-    COMPATIBILITY.customWorkoutUnverifiedActivities.activities;
+  const outdoor = capabilitiesFor(activity, "outdoor");
+  const indoor = capabilitiesFor(activity, "indoor");
 
   const lines = [
-    `${activity} (confidence: ${entry.confidence}${
-      unverified.includes(activity) ? ", activity itself unverified" : ""
-    })`,
-    `  goals:  ${entry.goalTypes.join(", ")}`,
-    `  alerts: ${entry.alerts.length === 0 ? "none" : entry.alerts.join(", ")}`,
+    activity + (outdoor.enumerated ? "" : " (never enumerated: anything allowed, with a warning)"),
+    `  goals:  ${outdoor.goals.join(", ")}`,
+    `  alerts: ${outdoor.alerts.length === 0 ? "none" : outdoor.alerts.join(", ")}`,
   ];
 
-  if (entry.alertsUnverified !== undefined && entry.alertsUnverified.length > 0) {
-    lines.push(`  alerts, unverified (allowed, will warn): ${entry.alertsUnverified.join(", ")}`);
+  const differsIndoors =
+    indoor.goals.join() !== outdoor.goals.join() || indoor.alerts.join() !== outdoor.alerts.join();
+  if (differsIndoors) {
+    lines.push(`  indoors: goals ${indoor.goals.join(", ")} · alerts ${indoor.alerts.join(", ")}`);
   }
-  if (entry.note !== undefined) lines.push(`  note:   ${entry.note}`);
+
+  if (outdoor.unverifiedAlerts.length > 0) {
+    lines.push(`  alerts, unverified (allowed, will warn): ${outdoor.unverifiedAlerts.join(", ")}`);
+  }
+  if (outdoor.advisory !== undefined) lines.push(`  note:   ${outdoor.advisory}`);
+
+  for (const metric of outdoor.alerts) {
+    const shape = alertShapeFor(metric);
+    const readings = shape.readings ? " · current or average" : "";
+    lines.push(`    ${metric}: ${shape.styles.join(" | ")}${readings}`);
+  }
 
   return lines.join("\n");
 }

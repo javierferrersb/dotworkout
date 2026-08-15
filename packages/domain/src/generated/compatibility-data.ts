@@ -10,14 +10,14 @@
 
 /** SHA-256 of constraints/compatibility.json at generation time. */
 export const COMPATIBILITY_SOURCE_SHA256 =
-  "2bfbb657567a0f438d98812062d5f61b86be6c345c8c404f3037e98fefb530d6";
+  "60b8a86fc04286c936479c1c4c20a4ac8b6aa2fcd33c35604130362764c8f21c";
 
 /** Path of the source file, relative to the repo root. */
 export const COMPATIBILITY_SOURCE_PATH = "constraints/compatibility.json";
 
 export const COMPATIBILITY = {
   "$schema": "./compatibility.schema.json",
-  "_about": "Single source of truth for sport/goal/alert compatibility. The .workout format itself encodes NONE of these constraints - a power alert on a swim step serialises fine and produces a file the Watch may reject. This file is data, not schema: the validator reads it, and the table in spec/FORMAT.md §7 is generated from it. Do not hand-edit that table.",
+  "_about": "Single source of truth for which sports exist, where they are offered, and which goals and alerts each allows. The .workout format itself encodes NONE of these constraints - a power alert on a swim step serialises fine and produces a file the Watch may reject. This file is data, not schema: the validator reads it, and the table in spec/FORMAT.md §7 is generated from it. Do not hand-edit that table.",
   "_provenance": "Read off the iOS Workout app composer UI, August 2026, by a single user on one device with metric units. Apple can change this in any OS update, and regional or unit settings may vary it. Treat every entry as provisional and dated, not as a specification.",
   "_confidence": {
     "confirmed": "Observed directly in the composer UI or in a corpus file.",
@@ -85,6 +85,9 @@ export const COMPATIBILITY = {
         "OPEN",
         "DISTANCE_TIME"
       ],
+      "locations": [
+        "outdoor"
+      ],
       "alerts": [
         "HEART_RATE"
       ],
@@ -96,6 +99,10 @@ export const COMPATIBILITY = {
         "DISTANCE",
         "TIME",
         "OPEN"
+      ],
+      "locations": [
+        "outdoor",
+        "indoor"
       ],
       "alerts": [
         "SPEED",
@@ -119,6 +126,10 @@ export const COMPATIBILITY = {
         "TIME",
         "DISTANCE",
         "OPEN"
+      ],
+      "locations": [
+        "outdoor",
+        "indoor"
       ],
       "alerts": [
         "SPEED",
@@ -147,6 +158,9 @@ export const COMPATIBILITY = {
         "TIME",
         "OPEN"
       ],
+      "locations": [
+        "outdoor"
+      ],
       "alerts": [
         "HEART_RATE"
       ],
@@ -159,6 +173,10 @@ export const COMPATIBILITY = {
         "TIME",
         "OPEN"
       ],
+      "locations": [
+        "outdoor",
+        "indoor"
+      ],
       "alerts": [
         "HEART_RATE"
       ],
@@ -170,6 +188,9 @@ export const COMPATIBILITY = {
         "TIME",
         "OPEN"
       ],
+      "locations": [
+        "outdoor"
+      ],
       "alerts": [
         "HEART_RATE"
       ],
@@ -180,6 +201,10 @@ export const COMPATIBILITY = {
         "DISTANCE",
         "TIME",
         "OPEN"
+      ],
+      "locations": [
+        "outdoor",
+        "indoor"
       ],
       "alerts": [
         "HEART_RATE"
@@ -202,6 +227,9 @@ export const COMPATIBILITY = {
         "TIME",
         "OPEN"
       ],
+      "locations": [
+        "indoor"
+      ],
       "alerts": [
         "HEART_RATE"
       ],
@@ -211,6 +239,9 @@ export const COMPATIBILITY = {
       "goalTypes": [
         "TIME",
         "OPEN"
+      ],
+      "locations": [
+        "indoor"
       ],
       "alerts": [
         "HEART_RATE"
@@ -222,6 +253,9 @@ export const COMPATIBILITY = {
         "TIME",
         "OPEN"
       ],
+      "locations": [
+        "indoor"
+      ],
       "alerts": [
         "HEART_RATE"
       ],
@@ -231,6 +265,9 @@ export const COMPATIBILITY = {
       "goalTypes": [
         "TIME",
         "OPEN"
+      ],
+      "locations": [
+        "indoor"
       ],
       "alerts": [
         "HEART_RATE"
@@ -242,6 +279,9 @@ export const COMPATIBILITY = {
         "TIME",
         "OPEN"
       ],
+      "locations": [
+        "indoor"
+      ],
       "alerts": [
         "HEART_RATE"
       ],
@@ -252,6 +292,9 @@ export const COMPATIBILITY = {
         "TIME",
         "OPEN"
       ],
+      "locations": [
+        "indoor"
+      ],
       "alerts": [
         "HEART_RATE"
       ],
@@ -261,6 +304,9 @@ export const COMPATIBILITY = {
       "goalTypes": [
         "TIME",
         "OPEN"
+      ],
+      "locations": [
+        "indoor"
       ],
       "alerts": [
         "HEART_RATE"
