@@ -10,7 +10,7 @@
 
 /** SHA-256 of constraints/compatibility.json at generation time. */
 export const COMPATIBILITY_SOURCE_SHA256 =
-  "cea723d2e29f9d2e0c143d66974387c48e0e5786bf86503d16ba6ebea2509038";
+  "38814ce05d50fe2bcd92d18aebf65cf4a21ade45d698ca835d5bb9513e25332c";
 
 /** Path of the source file, relative to the repo root. */
 export const COMPATIBILITY_SOURCE_PATH = "constraints/compatibility.json";
@@ -103,7 +103,16 @@ export const COMPATIBILITY = {
         "CADENCE",
         "POWER"
       ],
-      "confidence": "confirmed"
+      "confidence": "confirmed",
+      "note": "Outdoor. Indoors the composer drops cadence and power; see indoor.",
+      "indoor": {
+        "alerts": [
+          "SPEED",
+          "HEART_RATE"
+        ],
+        "confidence": "confirmed",
+        "note": "Indoor run offers pace and heart rate only. Cadence and power are absent."
+      }
     },
     "CYCLING": {
       "goalTypes": [
@@ -112,15 +121,13 @@ export const COMPATIBILITY = {
         "OPEN"
       ],
       "alerts": [
-        "SPEED"
-      ],
-      "alertsUnverified": [
+        "SPEED",
         "HEART_RATE",
         "CADENCE",
         "POWER"
       ],
       "confidence": "confirmed",
-      "note": "Goal types confirmed. Only the Speed alert was verified; the other three are very likely offered but were never checked. Validator should warn rather than reject on those."
+      "note": "Outdoor cycle offers all four. Speed carries the current/average axis and both a single value and a range, displayed in km/h. Indoor cycle was not checked."
     },
     "HIGH_INTENSITY_INTERVAL_TRAINING": {
       "goalTypes": [

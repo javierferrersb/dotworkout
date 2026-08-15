@@ -287,21 +287,23 @@ onto a swim step; it would serialise fine and the Watch might reject or ignore
 it. Validation belongs in the library's domain layer, using this matrix.
 
 **The matrix lives in `constraints/compatibility.json`, not here.** That file is
-the single source of truth: the validator reads it and this table is generated
-from it. It carries dating and per-entry confidence that a markdown table
-cannot. Do not hand-edit the table below.
-
-<!-- BEGIN GENERATED: constraints/compatibility.json -->
+the single source of truth: the validator reads it. This table is a summary of
+it, kept in step by hand; the JSON carries the dating and per-entry confidence a
+markdown table cannot.
 
 | Sport | Goal types | Alert types |
 |---|---|---|
 | Pool swim | Time, Distance, Open, **Distance · Time** | Heart rate |
-| Running | Distance, Time, Open | Pace, Heart rate, Cadence, Power |
-| Cycling | Time, Distance, Open | Speed *(others unverified)* |
+| Running, outdoor | Distance, Time, Open | Pace, Heart rate, Cadence, Power |
+| Running, indoor | Distance, Time, Open | Pace, Heart rate |
+| Cycling, outdoor | Time, Distance, Open | Speed, Heart rate, Cadence, Power |
 | HIIT | Time, Open | Heart rate |
 | *(single-goal workouts)* | Distance, Time, **Energy** | n/a |
 
-<!-- END GENERATED -->
+**Targets vary by location, not only by sport.** An indoor run drops cadence and
+power. Entries carry an optional `indoor` block overriding the alert list;
+without one, a sport offers the same targets wherever it is done. Indoor cycle
+has not been checked.
 
 Unverified entries must be **allowed with a warning**, never rejected. A
 combination that was never checked is not a combination known to be illegal, and

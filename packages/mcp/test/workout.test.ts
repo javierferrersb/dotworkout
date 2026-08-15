@@ -51,7 +51,7 @@ test("an alert the sport does not offer is an error", () => {
   assert.equal(result.errors[0]?.code, "compat.alert_not_offered");
 });
 
-test("an unverified combination warns but is allowed", () => {
+test("a bike takes every target the device offers", () => {
   const binary = buildWorkout({
     activity: "CYCLING",
     blocks: [{ repeat: 1, work: { time: "10:00" }, alert: { kind: "power", watts: 250 } }],
@@ -59,5 +59,5 @@ test("an unverified combination warns but is allowed", () => {
 
   const result = validateWorkout(binary);
   assert.equal(result.ok, true);
-  assert.ok(result.warnings.length > 0);
+  assert.equal(result.warnings.length, 0, JSON.stringify(result.warnings));
 });

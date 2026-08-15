@@ -124,14 +124,16 @@ describe("compatibility: confirmed entries are enforced", () => {
 });
 
 describe("compatibility: unverified entries warn and never reject", () => {
-  it("allows a heart-rate alert on a bike, with a warning", () => {
-    // CYCLING lists HEART_RATE under alertsUnverified: very likely offered,
-    // never checked.
+  it("takes a heart-rate alert on a bike without complaint", () => {
+    // Checked on the device: an outdoor cycle offers all four targets, so this
+    // is no longer the "unverified" case it used to be.
     const result = bike("hr ride").repeat(3).of("5km").hrZone(2).validate();
     ok(result.ok, `should not be rejected: ${JSON.stringify(result.errors)}`);
-    const warning = result.warnings.find((w) => w.code === "compat.alert_unverified");
-    ok(warning, JSON.stringify(result.warnings));
-    strictEqual(warning.confidence, "unknown");
+    strictEqual(
+      result.warnings.filter((w) => w.code === "compat.alert_unverified").length,
+      0,
+      JSON.stringify(result.warnings),
+    );
   });
 
   it("allows anything on an activity whose composer options were never enumerated", () => {

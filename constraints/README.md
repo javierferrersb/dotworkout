@@ -22,6 +22,13 @@ apart: the table in `spec/FORMAT.md` §7 is generated from this file.
 | Compatibility | this file | swimming allows `DISTANCE_TIME`; HIIT has no distance goal |
 | Reasoning and provenance | `spec/FORMAT.md` | why pace bounds read backwards |
 
+## Location overrides
+
+A sport can offer fewer targets indoors than out — an indoor run has no cadence
+or power, because a treadmill cannot measure them. An entry may carry an
+`indoor` block overriding `alerts`. Without one, the sport offers the same
+targets in both places.
+
 ## Confidence levels
 
 Every entry has a `confidence` field:

@@ -83,7 +83,13 @@ const ALL_ALERTS: readonly AlertMetric[] = ["HEART_RATE", "SPEED", "CADENCE", "P
 export function capabilitiesOf(activity: Activity): ActivityCapabilities {
   const table = COMPATIBILITY.customWorkout as Record<
     string,
-    { goalTypes: readonly string[]; alerts: readonly string[]; alertsUnverified?: readonly string[]; note?: string }
+    {
+      goalTypes: readonly string[];
+      alerts: readonly string[];
+      alertsUnverified?: readonly string[];
+      note?: string;
+      indoor?: { alerts: readonly string[]; note?: string };
+    }
   >;
   const entry = Object.hasOwn(table, activity.sport) ? table[activity.sport] : undefined;
 
@@ -97,12 +103,17 @@ export function capabilitiesOf(activity: Activity): ActivityCapabilities {
     };
   }
 
+  // A sport can offer fewer targets indoors than out: an indoor run drops
+  // cadence and power, which the treadmill cannot measure.
+  const override = activity.location === "indoor" ? entry.indoor : undefined;
+  const alerts = override?.alerts ?? entry.alerts;
+
   return {
     goals: ALL_GOALS.filter((goal) => entry.goalTypes.includes(goal)),
-    alerts: ALL_ALERTS.filter((metric) => entry.alerts.includes(metric)),
+    alerts: ALL_ALERTS.filter((metric) => alerts.includes(metric)),
     unverifiedAlerts: ALL_ALERTS.filter((metric) => (entry.alertsUnverified ?? []).includes(metric)),
     enumerated: true,
-    advisory: entry.note,
+    advisory: override?.note ?? entry.note,
   };
 }
 
