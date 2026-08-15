@@ -21,9 +21,9 @@
     "generate:proto": "buf generate",
     "generate:constraints": "node scripts/gen-compatibility.mjs",
     "generate:icons": "node scripts/gen-icons.mjs apple 10",
-    "build": "tsc -b packages/codec packages/domain packages/notation packages/mcp",
-    "clean": "tsc -b --clean packages/codec packages/domain packages/notation packages/mcp",
-    "test": "npm run build && node --test \"packages/*/dist/test/*.test.js\"",
+    "build": "tsc -b packages/codec packages/domain packages/notation packages/mcp packages/pwa/tsconfig.test.json",
+    "clean": "tsc -b --clean packages/codec packages/domain packages/notation packages/mcp packages/pwa/tsconfig.test.json",
+    "test": "npm run build && node --test \"packages/*/dist/test/*.test.js\" \"packages/pwa/dist-test/test/*.test.js\"",
     "check": "npm run generate && npm run test"
   },
   "devDependencies": {

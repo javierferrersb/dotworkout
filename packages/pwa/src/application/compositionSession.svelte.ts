@@ -22,6 +22,7 @@ import {
   type Question,
   type QuestionId,
 } from "../domain/interview.js";
+import { inPerformedOrder, isPinned, moved } from "../domain/order.js";
 import { activityName } from "../i18n/format.js";
 import { inspect, type WorkoutDraft } from "./workoutComposition.js";
 
@@ -191,29 +192,20 @@ export class CompositionSession {
     this.focused = undefined;
   }
 
-  /**
-   * A warm up and a cool down are single fields on the wire pinned to the ends
-   * of the workout, so there is only ever one of each and it never moves.
-   */
-  private pinned(index: number): boolean {
-    const block = this.blocks[index];
-    return block === undefined || block.kind === "WARMUP" || block.kind === "COOLDOWN";
-  }
-
   canDuplicate(index: number): boolean {
-    return !this.pinned(index);
+    return !isPinned(this.blocks[index]);
   }
 
   canReorder(index: number): boolean {
-    return !this.pinned(index);
+    return !isPinned(this.blocks[index]);
   }
 
   canMoveUp(index: number): boolean {
-    return this.canReorder(index) && !this.pinned(index - 1);
+    return this.canReorder(index) && !isPinned(this.blocks[index - 1]);
   }
 
   canMoveDown(index: number): boolean {
-    return this.canReorder(index) && !this.pinned(index + 1);
+    return this.canReorder(index) && !isPinned(this.blocks[index + 1]);
   }
 
   duplicateBlock(index: number): void {
@@ -225,17 +217,10 @@ export class CompositionSession {
     this.settle([...this.blocks.slice(0, index + 1), copy, ...this.blocks.slice(index + 1)], copy);
   }
 
-  /**
-   * Reordering cannot lift a set above the warm up or below the cool down —
-   * those are pinned by the format, so a drop past them lands beside them.
-   */
   moveBlock(from: number, to: number): void {
     const block = this.blocks[from];
     if (block === undefined || from === to) return;
-
-    const rest = this.blocks.filter((_, position) => position !== from);
-    const at = Math.max(0, Math.min(rest.length, to));
-    this.settle([...rest.slice(0, at), block, ...rest.slice(at)], block);
+    this.settle(moved(this.blocks, from, to), block);
   }
 
   private settle(blocks: readonly BlockDraft[], follow: BlockDraft): void {
@@ -259,13 +244,6 @@ export class CompositionSession {
     this.blocks = settled;
     this.cursor = settled.indexOf(next);
   }
-}
-
-function inPerformedOrder(blocks: readonly BlockDraft[]): BlockDraft[] {
-  const warmups = blocks.filter((block) => block.kind === "WARMUP");
-  const cooldowns = blocks.filter((block) => block.kind === "COOLDOWN");
-  const middle = blocks.filter((block) => block.kind !== "WARMUP" && block.kind !== "COOLDOWN");
-  return [...warmups, ...middle, ...cooldowns];
 }
 
 function applyAnswer(

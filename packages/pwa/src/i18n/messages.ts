@@ -112,7 +112,6 @@ const en = {
   "styleKey.VALUE": "T",
   "styleKey.RANGE": "R",
 
-  "alert.mpsRange": "{from}–{to} m/s",
   "alert.spmRange": "{from}–{to} spm",
   "alert.wattsRange": "{from}–{to} W",
   "question.label": "Name it",
@@ -173,7 +172,6 @@ const en = {
   "alert.paceRange": "{from}–{to} /km",
   "alert.speed": "{value} km/h",
   "alert.speedRange": "{from}–{to} km/h",
-  "alert.mps": "{value} m/s",
   "alert.spm": "{value} spm",
   "alert.watts": "{value} W",
 
@@ -182,7 +180,6 @@ const en = {
   "rail.total": "Total",
   "rail.download": "Download",
   "rail.scan": "Scan to phone",
-  "rail.share": "Share",
   "rail.whatsapp": "WhatsApp",
   "rail.privacy": "Nothing leaves this device unless you share it.",
   "rail.saved": "Saved {file}",
@@ -378,7 +375,6 @@ const es: Record<MessageKey, string> = {
   "styleKey.VALUE": "O",
   "styleKey.RANGE": "R",
 
-  "alert.mpsRange": "{from}–{to} m/s",
   "alert.spmRange": "{from}–{to} spm",
   "alert.wattsRange": "{from}–{to} W",
   "question.label": "Ponle nombre",
@@ -439,7 +435,6 @@ const es: Record<MessageKey, string> = {
   "alert.paceRange": "{from}–{to} /km",
   "alert.speed": "{value} km/h",
   "alert.speedRange": "{from}–{to} km/h",
-  "alert.mps": "{value} m/s",
   "alert.spm": "{value} ppm",
   "alert.watts": "{value} W",
 
@@ -448,7 +443,6 @@ const es: Record<MessageKey, string> = {
   "rail.total": "Total",
   "rail.download": "Descargar",
   "rail.scan": "Escanear en el móvil",
-  "rail.share": "Compartir",
   "rail.whatsapp": "WhatsApp",
   "rail.privacy": "No sale nada de este dispositivo salvo que tú lo compartas.",
   "rail.saved": "Guardado {file}",

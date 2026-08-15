@@ -1,5 +1,6 @@
 node_modules/
 dist/
+dist-test/
 *.tsbuildinfo
 
 # Generated code IS checked in, deliberately — building must not require protoc

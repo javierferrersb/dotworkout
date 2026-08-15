@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "outDir": "dist-test"
+  },
+  "include": [
+    "src/i18n/messages.ts",
+    "src/domain/**/*.ts",
+    "src/application/workoutComposition.ts",
+    "test/**/*.ts"
+  ],
+  "references": [{ "path": "../codec" }, { "path": "../domain" }]
+}
