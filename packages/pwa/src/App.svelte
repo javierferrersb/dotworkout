@@ -236,12 +236,39 @@
     display: flex;
     align-items: center;
     gap: 12px;
+    /* Never wider than the screen: Spanish runs 420px, which hangs off both
+       edges of a phone, and a narrow phone loses the English wording too. */
+    max-width: calc(100% - 24px);
     padding: 10px 12px 10px 18px;
     border-radius: var(--radius-pill);
     background: var(--bg-surface);
     box-shadow: var(--shadow);
     font-size: 13px;
     white-space: nowrap;
+  }
+
+  @media (max-width: 560px) {
+    /* Below the top bar rather than above the sheet: the sheet is the primary
+       action bar down there, its height moves with its contents, and the pill
+       was landing squarely on the download button. */
+    .resumed {
+      top: 58px;
+      bottom: auto;
+      left: 12px;
+      right: 12px;
+      transform: none;
+      max-width: none;
+      flex-wrap: wrap;
+      justify-content: center;
+      border-radius: 18px;
+      padding: 12px 14px;
+      white-space: normal;
+      text-align: center;
+    }
+
+    .resumed span {
+      flex: 1 0 100%;
+    }
   }
 
   .resumed button {

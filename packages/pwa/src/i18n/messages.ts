@@ -286,7 +286,7 @@ const es: Record<MessageKey, string> = {
   "welcome.fix3.body":
     "Obtienes un archivo .workout real. Envíatelo, ábrelo en el móvil y llega a la app Entreno del reloj.",
   "welcome.cta": "Crear un entrenamiento",
-  "welcome.privacy": "Todo ocurre en tu dispositivo. No se sube nada a internet, así que tus entrenamientos son solo tuyos.",
+  "welcome.privacy": "Nada se guarda online: se respeta tu privacidad.",
   "welcome.source": "Mira el código y contribuye en GitHub",
 
   "about.open": "Acerca de Dot Workout",
