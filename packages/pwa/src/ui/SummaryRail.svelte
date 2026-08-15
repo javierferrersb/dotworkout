@@ -15,7 +15,7 @@
   import type { CompositionSession } from "../application/compositionSession.svelte.js";
   import { whatsappLink, type ShareRoute } from "../application/share.js";
   import { download } from "../application/workoutFile.js";
-  import { alertSummary, blockKindName, blockSummary } from "../i18n/format.js";
+  import { alertSummary, blockHeading, blockKindName, blockSummary, questionText } from "../i18n/format.js";
   import { t } from "../i18n/locale.svelte.js";
   import InstallHelp from "./InstallHelp.svelte";
   import SendPanel from "./SendPanel.svelte";
@@ -30,7 +30,11 @@
 
   let totals = $derived(session.preview.totals);
   let validation = $derived(session.preview.validation);
-  let blocked = $derived(session.blocks.length === 0 || (validation?.errors.length ?? 0) > 0);
+  let blocked = $derived(
+    session.blocks.length === 0 ||
+      (validation?.errors.length ?? 0) > 0 ||
+      session.unfinished.length > 0,
+  );
   let notice = $state<string | undefined>(undefined);
   let sending = $state(false);
   let helping = $state<ShareRoute | undefined>(undefined);
@@ -205,6 +209,18 @@
   </div>
 
   <div class="foot">
+    {#each session.unfinished.slice(0, 2) as entry (entry.index)}
+      <button
+        class="error unfinished"
+        onclick={() => session.goToBlock(entry.index)}
+      >
+        {t("rail.unfinished", {
+          block: blockHeading(session.blocks[entry.index] ?? {}, entry.index),
+          question: questionText(entry.question),
+        })}
+      </button>
+    {/each}
+
     {#if validation && validation.errors.length > 0}
       {#each validation.errors.slice(0, 2) as issue (issue.code + issue.path)}
         <p class="error">{issue.message}</p>
@@ -460,6 +476,14 @@
     color: var(--danger);
     font-size: 12px;
     line-height: 1.4;
+  }
+
+  .unfinished {
+    width: 100%;
+    text-align: left;
+    padding: 0;
+    text-decoration: underline;
+    text-underline-offset: 2px;
   }
 
   .total {

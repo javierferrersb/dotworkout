@@ -18,9 +18,11 @@ import type { AlertDraft, BlockDraft, BlockKind } from "../domain/block.js";
 import {
   isAnswered,
   questionSequence,
+  unfinishedBlocks,
   type BlockContext,
   type Question,
   type QuestionId,
+  type Unfinished,
 } from "../domain/interview.js";
 import { inPerformedOrder, isPinned, moved } from "../domain/order.js";
 import { activityName } from "../i18n/format.js";
@@ -79,6 +81,10 @@ export class CompositionSession {
   });
 
   preview = $derived(inspect(this.workout));
+
+  unfinished = $derived<readonly Unfinished[]>(
+    unfinishedBlocks(this.blocks, this.activity, this.capabilities),
+  );
 
   complete = $derived<boolean>(
     this.questions.every((question) => question.optional || isAnswered(this.draft, question.id)),
@@ -255,14 +261,19 @@ function applyAnswer(
   switch (id) {
     case "kind":
       return draft.kind === raw ? draft : { kind: raw as BlockKind, label: draft.label };
+    // Changing the goal drops the measurements taken under the old one, which
+    // means confirming the goal you already had must be a no-op — otherwise
+    // reopening a finished block to look at it throws its numbers away.
     case "goal":
-      return {
-        ...draft,
-        goalKind: raw as BlockDraft["goalKind"],
-        distance: undefined,
-        duration: undefined,
-        sendOff: undefined,
-      };
+      return draft.goalKind === raw
+        ? draft
+        : {
+            ...draft,
+            goalKind: raw as BlockDraft["goalKind"],
+            distance: undefined,
+            duration: undefined,
+            sendOff: undefined,
+          };
     case "distance":
       return { ...draft, distance: parseDistance(raw, activity.defaultDistanceUnit) };
     case "duration":
@@ -279,23 +290,29 @@ function applyAnswer(
     case "recovery":
       return { ...draft, recovery: parseDuration(raw) };
     case "alert":
-      return {
-        ...draft,
-        alertMetric: raw as AlertMetric | "NONE",
-        alertReading: undefined,
-        alertStyle: undefined,
-        alertFrom: undefined,
-        alert: undefined,
-      };
+      return draft.alertMetric === raw
+        ? draft
+        : {
+            ...draft,
+            alertMetric: raw as AlertMetric | "NONE",
+            alertReading: undefined,
+            alertStyle: undefined,
+            alertFrom: undefined,
+            alert: undefined,
+          };
     case "alertReading":
-      return { ...draft, alertReading: raw as AlertReading, alert: undefined };
+      return draft.alertReading === raw
+        ? draft
+        : { ...draft, alertReading: raw as AlertReading, alert: undefined };
     case "alertStyle":
-      return {
-        ...draft,
-        alertStyle: raw as AlertStyle,
-        alertFrom: undefined,
-        alert: undefined,
-      };
+      return draft.alertStyle === raw
+        ? draft
+        : {
+            ...draft,
+            alertStyle: raw as AlertStyle,
+            alertFrom: undefined,
+            alert: undefined,
+          };
     case "alertFrom":
       return { ...draft, alertFrom: boundValue(draft.alertMetric, raw, activity), alert: undefined };
     case "alertValue":

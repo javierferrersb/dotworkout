@@ -378,6 +378,37 @@ export function isAnswered(draft: BlockDraft, id: QuestionId): boolean {
   }
 }
 
+export interface Unfinished {
+  readonly index: number;
+  readonly question: Question;
+}
+
+/**
+ * Blocks with a required question still unanswered.
+ *
+ * Composing one does not fail — it quietly produces a different workout. A set
+ * that asked for a send-off but never got one comes out as a plain distance
+ * goal, which the Watch accepts and runs, so nothing downstream can tell the
+ * author they did not get what they asked for. This is where that is caught.
+ */
+export function unfinishedBlocks(
+  blocks: readonly BlockDraft[],
+  activity: Activity,
+  capabilities: ActivityCapabilities,
+): readonly Unfinished[] {
+  return blocks.flatMap((block, index) => {
+    const questions = questionSequence(block, activity, capabilities, {
+      hasWarmup: blocks.some((other, at) => other.kind === "WARMUP" && at !== index),
+      hasCooldown: blocks.some((other, at) => other.kind === "COOLDOWN" && at !== index),
+      position: index,
+    });
+    const missing = questions.find(
+      (question) => !question.optional && !isAnswered(block, question.id),
+    );
+    return missing === undefined ? [] : [{ index, question: missing }];
+  });
+}
+
 export function rawAnswer(draft: BlockDraft, id: QuestionId): string | undefined {
   switch (id) {
     case "kind":
