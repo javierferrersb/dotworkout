@@ -69,22 +69,10 @@ Everything you did not touch comes back byte for byte.
 
 ## Notation
 
-`@dotworkout/notation` parses sets written as text. A bare number is a distance.
-Times need a colon or a unit, because guessing wrong there gives you a different
-workout without telling you.
-
-```
-400 warmup            warm up of 400 m
-8x50 on 1:00          8 × 50 m, leaving every 1:00
-4x100 pull rest :20   labelled "pull", 20 s rest after each
-4x1:00                4 × 1 minute
-8x50 z3               heart-rate zone 3
-100y                  100 yards, stored as yards
-200 cd                cool down
-```
-
-Words the grammar does not recognise become the step label. The format has no
-stroke field, so stroke is free text (spec §3).
+`@dotworkout/notation` parses sets written as text — `8x50 on 1:00 Build`. It is
+not published, because nothing consumes it since the terminal composer was
+removed. The grammar is in
+[`packages/notation/README.md`](packages/notation/README.md).
 
 ## Building workouts with an agent
 
@@ -143,18 +131,13 @@ For each of the 20 files in `testdata/`, three assertions:
 The third one is the point. Protobuf keeps fields it does not recognise and
 writes them back out, so nine of these files round-trip perfectly against a
 schema that is missing fields. Byte-identical output is not evidence of a
-correct schema. Checking for unknown fields is.
-
-protobuf-es v2 puts unrecognised fields on each message's `$unknown` property, so
-`findUnknownFields()` walks the whole tree rather than just the root. Checking
-only the root would miss every one of them — `SpeedAlert.speed_target` sits four
-levels down.
+correct schema. Checking for unknown fields is — and the check walks the whole
+tree, since `SpeedAlert.speed_target` sits four levels down.
 
 `packages/codec/test/unknown-fields.test.ts` is the control. It breaks the schema
-at runtime in six of the ten ways the upstream schema was actually broken, then
-checks that each broken version still round-trips byte-identically while
-assertion 3 catches it. Without that, a passing assertion 3 only proves the
-schema agrees with itself.
+at runtime in six of the ten ways the upstream schema was actually broken, and
+checks that assertion 3 catches each one. Without that, a passing assertion 3
+only proves the schema agrees with itself.
 
 ## Where the rules live
 
@@ -169,14 +152,13 @@ The compatibility matrix is read at build time into
 TypeScript or in prose. A test recomputes the source file's SHA-256 and fails if
 the JSON changed without regenerating.
 
-Entries in the matrix carry a confidence level. Confirmed ones are enforced: a
-power alert on a swim is an error. Unverified ones warn and are still allowed.
-The matrix came off one device on one day, so a combination nobody tested is not
-a combination known to be illegal. Getting it wrong the permissive way costs you
-a file the Watch declines to import. Getting it wrong the strict way costs you a
-workout you cannot create at all. `validateWorkout(msg, { downgradeToWarning })`
-takes a list of issue codes, so you do not have to edit the library when the
-matrix is wrong.
+Entries carry a confidence level. Confirmed ones are enforced: a power alert on
+a swim is an error. Unverified ones warn and are still allowed, because the
+matrix came off one device on one day, and a combination nobody tested is not a
+combination known to be illegal. Being too permissive costs you a file the Watch
+declines to import; being too strict costs you a workout you cannot create at
+all. `validateWorkout(msg, { downgradeToWarning })` takes a list of issue codes,
+so you never have to edit the library when the matrix is wrong.
 
 ## What this does not do
 

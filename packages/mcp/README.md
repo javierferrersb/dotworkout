@@ -25,6 +25,10 @@ validator that says what is wrong.
 are strings the library parses: `"400"`, `"1.2 km"`, `"0.5mi"`, `"1:00"`,
 `":20"`, `"90s"`.
 
+Sports offered both indoors and out take a `location`, and it changes what is
+allowed — a stationary bike has no speed target and no distance goal. The warm
+up and the cool down carry a target and a label of their own.
+
 ## Setup
 
 Needs [Claude Code](https://claude.com/claude-code) — the CLI, not the Claude
@@ -61,9 +65,8 @@ these tools instead of answering from memory:
 > What targets does an indoor cycle actually support? Build me a 45 minute
 > session using them. Use dotworkout.
 
-That last one is the point of the server. Which goals and alerts each sport
-offers was read off a real device, so Claude can ask rather than guess — and
-guessing produces a file the Watch rejects.
+That last one is the point of the server: Claude can ask what a sport supports
+rather than guess.
 
 Then send the file to your phone and open it there; it lands in the Workout app
 on your Watch.

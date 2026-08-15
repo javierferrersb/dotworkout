@@ -24,6 +24,18 @@ confidence level: confirmed rules are enforced, unverified ones warn but are
 still allowed. Pass `downgradeToWarning` a list of issue codes when the matrix
 is wrong, so you never have to edit the library.
 
+The same rules are readable before you build anything, so a UI can offer only
+what the sport accepts:
+
+```ts
+import { SPORTS, capabilitiesFor } from "@dotworkout/domain";
+
+capabilitiesFor("CYCLING", "indoor"); // no speed target, no distance goal
+```
+
+`SPORTS` is every sport the format accepts, with the locations it is offered in
+and the unit a bare number is read as.
+
 Three things this deliberately does not do: convert units (lossy, so authored
 units are kept), count laps (pool length is chosen on the Watch, not stored in
 the file), or assume a container type.

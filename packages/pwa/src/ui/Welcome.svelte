@@ -1,9 +1,11 @@
 <script lang="ts">
   import { fly } from "svelte/transition";
-  import { Code } from "@lucide/svelte";
-  import { t } from "../i18n/locale.svelte.js";
+  import { Code, Languages } from "@lucide/svelte";
+  import { locale, t } from "../i18n/locale.svelte.js";
   import { keys } from "../i18n/keys.svelte.js";
+  import { LOCALES, type LocaleCode } from "../i18n/messages.js";
   import About from "./About.svelte";
+  import Menu from "./Menu.svelte";
   import { pointer } from "./pointer.svelte.js";
 
   interface Props {
@@ -12,6 +14,8 @@
   let { oncontinue }: Props = $props();
 
   let about = $state(false);
+
+  let localeOptions = $derived(LOCALES.map((entry) => ({ value: entry.code, label: entry.label })));
 
   let touch = $derived(pointer.coarse);
 
@@ -71,6 +75,18 @@
         <Code size={15} strokeWidth={2} />
         {t("welcome.source")}
       </a>
+
+      <Menu
+        label={t("language.label")}
+        options={localeOptions}
+        selected={locale.code}
+        onselect={(value) => locale.set(value as LocaleCode)}
+      >
+        {#snippet trigger()}
+          <Languages size={15} strokeWidth={2} />
+          <span>{locale.code.toUpperCase()}</span>
+        {/snippet}
+      </Menu>
     </footer>
   </div>
 </div>
@@ -94,6 +110,8 @@
 
   .mark {
     display: block;
+    width: 76px;
+    height: 76px;
     padding: 0;
     margin: 0 0 20px;
     border-radius: 12px;
@@ -106,6 +124,8 @@
 
   .mark img {
     display: block;
+    width: 100%;
+    height: 100%;
   }
 
   h1 {
@@ -192,6 +212,10 @@
   }
 
   footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
     margin-top: 44px;
     padding-top: 20px;
     border-top: 1px solid var(--hairline);

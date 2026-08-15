@@ -29,7 +29,10 @@ const outPath = join(
 );
 
 const raw = readFileSync(sourcePath, "utf8");
-const sha256 = createHash("sha256").update(raw, "utf8").digest("hex");
+// Hash the text with line endings normalised. Git checks this file out as CRLF
+// on Windows, so hashing the bytes as they sit on disk gives a constant that
+// depends on who ran the generator and fails CI on Linux.
+const sha256 = createHash("sha256").update(raw.replace(/\r\n/g, "\n"), "utf8").digest("hex");
 const data = JSON.parse(raw);
 
 const banner = `// @generated from constraints/compatibility.json — DO NOT EDIT.

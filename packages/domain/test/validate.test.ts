@@ -36,9 +36,11 @@ describe("the generated matrix tracks its source", () => {
     // If this fails, run `npm run generate:constraints`. The JSON is the single
     // source of truth; the generated module is a transcription of it, and the
     // two must never disagree.
+    // Line endings are normalised first: git hands this file to a Windows
+    // checkout as CRLF, and the hash must not depend on which OS ran generate.
     const raw = readFileSync(join(ROOT, COMPATIBILITY_SOURCE_PATH), "utf8");
     strictEqual(
-      createHash("sha256").update(raw, "utf8").digest("hex"),
+      createHash("sha256").update(raw.replace(/\r\n/g, "\n"), "utf8").digest("hex"),
       COMPATIBILITY_SOURCE_SHA256,
       "constraints/compatibility.json changed without regenerating the domain layer",
     );
