@@ -88,11 +88,10 @@ export interface StepExtras {
    * Turns the distance into a send-off, the way `.on()` does for a set: leave
    * every so often however fast you finish.
    *
-   * No corpus file has a send-off on a warm up or a cool down — the device has
-   * only ever been seen writing distance, time or open there — so this is
-   * unverified rather than confirmed. It is allowed because the composer
-   * offers it, and silently dropping an answer someone gave is worse than
-   * writing a combination the Watch might decline.
+   * Confirmed on a real device, August 2026: a warm up and a cool down written
+   * this way import and run. No corpus file has one, because the composer UI
+   * has only ever been seen writing distance, time or open there — so this is
+   * evidence of what the Watch accepts, not of what it writes.
    */
   readonly sendOff?: DurationInput;
 }

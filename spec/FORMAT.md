@@ -350,7 +350,6 @@ against real WorkoutKit output. Ten corrections, all worth upstreaming:
   occupy further `WorkoutBinary` sibling fields. Never observed. This is the
   largest remaining structural unknown.
 - **`SingleGoalWorkout.display_name` (field 3)** — inferred by analogy, never seen.
-- **Cycling's full alert list** — only Speed confirmed; HR/cadence/power likely.
 - **Activity enums other than 13, 37, 46** in practice, and whether goal options
   change for sports where distance is meaningless (strength training, yoga).
 - **`PowerBound.unit`** — observed only as 1.
@@ -363,4 +362,10 @@ against real WorkoutKit output. Ten corrections, all worth upstreaming:
 Name length and Unicode: `Stress.workout` carries a 1,574-character name
 (2,069 UTF-8 bytes) with emoji, `ø`, `à`, and `l·l`, encoded as ordinary UTF-8
 with no escaping or truncation. Iterations 2–98 confirmed. Calorie goals located.
-Cycling speed confirmed identical to running pace encoding.
+Cycling speed confirmed identical to running pace encoding, and cycling's heart
+rate, cadence and power alerts confirmed on the device.
+
+A `DISTANCE_TIME` goal on a warm up or a cool down imports and runs (August
+2026). No corpus file has one — every export was written by the composer UI,
+which only puts distance, time or open there — so this says what the Watch
+accepts, not what it writes. An export of one would be worth adding.
