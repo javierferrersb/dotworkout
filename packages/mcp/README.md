@@ -29,6 +29,18 @@ Sports offered both indoors and out take a `location`, and it changes what is
 allowed — a stationary bike has no speed target and no distance goal. The warm
 up and the cool down carry a target and a label of their own.
 
+## Getting the file onto the phone
+
+The file lands on the machine Claude is running on, which is not the one paired
+with your Watch. So `create_workout` also prints a QR code. Scan it and the
+composer opens on your phone with the workout already loaded, ready to
+download — the workout travels inside the link itself, so nothing is uploaded
+and no account is involved.
+
+Blocks are drawn light-on-dark, which is right for a dark terminal. Set
+`DOTWORKOUT_QR_INVERT=1` for a light one. `DOTWORKOUT_SITE` points the link
+somewhere other than the hosted composer.
+
 ## Setup
 
 Needs [Claude Code](https://claude.com/claude-code) — the CLI, not the Claude

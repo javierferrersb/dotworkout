@@ -22,7 +22,7 @@
   ],
   "sideEffects": false,
   "dependencies": {
-    "@dotworkout/domain": "0.2.0"
+    "@dotworkout/domain": "0.3.0"
   },
   "keywords": [
     "swimming",

@@ -18,9 +18,29 @@ import {
   steps,
   totalDistance,
   validateWorkout,
+  workoutLink,
   type Issue,
 } from "@dotworkout/domain";
+import { qrBlock } from "./qr.js";
 import { ACTIVITIES, buildWorkout, workoutShape, type Activity } from "./workout.js";
+
+/** Where the composer is served. Override to point at a local build. */
+const SITE = process.env.DOTWORKOUT_SITE ?? "https://workout.javierferrersb.dev";
+
+/**
+ * The file is on this machine and the Watch is not, so the useful thing to
+ * hand back is a way onto the phone: the workout travels inside the link, so
+ * scanning it opens the composer with the workout already loaded and nothing
+ * is uploaded on the way.
+ */
+function handoff(bytes: Uint8Array, title: string | undefined): string {
+  const link = workoutLink(bytes, { origin: SITE, ...(title === undefined ? {} : { title }) });
+  const qr = qrBlock(link);
+  const how = "Scan to open it on your phone, then download it there:";
+  return qr === undefined
+    ? `Too long for a QR code. Open on your phone:\n${link}`
+    : `${how}\n\n${qr}\n\n${link}`;
+}
 
 function text(body: string) {
   return { content: [{ type: "text" as const, text: body }] };
@@ -60,7 +80,7 @@ function describe(activity: Activity): string {
   return lines.join("\n");
 }
 
-const server = new McpServer({ name: "dotworkout", version: "0.1.0" });
+const server = new McpServer({ name: "dotworkout", version: "0.3.0" });
 
 server.registerTool(
   "list_activities",
@@ -134,7 +154,8 @@ server.registerTool(
     return text(
       `Wrote ${target} (${bytes.length} bytes)\n` +
         `${steps(binary.customWorkout!).length} steps` +
-        (summary === "" ? "" : `, ${summary} total`),
+        (summary === "" ? "" : `, ${summary} total`) +
+        `\n\n${handoff(bytes, spec.name)}`,
     );
   },
 );

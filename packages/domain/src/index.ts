@@ -111,6 +111,14 @@ export {
 } from "./units.js";
 
 export { SPORTS, findSport, showsPace, type Sport } from "./sports.js";
+export {
+  fromBase64Url,
+  readWorkoutLink,
+  toBase64Url,
+  workoutLink,
+  type InboundWorkout,
+  type LinkOptions,
+} from "./share.js";
 
 export {
   capabilitiesFor,
