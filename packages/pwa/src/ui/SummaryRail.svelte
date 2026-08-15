@@ -1,7 +1,16 @@
 <script lang="ts">
   import { flip } from "svelte/animate";
   import { fly } from "svelte/transition";
-  import { ChevronUp, Download, QrCode, Share2 } from "@lucide/svelte";
+  import {
+    ArrowDown,
+    ArrowUp,
+    ChevronUp,
+    Copy,
+    Download,
+    GripVertical,
+    QrCode,
+    Share2,
+  } from "@lucide/svelte";
   import { formatDistance } from "@dotworkout/domain";
   import type { CompositionSession } from "../application/compositionSession.svelte.js";
   import { whatsappLink, type ShareRoute } from "../application/share.js";
@@ -27,6 +36,22 @@
   let helping = $state<ShareRoute | undefined>(undefined);
   let expanded = $state(false);
   let titleField = $state<HTMLTextAreaElement | undefined>(undefined);
+  let draggingFrom = $state<number | undefined>(undefined);
+  let dropAt = $state<number | undefined>(undefined);
+
+  function startDrag(event: DragEvent, index: number) {
+    draggingFrom = index;
+    if (event.dataTransfer !== null) {
+      event.dataTransfer.effectAllowed = "move";
+      // Firefox will not start a drag without payload.
+      event.dataTransfer.setData("text/plain", String(index));
+    }
+  }
+
+  function endDrag() {
+    draggingFrom = undefined;
+    dropAt = undefined;
+  }
 
   let totalText = $derived(
     totals === undefined || totals.total.byUnit.length === 0
@@ -104,27 +129,73 @@
 
     <div class="blocks">
       {#each session.blocks as block, index (block)}
-        <button
+        <div
           class="card"
           class:on={index === session.cursor}
-          onclick={() => session.goToBlock(index)}
+          class:over={dropAt === index && draggingFrom !== undefined && draggingFrom !== index}
+          draggable={session.canReorder(index)}
+          role="listitem"
           animate:flip={{ duration: 260 }}
           in:fly={{ y: 12, duration: 240 }}
+          ondragstart={(event) => startDrag(event, index)}
+          ondragover={(event) => {
+            event.preventDefault();
+            dropAt = index;
+          }}
+          ondrop={(event) => {
+            event.preventDefault();
+            if (draggingFrom !== undefined) session.moveBlock(draggingFrom, index);
+            endDrag();
+          }}
+          ondragend={endDrag}
         >
-          <div class="row">
-            <span class="kind">{block.kind ? blockKindName(block.kind) : t("kind.INTERVAL")}</span>
-            {#if block.repetitions && block.repetitions > 1}
-              <span class="reps">×{block.repetitions}</span>
+          <button class="pick" onclick={() => session.goToBlock(index)}>
+            <span class="row">
+              <span class="kind">{block.kind ? blockKindName(block.kind) : t("kind.INTERVAL")}</span>
+              {#if block.repetitions && block.repetitions > 1}
+                <span class="reps">×{block.repetitions}</span>
+              {/if}
+            </span>
+            <span class="row">
+              {#if block.label}<span class="name">{block.label}</span>{/if}
+              <span class="measure" class:alone={!block.label}>{blockSummary(block)}</span>
+            </span>
+            {#if block.alert}
+              <span class="row">
+                <span class="target">{alertSummary(block, session.activity.sport)}</span>
+              </span>
             {/if}
-          </div>
-          <div class="row">
-            {#if block.label}<span class="name">{block.label}</span>{/if}
-            <span class="measure" class:alone={!block.label}>{blockSummary(block)}</span>
-          </div>
-          {#if block.alert}
-            <div class="row"><span class="target">{alertSummary(block, session.activity.sport)}</span></div>
+          </button>
+
+          {#if session.canReorder(index)}
+            <div class="tools">
+              <span class="grip" aria-hidden="true"><GripVertical size={14} strokeWidth={2} /></span>
+              <button
+                class="tool"
+                disabled={!session.canMoveUp(index)}
+                aria-label={t("rail.moveUp")}
+                onclick={() => session.moveBlock(index, index - 1)}
+              >
+                <ArrowUp size={14} strokeWidth={2.4} />
+              </button>
+              <button
+                class="tool"
+                disabled={!session.canMoveDown(index)}
+                aria-label={t("rail.moveDown")}
+                onclick={() => session.moveBlock(index, index + 1)}
+              >
+                <ArrowDown size={14} strokeWidth={2.4} />
+              </button>
+              <button
+                class="tool"
+                aria-label={t("rail.duplicate")}
+                onclick={() => session.duplicateBlock(index)}
+              >
+                <Copy size={14} strokeWidth={2.4} />
+              </button>
+            </div>
           {/if}
-        </button>
+        </div>
       {/each}
 
       {#if session.blocks.length === 0}
@@ -253,15 +324,69 @@
   }
 
   .card {
+    position: relative;
     background: var(--bg-surface);
     border: 1px solid transparent;
     border-radius: 16px;
-    padding: 12px 14px;
+    transition: all 140ms var(--ease);
+  }
+
+  .card.over {
+    border-color: var(--accent);
+  }
+
+  .pick {
     display: grid;
     gap: 4px;
-    text-align: left;
     width: 100%;
-    transition: all 140ms var(--ease);
+    padding: 12px 14px;
+    text-align: left;
+    border-radius: inherit;
+  }
+
+  .tools {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    padding: 2px;
+    border-radius: var(--radius-pill);
+    background: var(--bg-raised);
+    opacity: 0;
+    transition: opacity 120ms var(--ease);
+  }
+
+  .card:hover .tools,
+  .card:focus-within .tools {
+    opacity: 1;
+  }
+
+  .grip {
+    display: grid;
+    place-items: center;
+    padding: 0 1px;
+    color: var(--text-tertiary);
+    cursor: grab;
+  }
+
+  .tool {
+    display: grid;
+    place-items: center;
+    padding: 4px;
+    border-radius: 6px;
+    color: var(--text-secondary);
+  }
+
+  .tool:hover:not(:disabled) {
+    background: var(--accent-soft);
+    color: var(--accent);
+  }
+
+  .tool:disabled {
+    opacity: 0.3;
+    cursor: default;
   }
 
   .card:hover {
@@ -277,6 +402,7 @@
     display: flex;
     align-items: baseline;
     gap: 8px;
+    min-width: 0;
   }
 
   .kind {
@@ -537,6 +663,14 @@
     aside.expanded .total,
     aside.expanded .chips {
       display: flex;
+    }
+
+    .tools {
+      opacity: 1;
+    }
+
+    .grip {
+      display: none;
     }
 
     .primary {

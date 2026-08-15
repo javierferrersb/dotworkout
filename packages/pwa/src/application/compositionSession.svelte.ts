@@ -191,6 +191,61 @@ export class CompositionSession {
     this.focused = undefined;
   }
 
+  /**
+   * A warm up and a cool down are single fields on the wire pinned to the ends
+   * of the workout, so there is only ever one of each and it never moves.
+   */
+  private pinned(index: number): boolean {
+    const block = this.blocks[index];
+    return block === undefined || block.kind === "WARMUP" || block.kind === "COOLDOWN";
+  }
+
+  canDuplicate(index: number): boolean {
+    return !this.pinned(index);
+  }
+
+  canReorder(index: number): boolean {
+    return !this.pinned(index);
+  }
+
+  canMoveUp(index: number): boolean {
+    return this.canReorder(index) && !this.pinned(index - 1);
+  }
+
+  canMoveDown(index: number): boolean {
+    return this.canReorder(index) && !this.pinned(index + 1);
+  }
+
+  duplicateBlock(index: number): void {
+    if (!this.canDuplicate(index)) return;
+    const block = this.blocks[index];
+    if (block === undefined) return;
+
+    const copy = { ...block };
+    this.settle([...this.blocks.slice(0, index + 1), copy, ...this.blocks.slice(index + 1)], copy);
+  }
+
+  /**
+   * Reordering cannot lift a set above the warm up or below the cool down —
+   * those are pinned by the format, so a drop past them lands beside them.
+   */
+  moveBlock(from: number, to: number): void {
+    const block = this.blocks[from];
+    if (block === undefined || from === to) return;
+
+    const rest = this.blocks.filter((_, position) => position !== from);
+    const at = Math.max(0, Math.min(rest.length, to));
+    this.settle([...rest.slice(0, at), block, ...rest.slice(at)], block);
+  }
+
+  private settle(blocks: readonly BlockDraft[], follow: BlockDraft): void {
+    const ordered = inPerformedOrder(blocks);
+    this.blocks = ordered;
+    this.cursor = ordered.indexOf(follow);
+    this.focused = undefined;
+    this.problem = undefined;
+  }
+
   deselect(): void {
     this.focused = undefined;
     this.problem = undefined;
