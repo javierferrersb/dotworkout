@@ -40,10 +40,7 @@ const WIRE_TYPE_NAMES: Record<number, string> = {
  * workout_alert > speed_alert`. So this recurses through every singular message
  * field, every element of every repeated message field, and every map value.
  */
-export function findUnknownFields(
-  schema: DescMessage,
-  message: Message,
-): UnknownFieldFinding[] {
+export function findUnknownFields(schema: DescMessage, message: Message): UnknownFieldFinding[] {
   const findings: UnknownFieldFinding[] = [];
   visit(schema, message, "$", findings, new Set());
   return findings;

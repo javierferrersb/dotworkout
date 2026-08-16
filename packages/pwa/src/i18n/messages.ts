@@ -24,7 +24,8 @@ const en = {
   "welcome.fix3.body":
     "Get a real .workout file. Send it to yourself, open it on your phone, and it lands in the Workout app on your Watch.",
   "welcome.cta": "Build a workout",
-  "welcome.privacy": "Runs entirely on your device. Nothing is uploaded, so your workouts stay yours.",
+  "welcome.privacy":
+    "Runs entirely on your device. Nothing is uploaded, so your workouts stay yours.",
   "welcome.source": "View source and contribute on GitHub",
 
   "about.open": "About Dot Workout",
@@ -135,7 +136,6 @@ const en = {
   "effort.sprint": "Sprint",
   "effort.recovery": "Recovery",
 
-
   "kind.WARMUP": "Warm up",
   "kind.INTERVAL": "Set",
   "kind.RECOVERY": "Rest",
@@ -207,7 +207,8 @@ const en = {
     "If it does not, save it to Files, open it from there, then tap Share and choose Workout.",
   "install.chat.step1": "Open the link from the chat on your phone.",
   "install.chat.step2": "Tap Save the workout and follow the steps it shows.",
-  "install.reopen": "If it does not show up, close the Workout app on your Watch and open it again.",
+  "install.reopen":
+    "If it does not show up, close the Workout app on your Watch and open it again.",
   "install.gotIt": "Got it",
   "install.dontShow": "Don’t show this again",
 
@@ -216,7 +217,8 @@ const en = {
   "welcome.fix1.title.touch": "One question at a time",
   "welcome.fix1.body.touch":
     "8 × 400 m with 90 seconds recovery is a handful of taps here, instead of a trip through four nested screens.",
-  "welcome.desktopHint": "On a computer it is quicker still — the whole workout is keyboard-driven.",
+  "welcome.desktopHint":
+    "On a computer it is quicker still — the whole workout is keyboard-driven.",
 
   "guide.heading": "Finding it in Safari",
   "guide.step1": "Tap the download arrow in the address bar.",
@@ -399,7 +401,6 @@ const es: Record<MessageKey, string> = {
   "effort.hard": "Fuerte",
   "effort.sprint": "Sprint",
   "effort.recovery": "Recuperación",
-
 
   "kind.WARMUP": "Calentamiento",
   "kind.INTERVAL": "Serie",

@@ -13,7 +13,7 @@
 import { fromBinary, fromJson, toBinary, toJson } from "@bufbuild/protobuf";
 import type { JsonValue } from "@bufbuild/protobuf";
 import { WorkoutBinarySchema, type WorkoutBinary } from "./schema.js";
-import { assertNoUnknownFields, findUnknownFields } from "./unknown.js";
+import { assertNoUnknownFields } from "./unknown.js";
 import { readContainer, type WorkoutContainer } from "./container.js";
 
 export * from "./schema.js";

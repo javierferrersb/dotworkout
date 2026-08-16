@@ -10,7 +10,7 @@
 
 /** SHA-256 of constraints/compatibility.json at generation time. */
 export const COMPATIBILITY_SOURCE_SHA256 =
-  "60b8a86fc04286c936479c1c4c20a4ac8b6aa2fcd33c35604130362764c8f21c";
+  "405725bb346a66715af5586a3dbff3d9be124101f83427c9fcd097ddec76751f";
 
 /** Path of the source file, relative to the repo root. */
 export const COMPATIBILITY_SOURCE_PATH = "constraints/compatibility.json";

@@ -25,10 +25,7 @@
   }
 </script>
 
-<svelte:window
-  onclick={away}
-  onkeydown={(event) => event.key === "Escape" && (open = false)}
-/>
+<svelte:window onclick={away} onkeydown={(event) => event.key === "Escape" && (open = false)} />
 
 <div class="menu" bind:this={root}>
   <button class="trigger" onclick={() => (open = !open)} aria-haspopup="menu" aria-expanded={open}>

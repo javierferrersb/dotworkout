@@ -180,7 +180,9 @@ export function parseDuration(input: DurationInput): Duration {
 
   const match = /^(-?\d+(?:\.\d+)?)\s*([a-z]*)$/.exec(text);
   if (match === null) {
-    throw new UnitParseError(`Cannot read "${input}" as a duration (try "30", ":20", "1:00", "5min")`);
+    throw new UnitParseError(
+      `Cannot read "${input}" as a duration (try "30", ":20", "1:00", "5min")`,
+    );
   }
   const [, rawValue = "", rawUnit = ""] = match;
   const unit = rawUnit === "" ? "s" : TIME_ALIASES[rawUnit];

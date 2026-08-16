@@ -4,7 +4,6 @@ import {
   findSport,
   custom,
   type AlertSpec,
-  type DistanceUnit,
   type StepExtras,
   type StepInput,
   type WorkoutBuilder,
@@ -70,6 +69,7 @@ export const workoutShape = {
   cooldown: edgeStep.optional(),
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- built only to derive WorkoutSpec via z.infer; the lint rule doesn't recognise that as a use
 const workoutSchema = z.object(workoutShape);
 
 export type WorkoutSpec = z.infer<typeof workoutSchema>;

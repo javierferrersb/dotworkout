@@ -72,7 +72,11 @@ describe("parseDuration", () => {
 describe("unit preservation through a goal round-trip", () => {
   it("keeps 5 minutes as MINUTES rather than 300 seconds", () => {
     const goal = toWorkoutGoal({ kind: "time", duration: parseDuration("5min") });
-    deepStrictEqual(goal.timeGoal, { $typeName: "WorkoutGoal.TimeGoal", unitType: 2, unitValue: 5 });
+    deepStrictEqual(goal.timeGoal, {
+      $typeName: "WorkoutGoal.TimeGoal",
+      unitType: 2,
+      unitValue: 5,
+    });
     deepStrictEqual(fromWorkoutGoal(goal), { kind: "time", duration: { value: 5, unit: "min" } });
   });
 

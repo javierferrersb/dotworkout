@@ -54,7 +54,9 @@
     const targets = capabilities.alerts.length + capabilities.unverifiedAlerts.length;
     const goals = t("picker.goalTypes", { count: capabilities.goals.length });
     const targetText =
-      targets === 1 ? t("picker.target", { count: targets }) : t("picker.targets", { count: targets });
+      targets === 1
+        ? t("picker.target", { count: targets })
+        : t("picker.targets", { count: targets });
     return `${goals} · ${targetText}`;
   }
 </script>

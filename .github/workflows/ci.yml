@@ -17,8 +17,17 @@ jobs:
 
       - run: npm ci
 
+      - name: Lint
+        run: npm run lint
+
+      - name: Check formatting
+        run: npm run format:check
+
       - name: Build and test the libraries
-        run: npm test
+        run: npm run check
+
+      - name: Verify generated code matches its source
+        run: git diff --exit-code
 
       - name: Type-check the app
         run: npm run check --workspace @dotworkout/pwa

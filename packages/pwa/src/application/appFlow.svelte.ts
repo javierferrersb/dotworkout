@@ -10,7 +10,9 @@ function readChoice(): ThemeChoice {
 }
 
 function systemPrefersLight(): boolean {
-  return typeof window !== "undefined" && window.matchMedia("(prefers-color-scheme: light)").matches;
+  return (
+    typeof window !== "undefined" && window.matchMedia("(prefers-color-scheme: light)").matches
+  );
 }
 
 export class AppFlow {
@@ -19,11 +21,7 @@ export class AppFlow {
   systemIsLight = $state(systemPrefersLight());
 
   resolvedTheme = $derived<"light" | "dark">(
-    this.themeChoice === "system"
-      ? this.systemIsLight
-        ? "light"
-        : "dark"
-      : this.themeChoice,
+    this.themeChoice === "system" ? (this.systemIsLight ? "light" : "dark") : this.themeChoice,
   );
 
   go(stage: Stage): void {

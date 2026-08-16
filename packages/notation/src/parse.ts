@@ -109,7 +109,7 @@ export function parseLine(line: string): ParsedLine {
     return parseWarmupOrCooldown(role, tokens, line);
   }
   if (role === "rest") {
-    return parseStandaloneRest(tokens, line);
+    return parseStandaloneRest(tokens);
   }
   return parseSet(tokens, line);
 }
@@ -168,10 +168,10 @@ function parseWarmupOrCooldown(
   return { kind: role, work, label: joinLabel(labelWords) };
 }
 
-function parseStandaloneRest(tokens: Token[], line: string): ParsedLine {
+function parseStandaloneRest(tokens: Token[]): ParsedLine {
   const target = tokens.length === 1 ? tokens[0]! : tokens[1]!;
   const text = tokens.length === 1 ? target.lower.replace(/^r:?/, "") : target.text;
-  const duration = asDuration(text, target, "A standalone rest needs a time");
+  const duration = asDuration(text);
   if (duration === undefined) {
     throw new NotationError(
       "A standalone rest needs a time",
@@ -197,7 +197,8 @@ function parseSet(tokens: Token[], line: string): ParsedLine {
     // `on 1:00` / `@ 1:00`, and the glued forms `@1:00`, `on1:00`.
     const sendOffText = attachedValue(token, SENDOFF_WORDS);
     if (sendOffText !== undefined) {
-      const [value, valueToken] = sendOffText === "" ? [next(tokens, i), tokens[++i]] : [sendOffText, token];
+      const [value, valueToken] =
+        sendOffText === "" ? [next(tokens, i), tokens[++i]] : [sendOffText, token];
       if (value === undefined || valueToken === undefined) {
         throw new NotationError(
           "`on` needs a send-off time",
@@ -213,7 +214,8 @@ function parseSet(tokens: Token[], line: string): ParsedLine {
     // `rest :20`, `rest 20`, `r:20`, `r 20`.
     const restText = attachedValue(token, REST_WORDS);
     if (restText !== undefined) {
-      const [value, valueToken] = restText === "" ? [next(tokens, i), tokens[++i]] : [restText, token];
+      const [value, valueToken] =
+        restText === "" ? [next(tokens, i), tokens[++i]] : [restText, token];
       if (value === undefined || valueToken === undefined) {
         throw new NotationError(
           "`rest` needs a time",
@@ -411,7 +413,7 @@ function normaliseDistanceUnit(unit: string | undefined): string {
   }
 }
 
-function asDuration(text: string, token: Token, message: string): Duration | undefined {
+function asDuration(text: string): Duration | undefined {
   const quantity = quantityFrom(text);
   if (quantity?.kind === "time") return quantity.duration;
   // A bare number after `rest` or `on` is unambiguous — nobody rests for 20
@@ -421,7 +423,7 @@ function asDuration(text: string, token: Token, message: string): Duration | und
 }
 
 function requireDuration(text: string, token: Token, message: string): Duration {
-  const duration = asDuration(text, token, message);
+  const duration = asDuration(text);
   if (duration === undefined) {
     throw new NotationError(
       `${message}, and \`${text}\` is not one`,

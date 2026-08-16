@@ -20,7 +20,7 @@ export function saveSession(snapshot: SessionSnapshot): void {
 }
 
 export function loadSession(): SessionSnapshot | undefined {
-  let raw: string | null = null;
+  let raw: string | null;
   try {
     raw = localStorage.getItem(KEY);
   } catch {

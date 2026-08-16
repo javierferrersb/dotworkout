@@ -127,9 +127,7 @@ export class CompositionSession {
     this.problem = undefined;
     const skipped = [...(this.draft.skipped ?? []), id];
     this.write(
-      id === "alert"
-        ? { ...this.draft, alertMetric: "NONE", skipped }
-        : { ...this.draft, skipped },
+      id === "alert" ? { ...this.draft, alertMetric: "NONE", skipped } : { ...this.draft, skipped },
     );
     this.focused = undefined;
   }
@@ -318,7 +316,11 @@ function applyAnswer(
             alert: undefined,
           };
     case "alertFrom":
-      return { ...draft, alertFrom: boundValue(draft.alertMetric, raw, activity), alert: undefined };
+      return {
+        ...draft,
+        alertFrom: boundValue(draft.alertMetric, raw, activity),
+        alert: undefined,
+      };
     case "alertValue":
       return { ...draft, alert: buildAlert(draft, raw, activity) };
     case "label":

@@ -1,0 +1,5 @@
+dist
+dist-test
+node_modules
+packages/codec/src/gen
+packages/domain/src/generated

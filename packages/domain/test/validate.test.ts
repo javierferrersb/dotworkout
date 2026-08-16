@@ -12,11 +12,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { deepStrictEqual, ok, strictEqual, throws } from "node:assert/strict";
 import { describe, it } from "node:test";
-import {
-  CustomWorkout_ActivityType,
-  WorkoutAlert_AlertStyle,
-  decode,
-} from "@dotworkout/codec";
+import { CustomWorkout_ActivityType, WorkoutAlert_AlertStyle, decode } from "@dotworkout/codec";
 import {
   COMPATIBILITY,
   COMPATIBILITY_SOURCE_PATH,
@@ -109,8 +105,8 @@ describe("compatibility: confirmed entries are enforced", () => {
     // Structural, not a matrix opinion: HeartRateRangeAlert field 1 holds a zone
     // index, so there is nowhere for a single HR target to go.
     const binary = swim("hr").repeat(4).of(100).hrZone(3).build();
-    const alert = binary.customWorkout!.intervalBlocks[0]!.intervalSteps[0]!.workoutStep!
-      .workoutAlert!;
+    const alert =
+      binary.customWorkout!.intervalBlocks[0]!.intervalSteps[0]!.workoutStep!.workoutAlert!;
     alert.alertStyle = WorkoutAlert_AlertStyle.VALUE;
     const result = validateWorkout(binary);
     strictEqual(result.ok, false);
@@ -191,13 +187,16 @@ describe("structural invariants come from protovalidate, not hand-written checks
     binary.customWorkout!.intervalBlocks[0]!.iterations = 0;
     const result = validateWorkout(binary);
     strictEqual(result.ok, false);
-    ok(result.errors.some((e) => e.code.startsWith("structural.")), JSON.stringify(result.errors));
+    ok(
+      result.errors.some((e) => e.code.startsWith("structural.")),
+      JSON.stringify(result.errors),
+    );
   });
 
   it("catches a goal_type that disagrees with its payload", () => {
     const binary = swim("x").set(100).build();
-    const goal = binary.customWorkout!.intervalBlocks[0]!.intervalSteps[0]!.workoutStep!
-      .workoutGoal!;
+    const goal =
+      binary.customWorkout!.intervalBlocks[0]!.intervalSteps[0]!.workoutStep!.workoutGoal!;
     goal.goalType = 1; // TIME, but distance_goal is what is populated
     const result = validateWorkout(binary);
     strictEqual(result.ok, false);

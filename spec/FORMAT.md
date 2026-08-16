@@ -103,7 +103,7 @@ separate activity in the composer.
 
 **Stroke is not a field.** There is no stroke selector; users type the stroke
 into the step's free-text `display_name`. A good authoring UI should offer a
-stroke picker that *writes into the label*.
+stroke picker that _writes into the label_.
 
 ---
 
@@ -166,7 +166,7 @@ Swimming offers a combined "Distance · Time" goal ("50 m on 1:00"): leave every
 is written in, and it is **entirely absent from the reference library**.
 
 It uses `goal_type = 5` and a dedicated field 5 carrying both quantities — it
-does *not* populate `time_goal` and `distance_goal` together. Offered only for
+does _not_ populate `time_goal` and `distance_goal` together. Offered only for
 swimming; not for running, cycling, or HIIT.
 
 ### `ENERGY` — single-goal workouts only
@@ -178,17 +178,17 @@ composer never offers it; it appears only in simple goal workouts (field 10).
 
 The stored unit is whichever the workout was authored in:
 
-| File | Stored as | True distance |
-|---|---|---|
-| `Minimal` | METERS 100 | 100 m |
-| `Minimal_kilometers` | KILOMETERS 0.1 | 100 m |
-| `Minimal_miles` | MILES 0.06 | 96.6 m |
-| `Minimal_yards` | YARDS 100 | 91.4 m |
+| File                 | Stored as      | True distance |
+| -------------------- | -------------- | ------------- |
+| `Minimal`            | METERS 100     | 100 m         |
+| `Minimal_kilometers` | KILOMETERS 0.1 | 100 m         |
+| `Minimal_miles`      | MILES 0.06     | 96.6 m        |
+| `Minimal_yards`      | YARDS 100      | 91.4 m        |
 
 **Switching display units is lossy** — the value is rounded into the new unit. A
 round-tripping library must preserve the unit, not canonicalise to metres.
 
-Time units are inconsistent *within a single file*: `Probe_Time` stores its warm
+Time units are inconsistent _within a single file_: `Probe_Time` stores its warm
 up as MINUTES 5 but its cool down as SECONDS 120; `Swim_DistTime` stores 1:00
 and 2:00 as SECONDS but 3:00 as MINUTES 3. Preserve what you read.
 
@@ -211,23 +211,23 @@ WorkoutAlert {
 
 Named `unknown` in the reference schema. It selects the payload shape:
 
-| Value | Style | Payload |
-|---|---|---|
-| 1 | VALUE | single target |
-| 2 | RANGE | explicit lower/upper bounds |
-| 3 | ZONE | zone index; bounds resolved on-device |
+| Value | Style | Payload                               |
+| ----- | ----- | ------------------------------------- |
+| 1     | VALUE | single target                         |
+| 2     | RANGE | explicit lower/upper bounds           |
+| 3     | ZONE  | zone index; bounds resolved on-device |
 
 ### Every alert type shares one field layout
 
 Consistent across all four — and **field 1 was missing from the reference
 schema in every case**:
 
-| Alert | field 1 | field 2 |
-|---|---|---|
-| `SpeedAlert` | `speed_target` (VALUE) | `speed_range_alert` (RANGE) |
-| `CadenceAlert` | `cadence_target` (VALUE) | `cadence_range_alert` (RANGE) |
-| `PowerAlert` | `power_target` (VALUE) | `power_range_alert` (RANGE) |
-| `HeartRateRangeAlert` | `heart_rate_zone` (ZONE) | `heart_rate_range` (RANGE) |
+| Alert                 | field 1                  | field 2                       |
+| --------------------- | ------------------------ | ----------------------------- |
+| `SpeedAlert`          | `speed_target` (VALUE)   | `speed_range_alert` (RANGE)   |
+| `CadenceAlert`        | `cadence_target` (VALUE) | `cadence_range_alert` (RANGE) |
+| `PowerAlert`          | `power_target` (VALUE)   | `power_range_alert` (RANGE)   |
+| `HeartRateRangeAlert` | `heart_rate_zone` (ZONE) | `heart_rate_range` (RANGE)    |
 
 Heart rate is the exception: field 1 holds a zone index rather than a single
 target, because its picker offers zones instead of single values. Zones store
@@ -241,25 +241,25 @@ POWER_AVERAGE 6. All observed.
 
 The current/average axis is **per-metric, not universal** — confirmed in the UI:
 
-| Metric | Enum value(s) | Current/average toggle |
-|---|---|---|
-| Speed/pace | AVERAGE 1, CURRENT 2 | yes |
-| Cadence | CADENCE 3 | no |
-| Power | POWER_CURRENT 4, POWER_AVERAGE 6 | yes |
-| Heart rate | COUNT_PER_MINUTE 5 | no |
+| Metric     | Enum value(s)                    | Current/average toggle |
+| ---------- | -------------------------------- | ---------------------- |
+| Speed/pace | AVERAGE 1, CURRENT 2             | yes                    |
+| Cadence    | CADENCE 3                        | no                     |
+| Power      | POWER_CURRENT 4, POWER_AVERAGE 6 | yes                    |
+| Heart rate | COUNT_PER_MINUTE 5               | no                     |
 
 ### Speed is always metres per second
 
 Both running pace and cycling speed use the identical `SpeedAlert` encoding.
 Display units are purely a UI concern:
 
-| Input | Displayed as | Stored (m/s) |
-|---|---|---|
-| 5'30"/km | pace | 3.030303… |
-| 5'00"/km | pace | 3.333333… |
-| 25 km/h | speed | 6.944444… |
-| 30 km/h | speed | 8.333333… |
-| 28 km/h | speed | 7.777777… |
+| Input    | Displayed as | Stored (m/s) |
+| -------- | ------------ | ------------ |
+| 5'30"/km | pace         | 3.030303…    |
+| 5'00"/km | pace         | 3.333333…    |
+| 25 km/h  | speed        | 6.944444…    |
+| 30 km/h  | speed        | 8.333333…    |
+| 28 km/h  | speed        | 7.777777…    |
 
 `lower_bound` is the **slower** value (lower m/s). For pace this reads backwards
 relative to how it is displayed — a common source of inverted-range bugs.
@@ -291,14 +291,14 @@ the single source of truth: the validator reads it. This table is a summary of
 it, kept in step by hand; the JSON carries the dating and per-entry confidence a
 markdown table cannot.
 
-| Sport | Goal types | Alert types |
-|---|---|---|
-| Pool swim | Time, Distance, Open, **Distance · Time** | Heart rate |
-| Running, outdoor | Distance, Time, Open | Pace, Heart rate, Cadence, Power |
-| Running, indoor | Distance, Time, Open | Pace, Heart rate |
-| Cycling, outdoor | Time, Distance, Open | Speed, Heart rate, Cadence, Power |
-| HIIT | Time, Open | Heart rate |
-| *(single-goal workouts)* | Distance, Time, **Energy** | n/a |
+| Sport                    | Goal types                                | Alert types                       |
+| ------------------------ | ----------------------------------------- | --------------------------------- |
+| Pool swim                | Time, Distance, Open, **Distance · Time** | Heart rate                        |
+| Running, outdoor         | Distance, Time, Open                      | Pace, Heart rate, Cadence, Power  |
+| Running, indoor          | Distance, Time, Open                      | Pace, Heart rate                  |
+| Cycling, outdoor         | Time, Distance, Open                      | Speed, Heart rate, Cadence, Power |
+| HIIT                     | Time, Open                                | Heart rate                        |
+| _(single-goal workouts)_ | Distance, Time, **Energy**                | n/a                               |
 
 **Targets vary by location, not only by sport.** An indoor run drops cadence and
 power. Entries carry an optional `indoor` block overriding the alert list;

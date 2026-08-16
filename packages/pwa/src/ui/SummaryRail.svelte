@@ -16,7 +16,13 @@
   import type { CompositionSession } from "../application/compositionSession.svelte.js";
   import { whatsappLink, type ShareRoute } from "../application/share.js";
   import { download } from "../application/workoutFile.js";
-  import { alertSummary, blockHeading, blockKindName, blockSummary, questionText } from "../i18n/format.js";
+  import {
+    alertSummary,
+    blockHeading,
+    blockKindName,
+    blockSummary,
+    questionText,
+  } from "../i18n/format.js";
   import { t } from "../i18n/locale.svelte.js";
   import InstallHelp from "./InstallHelp.svelte";
   import SendPanel from "./SendPanel.svelte";
@@ -127,8 +133,7 @@
             event.preventDefault();
             titleField?.blur();
           }
-        }}
-      ></textarea>
+        }}></textarea>
       <p class="activity">{session.activityName}</p>
     </header>
 
@@ -156,7 +161,8 @@
         >
           <button class="pick" onclick={() => session.goToBlock(index)}>
             <span class="row">
-              <span class="kind">{block.kind ? blockKindName(block.kind) : t("kind.INTERVAL")}</span>
+              <span class="kind">{block.kind ? blockKindName(block.kind) : t("kind.INTERVAL")}</span
+              >
               {#if block.repetitions && block.repetitions > 1}
                 <span class="reps">×{block.repetitions}</span>
               {/if}
@@ -174,7 +180,8 @@
 
           <div class="tools">
             {#if session.canReorder(index)}
-              <span class="grip" aria-hidden="true"><GripVertical size={14} strokeWidth={2} /></span>
+              <span class="grip" aria-hidden="true"><GripVertical size={14} strokeWidth={2} /></span
+              >
               <button
                 class="tool"
                 disabled={!session.canMoveUp(index)}
@@ -218,10 +225,7 @@
 
   <div class="foot">
     {#each session.unfinished.slice(0, 2) as entry (entry.index)}
-      <button
-        class="error unfinished"
-        onclick={() => session.goToBlock(entry.index)}
-      >
+      <button class="error unfinished" onclick={() => session.goToBlock(entry.index)}>
         {t("rail.unfinished", {
           block: blockHeading(session.blocks[entry.index] ?? {}, entry.index),
           question: questionText(entry.question),

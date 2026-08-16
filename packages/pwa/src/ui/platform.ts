@@ -1,5 +1,4 @@
-const signature =
-  typeof navigator === "undefined" ? "" : navigator.platform || navigator.userAgent;
+const signature = typeof navigator === "undefined" ? "" : navigator.platform || navigator.userAgent;
 
 export const isApple = /mac|iphone|ipad|ipod/i.test(signature);
 

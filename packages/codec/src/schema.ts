@@ -10,11 +10,7 @@
  * regenerate rather than editing `src/gen/`.
  */
 
-export {
-  file_WorkoutFile,
-  WorkoutBinarySchema,
-  type WorkoutBinary,
-} from "./gen/WorkoutFile_pb.js";
+export { file_WorkoutFile, WorkoutBinarySchema, type WorkoutBinary } from "./gen/WorkoutFile_pb.js";
 
 export {
   file_CustomWorkout,
@@ -39,11 +35,7 @@ export {
   type IntervalBlock_IntervalStep,
 } from "./gen/IntervalBlock_pb.js";
 
-export {
-  file_WorkoutStep,
-  WorkoutStepSchema,
-  type WorkoutStep,
-} from "./gen/WorkoutStep_pb.js";
+export { file_WorkoutStep, WorkoutStepSchema, type WorkoutStep } from "./gen/WorkoutStep_pb.js";
 
 export {
   file_WorkoutGoal,

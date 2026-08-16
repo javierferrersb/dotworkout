@@ -16,11 +16,11 @@ apart: the table in `spec/FORMAT.md` §7 is generated from this file.
 
 ## Three kinds of rule
 
-| Kind | Lives in | Example |
-|---|---|---|
-| Structural | protovalidate options in `proto/` | `iterations >= 1`; exactly one container field set |
-| Compatibility | this file | swimming allows `DISTANCE_TIME`; HIIT has no distance goal |
-| Reasoning and provenance | `spec/FORMAT.md` | why pace bounds read backwards |
+| Kind                     | Lives in                          | Example                                                    |
+| ------------------------ | --------------------------------- | ---------------------------------------------------------- |
+| Structural               | protovalidate options in `proto/` | `iterations >= 1`; exactly one container field set         |
+| Compatibility            | this file                         | swimming allows `DISTANCE_TIME`; HIIT has no distance goal |
+| Reasoning and provenance | `spec/FORMAT.md`                  | why pace bounds read backwards                             |
 
 ## Location overrides
 

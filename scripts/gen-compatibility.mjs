@@ -19,14 +19,7 @@ import { fileURLToPath } from "node:url";
 
 const repoRoot = join(dirname(fileURLToPath(import.meta.url)), "..");
 const sourcePath = join(repoRoot, "constraints", "compatibility.json");
-const outPath = join(
-  repoRoot,
-  "packages",
-  "domain",
-  "src",
-  "generated",
-  "compatibility-data.ts",
-);
+const outPath = join(repoRoot, "packages", "domain", "src", "generated", "compatibility-data.ts");
 
 const raw = readFileSync(sourcePath, "utf8");
 // Hash the text with line endings normalised. Git checks this file out as CRLF

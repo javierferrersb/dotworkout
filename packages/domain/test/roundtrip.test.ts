@@ -41,7 +41,11 @@ describe("editing one step perturbs nothing else", () => {
   it("keeps the file byte-identical when the edit is a no-op", () => {
     for (const name of corpusNames()) {
       const bytes = workoutBytes(name);
-      const untouched = editSteps(decode(bytes), () => false, () => {});
+      const untouched = editSteps(
+        decode(bytes),
+        () => false,
+        () => {},
+      );
       strictEqual(
         Buffer.from(encode(untouched)).toString("hex"),
         Buffer.from(bytes).toString("hex"),
@@ -87,8 +91,7 @@ describe("reading real files", () => {
     ok(totals.total.meters > 0);
     strictEqual(
       totals.total.meters,
-      totals.byLabel.reduce((sum, entry) => sum + entry.total.meters, 0) +
-        totals.unlabelled.meters,
+      totals.byLabel.reduce((sum, entry) => sum + entry.total.meters, 0) + totals.unlabelled.meters,
     );
   });
 
@@ -115,7 +118,9 @@ function differingPaths(before: unknown, after: unknown, prefix = ""): string[] 
     const keys = new Set([...Object.keys(before), ...Object.keys(after)]);
     const out: string[] = [];
     for (const key of [...keys].sort()) {
-      out.push(...differingPaths(before[key], after[key], prefix === "" ? key : `${prefix}.${key}`));
+      out.push(
+        ...differingPaths(before[key], after[key], prefix === "" ? key : `${prefix}.${key}`),
+      );
     }
     return out;
   }

@@ -126,7 +126,10 @@ describe("builder surface", () => {
     // Minimal and Activity_Cycle both contain one, so this has to be expressible.
     const block = swim("rest only").recovery(30).build().customWorkout?.intervalBlocks[0];
     strictEqual(block?.intervalSteps.length, 1);
-    strictEqual(block?.intervalSteps[0]?.purpose, IntervalBlock_IntervalStep_IntervalPurpose.RECOVERY);
+    strictEqual(
+      block?.intervalSteps[0]?.purpose,
+      IntervalBlock_IntervalStep_IntervalPurpose.RECOVERY,
+    );
   });
 
   it("writes iterations 1 for a single unrepeated set", () => {
@@ -135,15 +138,21 @@ describe("builder surface", () => {
   });
 
   it("uses the sport's natural default unit for bare numbers", () => {
-    strictEqual(swim("s").set(400).build().customWorkout?.intervalBlocks[0]
-      ?.intervalSteps[0]?.workoutStep?.workoutGoal?.distanceGoal?.unitType, 1); // METERS
-    strictEqual(bike("b").set(40).build().customWorkout?.intervalBlocks[0]
-      ?.intervalSteps[0]?.workoutStep?.workoutGoal?.distanceGoal?.unitType, 2); // KILOMETERS
+    strictEqual(
+      swim("s").set(400).build().customWorkout?.intervalBlocks[0]?.intervalSteps[0]?.workoutStep
+        ?.workoutGoal?.distanceGoal?.unitType,
+      1,
+    ); // METERS
+    strictEqual(
+      bike("b").set(40).build().customWorkout?.intervalBlocks[0]?.intervalSteps[0]?.workoutStep
+        ?.workoutGoal?.distanceGoal?.unitType,
+      2,
+    ); // KILOMETERS
   });
 
   it("puts heart-rate zones on the step, with the ZONE style", () => {
-    const alert = swim("z").repeat(4).of(100).hrZone(3).build().customWorkout
-      ?.intervalBlocks[0]?.intervalSteps[0]?.workoutStep?.workoutAlert;
+    const alert = swim("z").repeat(4).of(100).hrZone(3).build().customWorkout?.intervalBlocks[0]
+      ?.intervalSteps[0]?.workoutStep?.workoutAlert;
     strictEqual(alert?.alertStyle, WorkoutAlert_AlertStyle.ZONE);
     strictEqual(alert?.heartRateRangeAlert?.heartRateZone?.zone, 3);
     strictEqual(alert?.heartRateRangeAlert?.heartRateRange, undefined);

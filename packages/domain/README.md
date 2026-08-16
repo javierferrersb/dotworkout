@@ -8,8 +8,13 @@ import { swim } from "@dotworkout/domain";
 
 const bytes = swim("Thursday threshold")
   .warmup(400)
-  .repeat(8).of(50).rest(30).label("Build")
-  .repeat(4).of(100).on("2:00")
+  .repeat(8)
+  .of(50)
+  .rest(30)
+  .label("Build")
+  .repeat(4)
+  .of(100)
+  .on("2:00")
   .cooldown(200)
   .toBytes();
 ```

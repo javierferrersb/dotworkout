@@ -26,7 +26,10 @@
       <h1>{blockHeading(session.draft, session.cursor)}</h1>
       <p>
         {session.composingNew
-          ? t("block.newBlock", { index: session.blocks.length + 1, total: session.blocks.length + 1 })
+          ? t("block.newBlock", {
+              index: session.blocks.length + 1,
+              total: session.blocks.length + 1,
+            })
           : t("block.editing", { index: session.cursor + 1, total: session.blocks.length })}
       </p>
     </div>
@@ -34,7 +37,11 @@
 
   <div class="answers">
     {#each session.answered as question (question.id)}
-      <button class="answered" onclick={() => session.focus(question.id)} transition:fly={{ y: -6, duration: 200 }}>
+      <button
+        class="answered"
+        onclick={() => session.focus(question.id)}
+        transition:fly={{ y: -6, duration: 200 }}
+      >
         <Check class="tick" size={15} strokeWidth={3} />
         <span class="label">{questionText(question)}</span>
         <span class="value">{answerLabel(session.draft, question.id, session.activity.sport)}</span>

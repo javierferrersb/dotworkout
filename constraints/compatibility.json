@@ -11,50 +11,28 @@
   "appVersion": "unrecorded",
   "alertStyles": {
     "HEART_RATE": {
-      "styles": [
-        "RANGE",
-        "ZONE"
-      ],
-      "metrics": [
-        "COUNT_PER_MINUTE"
-      ],
+      "styles": ["RANGE", "ZONE"],
+      "metrics": ["COUNT_PER_MINUTE"],
       "currentAverageToggle": false,
       "confidence": "confirmed",
       "note": "Offers zones instead of a single-value target. VALUE style never observed for heart rate."
     },
     "SPEED": {
-      "styles": [
-        "RANGE",
-        "VALUE"
-      ],
-      "metrics": [
-        "CURRENT",
-        "AVERAGE"
-      ],
+      "styles": ["RANGE", "VALUE"],
+      "metrics": ["CURRENT", "AVERAGE"],
       "currentAverageToggle": true,
       "confidence": "confirmed",
       "note": "Displayed as pace (min/km) for running and speed (km/h) for cycling. Identical encoding either way: always metres per second. ZONE style not observed."
     },
     "CADENCE": {
-      "styles": [
-        "RANGE",
-        "VALUE"
-      ],
-      "metrics": [
-        "CADENCE"
-      ],
+      "styles": ["RANGE", "VALUE"],
+      "metrics": ["CADENCE"],
       "currentAverageToggle": false,
       "confidence": "confirmed"
     },
     "POWER": {
-      "styles": [
-        "RANGE",
-        "VALUE"
-      ],
-      "metrics": [
-        "POWER_CURRENT",
-        "POWER_AVERAGE"
-      ],
+      "styles": ["RANGE", "VALUE"],
+      "metrics": ["POWER_CURRENT", "POWER_AVERAGE"],
       "currentAverageToggle": true,
       "confidence": "confirmed",
       "note": "ZONE style not offered at the time of observation, but this was not exhaustively checked."
@@ -62,238 +40,108 @@
   },
   "customWorkout": {
     "SWIMMING": {
-      "goalTypes": [
-        "TIME",
-        "DISTANCE",
-        "OPEN",
-        "DISTANCE_TIME"
-      ],
-      "locations": [
-        "outdoor"
-      ],
-      "alerts": [
-        "HEART_RATE"
-      ],
+      "goalTypes": ["TIME", "DISTANCE", "OPEN", "DISTANCE_TIME"],
+      "locations": ["outdoor"],
+      "alerts": ["HEART_RATE"],
       "confidence": "confirmed",
       "note": "DISTANCE_TIME (send-off intervals) is offered ONLY for swimming. Pool swims store as OUTDOOR; open water is not a separate composer activity. There is no stroke field - stroke is typed into the step's display_name."
     },
     "RUNNING": {
-      "goalTypes": [
-        "DISTANCE",
-        "TIME",
-        "OPEN"
-      ],
-      "locations": [
-        "outdoor",
-        "indoor"
-      ],
-      "alerts": [
-        "SPEED",
-        "HEART_RATE",
-        "CADENCE",
-        "POWER"
-      ],
+      "goalTypes": ["DISTANCE", "TIME", "OPEN"],
+      "locations": ["outdoor", "indoor"],
+      "alerts": ["SPEED", "HEART_RATE", "CADENCE", "POWER"],
       "confidence": "confirmed",
       "note": "Outdoor. Indoors the composer drops cadence and power; see indoor.",
       "indoor": {
-        "alerts": [
-          "SPEED",
-          "HEART_RATE"
-        ],
+        "alerts": ["SPEED", "HEART_RATE"],
         "confidence": "confirmed",
         "note": "Indoor run offers pace and heart rate only. Cadence and power are absent."
       }
     },
     "CYCLING": {
-      "goalTypes": [
-        "TIME",
-        "DISTANCE",
-        "OPEN"
-      ],
-      "locations": [
-        "outdoor",
-        "indoor"
-      ],
-      "alerts": [
-        "SPEED",
-        "HEART_RATE",
-        "CADENCE",
-        "POWER"
-      ],
+      "goalTypes": ["TIME", "DISTANCE", "OPEN"],
+      "locations": ["outdoor", "indoor"],
+      "alerts": ["SPEED", "HEART_RATE", "CADENCE", "POWER"],
       "confidence": "confirmed",
       "note": "Outdoor cycle offers all four. Speed carries the current/average axis and both a single value and a range, displayed in km/h. Indoors differs; see indoor.",
       "indoor": {
-        "goalTypes": [
-          "TIME",
-          "OPEN"
-        ],
-        "alerts": [
-          "HEART_RATE",
-          "CADENCE",
-          "POWER"
-        ],
+        "goalTypes": ["TIME", "OPEN"],
+        "alerts": ["HEART_RATE", "CADENCE", "POWER"],
         "confidence": "confirmed",
         "note": "Indoor cycle drops speed and the distance goal. Cadence and power remain."
       }
     },
     "HIGH_INTENSITY_INTERVAL_TRAINING": {
-      "goalTypes": [
-        "TIME",
-        "OPEN"
-      ],
-      "locations": [
-        "outdoor"
-      ],
-      "alerts": [
-        "HEART_RATE"
-      ],
+      "goalTypes": ["TIME", "OPEN"],
+      "locations": ["outdoor"],
+      "alerts": ["HEART_RATE"],
       "confidence": "confirmed",
       "note": "No distance goal, as expected for a non-distance sport."
     },
     "WALKING": {
-      "goalTypes": [
-        "DISTANCE",
-        "TIME",
-        "OPEN"
-      ],
-      "locations": [
-        "outdoor",
-        "indoor"
-      ],
-      "alerts": [
-        "HEART_RATE"
-      ],
+      "goalTypes": ["DISTANCE", "TIME", "OPEN"],
+      "locations": ["outdoor", "indoor"],
+      "alerts": ["HEART_RATE"],
       "confidence": "confirmed"
     },
     "HIKING": {
-      "goalTypes": [
-        "DISTANCE",
-        "TIME",
-        "OPEN"
-      ],
-      "locations": [
-        "outdoor"
-      ],
-      "alerts": [
-        "HEART_RATE"
-      ],
+      "goalTypes": ["DISTANCE", "TIME", "OPEN"],
+      "locations": ["outdoor"],
+      "alerts": ["HEART_RATE"],
       "confidence": "confirmed"
     },
     "ROWING": {
-      "goalTypes": [
-        "DISTANCE",
-        "TIME",
-        "OPEN"
-      ],
-      "locations": [
-        "outdoor",
-        "indoor"
-      ],
-      "alerts": [
-        "HEART_RATE"
-      ],
+      "goalTypes": ["DISTANCE", "TIME", "OPEN"],
+      "locations": ["outdoor", "indoor"],
+      "alerts": ["HEART_RATE"],
       "confidence": "confirmed",
       "note": "Outdoor rowing keeps the distance goal; indoors it goes.",
       "indoor": {
-        "goalTypes": [
-          "TIME",
-          "OPEN"
-        ],
-        "alerts": [
-          "HEART_RATE"
-        ],
+        "goalTypes": ["TIME", "OPEN"],
+        "alerts": ["HEART_RATE"],
         "confidence": "confirmed"
       }
     },
     "ELLIPTICAL": {
-      "goalTypes": [
-        "TIME",
-        "OPEN"
-      ],
-      "locations": [
-        "indoor"
-      ],
-      "alerts": [
-        "HEART_RATE"
-      ],
+      "goalTypes": ["TIME", "OPEN"],
+      "locations": ["indoor"],
+      "alerts": ["HEART_RATE"],
       "confidence": "confirmed"
     },
     "STAIR_CLIMBING": {
-      "goalTypes": [
-        "TIME",
-        "OPEN"
-      ],
-      "locations": [
-        "indoor"
-      ],
-      "alerts": [
-        "HEART_RATE"
-      ],
+      "goalTypes": ["TIME", "OPEN"],
+      "locations": ["indoor"],
+      "alerts": ["HEART_RATE"],
       "confidence": "confirmed"
     },
     "CROSS_TRAINING": {
-      "goalTypes": [
-        "TIME",
-        "OPEN"
-      ],
-      "locations": [
-        "indoor"
-      ],
-      "alerts": [
-        "HEART_RATE"
-      ],
+      "goalTypes": ["TIME", "OPEN"],
+      "locations": ["indoor"],
+      "alerts": ["HEART_RATE"],
       "confidence": "confirmed"
     },
     "FUNCTIONAL_STRENGTH_TRAINING": {
-      "goalTypes": [
-        "TIME",
-        "OPEN"
-      ],
-      "locations": [
-        "indoor"
-      ],
-      "alerts": [
-        "HEART_RATE"
-      ],
+      "goalTypes": ["TIME", "OPEN"],
+      "locations": ["indoor"],
+      "alerts": ["HEART_RATE"],
       "confidence": "confirmed"
     },
     "TRADITIONAL_STRENGTH_TRAINING": {
-      "goalTypes": [
-        "TIME",
-        "OPEN"
-      ],
-      "locations": [
-        "indoor"
-      ],
-      "alerts": [
-        "HEART_RATE"
-      ],
+      "goalTypes": ["TIME", "OPEN"],
+      "locations": ["indoor"],
+      "alerts": ["HEART_RATE"],
       "confidence": "confirmed"
     },
     "CORE_TRAINING": {
-      "goalTypes": [
-        "TIME",
-        "OPEN"
-      ],
-      "locations": [
-        "indoor"
-      ],
-      "alerts": [
-        "HEART_RATE"
-      ],
+      "goalTypes": ["TIME", "OPEN"],
+      "locations": ["indoor"],
+      "alerts": ["HEART_RATE"],
       "confidence": "confirmed"
     },
     "YOGA": {
-      "goalTypes": [
-        "TIME",
-        "OPEN"
-      ],
-      "locations": [
-        "indoor"
-      ],
-      "alerts": [
-        "HEART_RATE"
-      ],
+      "goalTypes": ["TIME", "OPEN"],
+      "locations": ["indoor"],
+      "alerts": ["HEART_RATE"],
       "confidence": "confirmed"
     }
   },
@@ -304,15 +152,9 @@
   },
   "singleGoalWorkout": {
     "_note": "The simple non-custom workouts, WorkoutBinary field 10. One activity, one goal, no blocks. ENERGY appears ONLY here and never in a custom workout.",
-    "goalTypes": [
-      "DISTANCE",
-      "TIME",
-      "ENERGY"
-    ],
+    "goalTypes": ["DISTANCE", "TIME", "ENERGY"],
     "confidence": "confirmed",
-    "observedActivities": [
-      "CYCLING"
-    ],
+    "observedActivities": ["CYCLING"],
     "openQuestion": "The user also reported a 'pace' option among simple workouts. That is most likely WorkoutKit's separate Pacer workout type, which would occupy a different WorkoutBinary container field entirely, not a goal type here. Unresolved - do not model it as a goal until a Pacer file is captured."
   },
   "structuralRules": {

@@ -178,10 +178,7 @@ export function alertKind(alert: WorkoutAlert): AlertKind | undefined {
  * kilometre. Remember that a *slower* pace produces a *smaller* number, which is
  * why range bounds are named `slower`/`faster`.
  */
-export function paceToMetersPerSecond(
-  perUnit: DurationInput,
-  unit: "km" | "mi" = "km",
-): number {
+export function paceToMetersPerSecond(perUnit: DurationInput, unit: "km" | "mi" = "km"): number {
   const seconds = toSeconds(parseDuration(perUnit));
   const meters = unit === "km" ? 1000 : 1609.344;
   return meters / seconds;

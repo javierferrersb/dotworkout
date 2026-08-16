@@ -12,17 +12,18 @@ which decode with zero unknown fields and re-encode byte for byte.
 [`spec/FORMAT.md`](spec/FORMAT.md) has the details.
 
 There is also a browser app for building workouts:
-<https://workout.javierferrersb.dev>
+<https://workout.javierferrersb.dev>. It runs entirely on the client; details
+in [`packages/pwa/README.md`](packages/pwa/README.md).
 
 ## Packages
 
-| Package | What it does |
-|---|---|
-| `@dotworkout/codec` | Decodes and encodes the binary format. Nothing else. |
-| `@dotworkout/domain` | Builds and validates workouts. Uses the codec. |
+| Package                | What it does                                                           |
+| ---------------------- | ---------------------------------------------------------------------- |
+| `@dotworkout/codec`    | Decodes and encodes the binary format. Nothing else.                   |
+| `@dotworkout/domain`   | Builds and validates workouts. Uses the codec.                         |
 | `@dotworkout/notation` | Parses sets written as text, like `8x50 on 1:00 Build`. Not published. |
-| `@dotworkout/mcp` | MCP server, so agents can build workouts. |
-| `@dotworkout/pwa` | The browser app. Runs entirely on the client. Not published. |
+| `@dotworkout/mcp`      | MCP server, so agents can build workouts.                              |
+| `@dotworkout/pwa`      | The browser app. Runs entirely on the client. Not published.           |
 
 ```bash
 npm install @dotworkout/domain
@@ -38,8 +39,13 @@ import { swim } from "@dotworkout/domain";
 
 const bytes = swim("Thursday threshold")
   .warmup(400)
-  .repeat(8).of(50).rest(30).label("Build")
-  .repeat(4).of(100).on("2:00")
+  .repeat(8)
+  .of(50)
+  .rest(30)
+  .label("Build")
+  .repeat(4)
+  .of(100)
+  .on("2:00")
   .cooldown(200)
   .toBytes();
 ```
@@ -59,7 +65,9 @@ const totals = totalDistance(workout.customWorkout!);
 const edited = editStepAt(
   workout,
   "custom_workout.interval_blocks[0].interval_steps[0].workout_step",
-  (step) => { step.displayName = "Build (fins)"; },
+  (step) => {
+    step.displayName = "Build (fins)";
+  },
 );
 
 encode(edited);
@@ -141,11 +149,11 @@ only proves the schema agrees with itself.
 
 ## Where the rules live
 
-| Kind of rule | Lives in |
-|---|---|
-| Wire structure | `proto/`, as protovalidate options |
-| Which goals and alerts each sport allows | `constraints/compatibility.json` |
-| Everything else | `spec/FORMAT.md` |
+| Kind of rule                             | Lives in                           |
+| ---------------------------------------- | ---------------------------------- |
+| Wire structure                           | `proto/`, as protovalidate options |
+| Which goals and alerts each sport allows | `constraints/compatibility.json`   |
+| Everything else                          | `spec/FORMAT.md`                   |
 
 The compatibility matrix is read at build time into
 `packages/domain/src/generated/compatibility-data.ts`. It is never restated in

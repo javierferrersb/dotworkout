@@ -15,7 +15,6 @@
  */
 
 import { deepStrictEqual, ok, strictEqual } from "node:assert/strict";
-import { readFileSync } from "node:fs";
 import { describe, it } from "node:test";
 import {
   decode,
@@ -45,10 +44,7 @@ describe("conformance corpus", () => {
       it("2. re-encodes byte-identically", () => {
         const binary = decode(bytes, { allowUnknownFields: true });
         const reencoded = encode(binary);
-        deepStrictEqual(
-          Buffer.from(reencoded).toString("hex"),
-          Buffer.from(bytes).toString("hex"),
-        );
+        deepStrictEqual(Buffer.from(reencoded).toString("hex"), Buffer.from(bytes).toString("hex"));
       });
 
       it("3. decodes with zero unknown fields", () => {
@@ -60,13 +56,13 @@ describe("conformance corpus", () => {
           findings.length === 0
             ? ""
             : `Schema gap: ${findings.length} unknown field(s) retained.\n` +
-              findings
-                .map(
-                  (f) =>
-                    `  ${f.path} (${f.typeName}) field ${f.fieldNumber} ` +
-                    `[${f.wireTypeName}, ${f.byteLength} bytes]`,
-                )
-                .join("\n"),
+                findings
+                  .map(
+                    (f) =>
+                      `  ${f.path} (${f.typeName}) field ${f.fieldNumber} ` +
+                      `[${f.wireTypeName}, ${f.byteLength} bytes]`,
+                  )
+                  .join("\n"),
         );
       });
 

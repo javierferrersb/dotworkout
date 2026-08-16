@@ -43,11 +43,7 @@ export {
   type StepExtras,
 } from "./builder.js";
 
-export {
-  toWorkoutGoal,
-  fromWorkoutGoal,
-  type GoalSpec,
-} from "./goals.js";
+export { toWorkoutGoal, fromWorkoutGoal, type GoalSpec } from "./goals.js";
 
 export {
   toWorkoutAlert,
@@ -60,13 +56,7 @@ export {
   type SpeedMetric,
 } from "./alerts.js";
 
-export {
-  steps,
-  labelledSteps,
-  type Purpose,
-  type StepPosition,
-  type StepView,
-} from "./inspect.js";
+export { steps, labelledSteps, type Purpose, type StepPosition, type StepView } from "./inspect.js";
 
 export {
   totalDistance,

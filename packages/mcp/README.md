@@ -13,13 +13,13 @@ validator that says what is wrong.
 
 ## Tools
 
-| Tool | Does |
-|---|---|
-| `list_activities` | Every activity with the goals and alerts it supports |
+| Tool                | Does                                                      |
+| ------------------- | --------------------------------------------------------- |
+| `list_activities`   | Every activity with the goals and alerts it supports      |
 | `describe_activity` | One activity in detail, including unverified combinations |
-| `validate_workout` | Check a workout without writing anything |
-| `create_workout` | Build a `.workout` file and write it to disk |
-| `inspect_workout` | Decode an existing file and describe it |
+| `validate_workout`  | Check a workout without writing anything                  |
+| `create_workout`    | Build a `.workout` file and write it to disk              |
+| `inspect_workout`   | Decode an existing file and describe it                   |
 
 `create_workout` takes an `outputPath` and writes there. Distances and durations
 are strings the library parses: `"400"`, `"1.2 km"`, `"0.5mi"`, `"1:00"`,

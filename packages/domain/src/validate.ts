@@ -83,7 +83,9 @@ export class WorkoutValidationError extends Error {
   constructor(result: ValidationResult) {
     super(
       `Workout failed validation with ${result.errors.length} error(s):\n` +
-        result.errors.map((issue) => `  [${issue.code}] ${issue.path}: ${issue.message}`).join("\n"),
+        result.errors
+          .map((issue) => `  [${issue.code}] ${issue.path}: ${issue.message}`)
+          .join("\n"),
     );
     this.result = result;
   }
@@ -264,7 +266,12 @@ function customWorkoutIssues(workout: CustomWorkout): Issue[] {
 
     if (entry !== undefined) {
       issues.push(
-        ...alertAllowedForActivity(kind, entry, activity ?? "this activity", `${step.path}.workout_alert`),
+        ...alertAllowedForActivity(
+          kind,
+          entry,
+          activity ?? "this activity",
+          `${step.path}.workout_alert`,
+        ),
       );
     }
     issues.push(...alertShapeIssues(kind, alert, `${step.path}.workout_alert`));
@@ -341,9 +348,7 @@ function alertShapeIssues(kind: AlertKind, alert: WorkoutAlert, path: string): I
       message:
         `The ${kind} alert does not use the ${metric} metric. ` +
         `${sourceRef()} lists ${entry.metrics.join(", ")}` +
-        (entry.currentAverageToggle
-          ? "."
-          : `, and this metric has no current/average toggle.`),
+        (entry.currentAverageToggle ? "." : `, and this metric has no current/average toggle.`),
       path,
       confidence: entry.confidence,
       note: noteOf(entry),
@@ -353,10 +358,7 @@ function alertShapeIssues(kind: AlertKind, alert: WorkoutAlert, path: string): I
   return issues;
 }
 
-function unverifiedActivityIssue(
-  activity: string | undefined,
-  rawValue: number,
-): Issue {
+function unverifiedActivityIssue(activity: string | undefined, rawValue: number): Issue {
   const unverified = COMPATIBILITY.customWorkoutUnverifiedActivities;
   if (activity !== undefined && includes(unverified.activities, activity)) {
     return {

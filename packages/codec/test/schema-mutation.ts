@@ -13,7 +13,13 @@
  * mutated registry is a clone-edit-rebuild away.
  */
 
-import { clone, create, createFileRegistry, type DescFile, type DescMessage } from "@bufbuild/protobuf";
+import {
+  clone,
+  create,
+  createFileRegistry,
+  type DescFile,
+  type DescMessage,
+} from "@bufbuild/protobuf";
 import {
   FileDescriptorProtoSchema,
   FileDescriptorSetSchema,
@@ -93,9 +99,7 @@ export function mutatedWorkoutBinary(...edits: readonly SchemaEdit[]): DescMessa
 }
 
 /** Dependencies before dependents, so each file's imports are already registered. */
-function topologicalOrder(
-  files: ReadonlyMap<string, FileDescriptorProto>,
-): FileDescriptorProto[] {
+function topologicalOrder(files: ReadonlyMap<string, FileDescriptorProto>): FileDescriptorProto[] {
   const ordered: FileDescriptorProto[] = [];
   const done = new Set<string>();
   const visiting = new Set<string>();

@@ -10,10 +10,7 @@ const swimming = findActivity("SWIMMING");
 const capabilities = capabilitiesOf(swimming);
 
 const unfinished = (blocks: readonly BlockDraft[]) =>
-  unfinishedBlocks(blocks, swimming, capabilities).map((entry) => [
-    entry.index,
-    entry.question.id,
-  ]);
+  unfinishedBlocks(blocks, swimming, capabilities).map((entry) => [entry.index, entry.question.id]);
 
 const sendOffSet: BlockDraft = {
   kind: "INTERVAL",
@@ -36,7 +33,8 @@ describe("a send-off with no time is caught before it is saved", () => {
     const workout = decode(
       encode(compose({ title: "probe", activity: swimming, blocks: [withoutSendOff] })),
     );
-    const goal = workout.customWorkout?.intervalBlocks[0]?.intervalSteps[0]?.workoutStep?.workoutGoal;
+    const goal =
+      workout.customWorkout?.intervalBlocks[0]?.intervalSteps[0]?.workoutStep?.workoutGoal;
     strictEqual(goal?.goalType, 3, "a distance goal, not the send-off that was asked for");
   });
 
@@ -51,7 +49,8 @@ describe("a send-off with no time is caught before it is saved", () => {
     const workout = decode(
       encode(compose({ title: "probe", activity: swimming, blocks: [sendOffSet] })),
     );
-    const goal = workout.customWorkout?.intervalBlocks[0]?.intervalSteps[0]?.workoutStep?.workoutGoal;
+    const goal =
+      workout.customWorkout?.intervalBlocks[0]?.intervalSteps[0]?.workoutStep?.workoutGoal;
     strictEqual(goal?.goalType, 5, "DISTANCE_TIME");
   });
 });

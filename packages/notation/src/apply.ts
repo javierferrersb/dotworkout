@@ -16,8 +16,14 @@ export interface ComposeOptions {
 }
 
 /** Build a workout from parsed lines, in the order they were written. */
-export function applyLines(lines: readonly ParsedLine[], options: ComposeOptions = {}): WorkoutBuilder {
-  const builder = swim(options.name ?? "Workout", options.guid === undefined ? {} : { guid: options.guid });
+export function applyLines(
+  lines: readonly ParsedLine[],
+  options: ComposeOptions = {},
+): WorkoutBuilder {
+  const builder = swim(
+    options.name ?? "Workout",
+    options.guid === undefined ? {} : { guid: options.guid },
+  );
 
   for (const line of lines) {
     switch (line.kind) {

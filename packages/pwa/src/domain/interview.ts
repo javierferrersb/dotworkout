@@ -4,7 +4,6 @@ import {
   type Activity,
   type ActivityCapabilities,
   type AlertMetric,
-  type GoalKind,
 } from "./activity.js";
 import { repeats, type BlockDraft, type BlockKind } from "./block.js";
 

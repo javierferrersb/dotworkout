@@ -40,9 +40,6 @@ export function findActivity(id: string): Activity {
   return activity;
 }
 
-const ALL_GOALS: readonly GoalKind[] = ["DISTANCE", "DISTANCE_TIME", "TIME", "OPEN"];
-const ALL_ALERTS: readonly AlertMetric[] = ["HEART_RATE", "SPEED", "CADENCE", "POWER"];
-
 export function capabilitiesOf(activity: Activity): ActivityCapabilities {
   return capabilitiesFor(activity.sport, activity.location);
 }

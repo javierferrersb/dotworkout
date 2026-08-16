@@ -48,7 +48,12 @@ describe("every assembled message key exists in both languages", () => {
   });
 
   it("names a speed target both ways round, because running reads it as a pace", () => {
-    for (const key of ["alert.SPEED.pace", "alert.SPEED.speed", "alertKey.SPEED.pace", "alertKey.SPEED.speed"]) {
+    for (const key of [
+      "alert.SPEED.pace",
+      "alert.SPEED.speed",
+      "alertKey.SPEED.pace",
+      "alertKey.SPEED.speed",
+    ]) {
       deepStrictEqual(missing(key), [], key);
     }
   });

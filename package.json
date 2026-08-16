@@ -24,12 +24,23 @@
     "build": "tsc -b packages/codec packages/domain packages/notation packages/mcp packages/pwa/tsconfig.test.json",
     "clean": "tsc -b --clean packages/codec packages/domain packages/notation packages/mcp packages/pwa/tsconfig.test.json",
     "test": "npm run build && node --test \"packages/*/dist/test/*.test.js\" \"packages/pwa/dist-test/test/*.test.js\"",
-    "check": "npm run generate && npm run test"
+    "check": "npm run generate && npm run test",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "devDependencies": {
     "@bufbuild/buf": "^1.72.0",
     "@bufbuild/protoc-gen-es": "^2.13.0",
+    "@eslint/js": "^10.0.1",
     "@types/node": "^22.20.1",
-    "typescript": "^5.9.3"
+    "eslint": "^10.8.1",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-svelte": "^3.23.0",
+    "globals": "^17.11.0",
+    "prettier": "^3.9.6",
+    "prettier-plugin-svelte": "^4.1.1",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.67.0"
   }
 }

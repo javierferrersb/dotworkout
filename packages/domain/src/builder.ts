@@ -96,10 +96,7 @@ export interface StepExtras {
   readonly sendOff?: DurationInput;
 }
 
-export type StepInput =
-  | DistanceInput
-  | { readonly time: DurationInput }
-  | { readonly open: true };
+export type StepInput = DistanceInput | { readonly time: DurationInput } | { readonly open: true };
 
 export function swim(name?: string, options: WorkoutOptions = {}): WorkoutBuilder {
   return new WorkoutBuilder(CustomWorkout_ActivityType.SWIMMING, name, {

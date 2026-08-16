@@ -104,10 +104,10 @@ describe("warm up and cool down", () => {
   it("accepts a time-based warm up", () => {
     const parsed = parseLine("warmup 10:00");
     strictEqual(parsed.kind, "warmup");
-    deepStrictEqual(
-      parsed.kind === "warmup" ? parsed.work : undefined,
-      { kind: "time", duration: { value: 600, unit: "s" } },
-    );
+    deepStrictEqual(parsed.kind === "warmup" ? parsed.work : undefined, {
+      kind: "time",
+      duration: { value: 600, unit: "s" },
+    });
   });
 
   it("keeps extra words as the label", () => {

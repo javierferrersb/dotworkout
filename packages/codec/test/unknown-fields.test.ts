@@ -126,11 +126,7 @@ describe("assertion 3 has teeth", () => {
       it("is caught by the unknown-field walker, at the right path", () => {
         const decoded = fromBinary(broken, bytes);
         const findings = findUnknownFields(broken, decoded);
-        strictEqual(
-          findings.length >= 1,
-          true,
-          "expected the removed field to surface as unknown",
-        );
+        strictEqual(findings.length >= 1, true, "expected the removed field to surface as unknown");
         deepStrictEqual(
           findings.map((f) => f.path).includes(testCase.expectedPath),
           true,
@@ -207,7 +203,9 @@ describe("assertion 3 has teeth", () => {
 
 describe("container branching", () => {
   it("resolves field 11 as a custom workout", () => {
-    const { container } = { container: readContainer(decode(readWorkoutBytes(findEntry("PoolSwim_2")))) };
+    const { container } = {
+      container: readContainer(decode(readWorkoutBytes(findEntry("PoolSwim_2")))),
+    };
     strictEqual(container.kind, "custom");
     strictEqual(container.fieldNumber, 11);
   });
