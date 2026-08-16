@@ -16,6 +16,15 @@ export function inPerformedOrder(blocks: readonly BlockDraft[]): BlockDraft[] {
 }
 
 /**
+ * Where the cursor lands once the block at `index` is gone. Removing a block
+ * above the one being edited shifts it up by one, so the composer stays on the
+ * block it was on rather than sliding onto its neighbour.
+ */
+export function cursorAfterRemoval(cursor: number, index: number, remaining: number): number {
+  return Math.min(index < cursor ? cursor - 1 : cursor, remaining);
+}
+
+/**
  * The block at `from` lands at `to`, taking that slot and pushing the rest
  * down. A drop past a pinned block lands beside it instead.
  */

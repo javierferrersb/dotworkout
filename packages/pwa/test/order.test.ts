@@ -1,7 +1,7 @@
-import { deepStrictEqual } from "node:assert/strict";
+import { deepStrictEqual, strictEqual } from "node:assert/strict";
 import { describe, it } from "node:test";
 import type { BlockDraft } from "../src/domain/block.js";
-import { inPerformedOrder, isPinned, moved } from "../src/domain/order.js";
+import { cursorAfterRemoval, inPerformedOrder, isPinned, moved } from "../src/domain/order.js";
 
 const warmup: BlockDraft = { kind: "WARMUP", label: "W" };
 const cooldown: BlockDraft = { kind: "COOLDOWN", label: "C" };
@@ -84,5 +84,32 @@ describe("moving a block", () => {
         deepStrictEqual(result[result.length - 1]?.kind, "COOLDOWN", `${from} to ${to}`);
       }
     }
+  });
+});
+
+describe("the cursor after a block is removed", () => {
+  it("follows the block being edited when one above it goes", () => {
+    strictEqual(cursorAfterRemoval(2, 0, 2), 1);
+    strictEqual(cursorAfterRemoval(3, 1, 3), 2);
+  });
+
+  it("stays put when the one removed was below it", () => {
+    strictEqual(cursorAfterRemoval(1, 2, 2), 1);
+    strictEqual(cursorAfterRemoval(0, 3, 3), 0);
+  });
+
+  it("stays put when the block removed was the one being edited", () => {
+    strictEqual(cursorAfterRemoval(1, 1, 3), 1);
+  });
+
+  it("never points past the end", () => {
+    strictEqual(cursorAfterRemoval(2, 2, 2), 2);
+    strictEqual(cursorAfterRemoval(5, 4, 1), 1);
+    strictEqual(cursorAfterRemoval(0, 0, 0), 0);
+  });
+
+  it("lands on the composing slot when the last block goes", () => {
+    strictEqual(cursorAfterRemoval(0, 0, 0), 0);
+    strictEqual(cursorAfterRemoval(1, 0, 0), 0);
   });
 });

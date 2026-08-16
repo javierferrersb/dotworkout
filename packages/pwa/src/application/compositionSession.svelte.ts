@@ -24,7 +24,7 @@ import {
   type QuestionId,
   type Unfinished,
 } from "../domain/interview.js";
-import { inPerformedOrder, isPinned, moved } from "../domain/order.js";
+import { cursorAfterRemoval, inPerformedOrder, isPinned, moved } from "../domain/order.js";
 import { activityName } from "../i18n/format.js";
 import { inspect, type WorkoutDraft } from "./workoutComposition.js";
 
@@ -193,9 +193,13 @@ export class CompositionSession {
   }
 
   removeBlock(index: number): void {
-    this.blocks = this.blocks.filter((_, position) => position !== index);
-    this.cursor = Math.min(this.cursor, this.blocks.length);
+    if (this.blocks[index] === undefined) return;
+
+    const remaining = this.blocks.filter((_, position) => position !== index);
+    this.blocks = remaining;
+    this.cursor = cursorAfterRemoval(this.cursor, index, remaining.length);
     this.focused = undefined;
+    this.problem = undefined;
   }
 
   canDuplicate(index: number): boolean {

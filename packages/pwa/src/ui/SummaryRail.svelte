@@ -10,6 +10,7 @@
     GripVertical,
     QrCode,
     Share2,
+    Trash2,
   } from "@lucide/svelte";
   import { formatDistance } from "@dotworkout/domain";
   import type { CompositionSession } from "../application/compositionSession.svelte.js";
@@ -171,8 +172,8 @@
             {/if}
           </button>
 
-          {#if session.canReorder(index)}
-            <div class="tools">
+          <div class="tools">
+            {#if session.canReorder(index)}
               <span class="grip" aria-hidden="true"><GripVertical size={14} strokeWidth={2} /></span>
               <button
                 class="tool"
@@ -197,8 +198,15 @@
               >
                 <Copy size={14} strokeWidth={2.4} />
               </button>
-            </div>
-          {/if}
+            {/if}
+            <button
+              class="tool danger"
+              aria-label={t("rail.remove")}
+              onclick={() => session.removeBlock(index)}
+            >
+              <Trash2 size={14} strokeWidth={2.4} />
+            </button>
+          </div>
         </div>
       {/each}
 
@@ -398,6 +406,11 @@
   .tool:hover:not(:disabled) {
     background: var(--accent-soft);
     color: var(--accent);
+  }
+
+  .tool.danger:hover:not(:disabled) {
+    background: color-mix(in srgb, var(--danger) 16%, transparent);
+    color: var(--danger);
   }
 
   .tool:disabled {
