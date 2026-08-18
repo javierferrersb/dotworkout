@@ -37,5 +37,10 @@
     "workout",
     "dotworkout",
     "agent"
-  ]
+  ],
+  "exports": {
+    "./http": "./dist/src/http.js",
+    "./worker": "./dist/src/worker.js",
+    "./package.json": "./package.json"
+  }
 }
