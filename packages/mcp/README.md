@@ -78,19 +78,26 @@ It should print `dotworkout: … ✔ Connected`.
 ### Remotely, over HTTP
 
 A client that cannot spawn a local process — a phone, ChatGPT, claude.ai — needs
-the server at a URL instead. Deploy it to your own Cloudflare account:
+the server at a URL instead. One is already running:
+
+```
+https://mcp.javierferrersb.dev/mcp
+```
+
+Paste that into Claude's custom connector settings, or ChatGPT's Settings →
+Apps → Advanced → Developer mode. There is nothing to install and no account to
+make. It stores nothing, so there is nothing to sign in to.
+
+To run your own instead, deploy it to your own Cloudflare account:
 
 ```bash
 npm run deploy --workspace @dotworkout/mcp
 ```
 
-That publishes a Worker and prints its URL. The endpoint is the `/mcp` path on
-it, and that is what you paste into Claude's custom connector settings or
-ChatGPT's developer mode.
-
-`wrangler dev` runs the same thing locally on `http://127.0.0.1:8787/mcp` if you
-want to try it first. `DOTWORKOUT_SITE` in `wrangler.toml` points the links it
-returns at a composer other than the hosted one.
+That prints the URL it published to; the endpoint is the `/mcp` path on it.
+`wrangler dev` runs the same thing locally first, and `DOTWORKOUT_SITE` in
+`wrangler.toml` points the links it returns at a composer other than the hosted
+one.
 
 It fits the free plan. Every tool is well inside the 10 ms of CPU a free request
 gets, and the whole thing starts in about half of the 1 second allowed — there

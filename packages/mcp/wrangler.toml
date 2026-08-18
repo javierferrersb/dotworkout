@@ -2,6 +2,10 @@ name = "dotworkout-mcp"
 main = "dist/src/worker.js"
 compatibility_date = "2026-06-01"
 
+# Served next to the composer it hands links to. Cloudflare creates the DNS
+# record itself, which it can do because the zone is already here.
+routes = [{ pattern = "mcp.javierferrersb.dev", custom_domain = true }]
+
 # The server keeps nothing between requests, so there is no KV, no D1 and no
 # Durable Object here. Everything it needs arrives in the request, and the
 # workout it hands back travels inside a link rather than any storage of ours.

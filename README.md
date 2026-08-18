@@ -111,10 +111,11 @@ than answering from memory:
 > What targets does an indoor cycle actually support? Build me a 45 minute
 > session using them. Use dotworkout.
 
-That registration runs the server locally, which covers desktop clients. To
-reach a phone, ChatGPT or claude.ai in a browser, the same server also runs over
-HTTP — `npm run deploy --workspace @dotworkout/mcp` puts it on your own
-Cloudflare account, inside the free plan.
+That registration runs the server locally, which covers desktop clients. A
+phone, ChatGPT, or claude.ai in a browser cannot spawn a process, so for those
+the same server is hosted at `https://mcp.javierferrersb.dev/mcp` — paste it in
+as a custom connector. `npm run deploy --workspace @dotworkout/mcp` puts your
+own copy on Cloudflare, inside the free plan.
 
 The tools, the reason `-s user` matters, and the remote setup are in
 [`packages/mcp/README.md`](packages/mcp/README.md).
