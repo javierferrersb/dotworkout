@@ -68,7 +68,7 @@ function describe(activity: Activity): string {
 }
 
 export function createServer(options: ServerOptions): McpServer {
-  const server = new McpServer({ name: "dotworkout", version: "0.4.0" });
+  const server = new McpServer({ name: "dotworkout", version: "0.4.1" });
 
   server.registerTool(
     "list_activities",

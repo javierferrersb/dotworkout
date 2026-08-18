@@ -85,20 +85,34 @@ removed. The grammar is in
 ## Building workouts with an agent
 
 `@dotworkout/mcp` is an MCP server, so Claude and other agents can build these
-files. It exposes five tools: list and describe activities, validate a workout,
-write one to disk, and inspect an existing file.
+files. It lists and describes activities, validates a workout, builds one, and
+reads an existing one back.
 
 The activity tools are the useful part. A model cannot write this format from
 memory, and it has no idea which goals and alerts each sport offers — that came
 off a real device and lives in `constraints/compatibility.json`. Asking gets you
 a file the Watch accepts; guessing gets you one it rejects.
 
-It needs [Claude Code](https://claude.com/claude-code) — the CLI, not the Claude
-website. Register it once:
+There are two ways to connect it.
+
+**Hosted**, for anything that cannot run a process — a phone, ChatGPT, or Claude
+in a browser. Add this as a custom connector; there is nothing to install:
+
+```
+https://mcp.javierferrersb.dev/mcp
+```
+
+**Local**, for [Claude Code](https://claude.com/claude-code) and other clients
+that can spawn one. `npx` fetches it on first run:
 
 ```bash
 claude mcp add -s user dotworkout -- npx -y @dotworkout/mcp
 ```
+
+The difference is where the file ends up. Run locally it writes to a path you
+give it and prints a QR code. Hosted it cannot — the disk it runs on is not
+yours — so it returns a link with the workout inside it, which opens the
+composer on your phone ready to download.
 
 Then ask, ending with **use dotworkout** so Claude reaches for the tools rather
 than answering from memory:
@@ -111,13 +125,7 @@ than answering from memory:
 > What targets does an indoor cycle actually support? Build me a 45 minute
 > session using them. Use dotworkout.
 
-That registration runs the server locally, which covers desktop clients. A
-phone, ChatGPT, or claude.ai in a browser cannot spawn a process, so for those
-the same server is hosted at `https://mcp.javierferrersb.dev/mcp` — paste it in
-as a custom connector. `npm run deploy --workspace @dotworkout/mcp` puts your
-own copy on Cloudflare, inside the free plan.
-
-The tools, the reason `-s user` matters, and the remote setup are in
+The tools, the reason `-s user` matters, and how to host your own copy are in
 [`packages/mcp/README.md`](packages/mcp/README.md).
 
 ## Commands

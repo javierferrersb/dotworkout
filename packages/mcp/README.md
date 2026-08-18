@@ -2,6 +2,10 @@
 
 An MCP server that lets an agent build Apple `.workout` files.
 
+Run it locally over stdio, or connect to the hosted one at
+`https://mcp.javierferrersb.dev/mcp` from anything that cannot spawn a process —
+a phone, ChatGPT, Claude in a browser.
+
 ## Why
 
 No model knows this format. It is undocumented binary protobuf, so an agent
@@ -18,8 +22,8 @@ validator that says what is wrong.
 | `list_activities`   | Every activity with the goals and alerts it supports      |
 | `describe_activity` | One activity in detail, including unverified combinations |
 | `validate_workout`  | Check a workout without writing anything                  |
-| `create_workout`    | Build a `.workout` file and write it to disk              |
-| `inspect_workout`   | Decode an existing file and describe it                   |
+| `create_workout`    | Build a `.workout` file                                   |
+| `inspect_workout`   | Decode a workout and describe it                          |
 
 Run locally, `create_workout` takes an `outputPath` and writes there; run as a
 remote server it returns a link instead, because the disk it is running on is

@@ -1,6 +1,6 @@
 {
   "name": "@dotworkout/mcp",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "type": "module",
   "description": "MCP server for building Apple .workout files",
   "license": "MIT",
