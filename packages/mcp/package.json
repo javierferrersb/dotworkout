@@ -1,6 +1,6 @@
 {
   "name": "@dotworkout/mcp",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "type": "module",
   "description": "MCP server for building Apple .workout files",
   "license": "MIT",
@@ -14,7 +14,9 @@
     "access": "public"
   },
   "scripts": {
-    "prepublishOnly": "tsc -b"
+    "prepublishOnly": "tsc -b",
+    "deploy": "wrangler deploy",
+    "dev:http": "wrangler dev"
   },
   "bin": {
     "dotworkout-mcp": "dist/src/index.js"

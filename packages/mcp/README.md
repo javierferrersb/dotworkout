@@ -21,9 +21,10 @@ validator that says what is wrong.
 | `create_workout`    | Build a `.workout` file and write it to disk              |
 | `inspect_workout`   | Decode an existing file and describe it                   |
 
-`create_workout` takes an `outputPath` and writes there. Distances and durations
-are strings the library parses: `"400"`, `"1.2 km"`, `"0.5mi"`, `"1:00"`,
-`":20"`, `"90s"`.
+Run locally, `create_workout` takes an `outputPath` and writes there; run as a
+remote server it returns a link instead, because the disk it is running on is
+not yours. Distances and durations are strings the library parses: `"400"`,
+`"1.2 km"`, `"0.5mi"`, `"1:00"`, `":20"`, `"90s"`.
 
 Sports offered both indoors and out take a `location`, and it changes what is
 allowed — a stationary bike has no speed target and no distance goal. The warm
@@ -32,7 +33,7 @@ up and the cool down carry a target and a label of their own.
 ## Getting the file onto the phone
 
 The file lands on the machine Claude is running on, which is not the one paired
-with your Watch. So `create_workout` also prints a QR code. Scan it and the
+with your Watch. So the local server also prints a QR code. Scan it and the
 composer opens on your phone with the workout already loaded, ready to
 download — the workout travels inside the link itself, so nothing is uploaded
 and no account is involved.
@@ -41,7 +42,17 @@ Blocks are drawn light-on-dark, which is right for a dark terminal. Set
 `DOTWORKOUT_QR_INVERT=1` for a light one. `DOTWORKOUT_SITE` points the link
 somewhere other than the hosted composer.
 
+The remote server does not draw one: a client reading its reply on a phone can
+simply open the link, and one that cannot is talking to something that can draw
+a QR itself.
+
 ## Setup
+
+There are two ways to run this. Locally over stdio, which is the simplest and
+covers desktop clients; or as a remote server over HTTP, which is the only way
+to reach a phone, ChatGPT, or claude.ai in a browser.
+
+### Locally, over stdio
 
 Needs [Claude Code](https://claude.com/claude-code) — the CLI, not the Claude
 website or the desktop chat. Register the server once:
@@ -63,6 +74,33 @@ claude mcp list
 ```
 
 It should print `dotworkout: … ✔ Connected`.
+
+### Remotely, over HTTP
+
+A client that cannot spawn a local process — a phone, ChatGPT, claude.ai — needs
+the server at a URL instead. Deploy it to your own Cloudflare account:
+
+```bash
+npm run deploy --workspace @dotworkout/mcp
+```
+
+That publishes a Worker and prints its URL. The endpoint is the `/mcp` path on
+it, and that is what you paste into Claude's custom connector settings or
+ChatGPT's developer mode.
+
+`wrangler dev` runs the same thing locally on `http://127.0.0.1:8787/mcp` if you
+want to try it first. `DOTWORKOUT_SITE` in `wrangler.toml` points the links it
+returns at a composer other than the hosted one.
+
+It fits the free plan. Every tool is well inside the 10 ms of CPU a free request
+gets, and the whole thing starts in about half of the 1 second allowed — there
+is no database, no session and no storage, because everything the server needs
+arrives in the request.
+
+The remote server has no `create_workout` that writes to disk, because the disk
+it runs on is not the one beside your phone. It returns a link with the workout
+inside it instead. Open that on the phone and the composer loads it ready to
+download. `inspect_workout` takes the same link back.
 
 ## Using it
 
