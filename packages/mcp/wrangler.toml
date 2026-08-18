@@ -1,0 +1,13 @@
+name = "dotworkout-mcp"
+main = "dist/src/worker.js"
+compatibility_date = "2026-08-19"
+
+# The server keeps nothing between requests, so there is no KV, no D1 and no
+# Durable Object here. Everything it needs arrives in the request, and the
+# workout it hands back travels inside a link rather than any storage of ours.
+
+[vars]
+DOTWORKOUT_SITE = "https://workout.javierferrersb.dev"
+
+[observability]
+enabled = true

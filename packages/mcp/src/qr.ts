@@ -2,6 +2,8 @@ import qrcode from "qrcode-generator";
 
 const QUIET_ZONE = 4;
 
+export type Correction = "L" | "M" | "Q" | "H";
+
 /**
  * A QR code drawn with half blocks: two module rows per line of text, because
  * a character cell is about twice as tall as it is wide, and one module per
@@ -11,8 +13,12 @@ const QUIET_ZONE = 4;
  * round on a dark terminal — the blocks take the foreground colour. Set
  * DOTWORKOUT_QR_INVERT to flip it for a light one.
  */
-export function qrLines(content: string, invert = process.env.DOTWORKOUT_QR_INVERT !== undefined) {
-  const code = qrcode(0, "M");
+export function qrLines(
+  content: string,
+  invert = env("DOTWORKOUT_QR_INVERT") !== undefined,
+  correction: Correction = "M",
+) {
+  const code = qrcode(0, correction);
   code.addData(content);
   code.make();
 
@@ -42,11 +48,16 @@ export function qrLines(content: string, invert = process.env.DOTWORKOUT_QR_INVE
 /** Beyond this a QR is too dense to read off a screen, so send the link alone. */
 const READABLE_MODULES = 89;
 
-export function qrBlock(content: string): string | undefined {
+export function qrBlock(content: string, correction: Correction = "M"): string | undefined {
   try {
-    const lines = qrLines(content);
+    const lines = qrLines(content, undefined, correction);
     return lines.length * 2 > READABLE_MODULES + QUIET_ZONE * 2 ? undefined : lines.join("\n");
   } catch {
     return undefined;
   }
+}
+
+/** Workers and Deno have no `process`; reading it defensively keeps this portable. */
+function env(name: string): string | undefined {
+  return typeof process === "undefined" ? undefined : process.env[name];
 }
