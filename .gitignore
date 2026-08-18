@@ -11,3 +11,6 @@ dist-test/
 .vercel
 
 .claude/
+
+# wrangler local state (workerd cache, dev bundles)
+.wrangler/

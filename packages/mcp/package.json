@@ -42,5 +42,8 @@
     "./http": "./dist/src/http.js",
     "./worker": "./dist/src/worker.js",
     "./package.json": "./package.json"
+  },
+  "devDependencies": {
+    "wrangler": "^4.124.0"
   }
 }

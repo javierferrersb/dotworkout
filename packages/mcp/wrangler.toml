@@ -1,6 +1,6 @@
 name = "dotworkout-mcp"
 main = "dist/src/worker.js"
-compatibility_date = "2026-08-19"
+compatibility_date = "2026-06-01"
 
 # The server keeps nothing between requests, so there is no KV, no D1 and no
 # Durable Object here. Everything it needs arrives in the request, and the

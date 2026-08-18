@@ -13,7 +13,6 @@ import {
   workoutLink,
 } from "@dotworkout/domain";
 import { precheck } from "./precheck.js";
-import { qrBlock } from "./qr.js";
 import { ACTIVITIES, buildWorkout, workoutShape, type Activity } from "./workout.js";
 
 /**
@@ -144,31 +143,7 @@ export function createServer(options: ServerOptions): McpServer {
         ` (${bytes.length} bytes)`;
       const warned = warnings.length === 0 ? "" : `\n\nWarnings:\n${bullets(warnings)}`;
 
-      return text(
-        `${head}${warned}\n\nOpen on your phone to download it:\n${link}\n\n` +
-          `On a computer, qr_code turns that link into something the phone can scan.`,
-      );
-    },
-  );
-
-  server.registerTool(
-    "qr_code",
-    {
-      title: "Draw a link as a QR code",
-      description:
-        "Turn a dotworkout link into a scannable QR code. Only worth doing when the person is at a computer and the workout needs to reach their phone — on a phone they can just open the link.",
-      inputSchema: { link: z.string().describe("the link create_workout returned") },
-    },
-    async ({ link }) => {
-      // Low correction: a screen is a pristine scanning surface, and it keeps
-      // the code small enough both to read in a chat window and to draw inside
-      // a free isolate's CPU budget.
-      const qr = qrBlock(link, "L");
-      return text(
-        qr === undefined
-          ? `That workout is too long to fit in a QR code. Open the link instead:\n${link}`
-          : `${qr}\n\n${link}`,
-      );
+      return text(`${head}${warned}\n\nOpen this on your phone to download it:\n${link}`);
     },
   );
 
