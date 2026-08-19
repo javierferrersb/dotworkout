@@ -80,7 +80,7 @@ function describe(activity: Activity): string {
   return lines.join("\n");
 }
 
-const server = new McpServer({ name: "dotworkout", version: "0.4.1" });
+const server = new McpServer({ name: "dotworkout", version: "0.5.0" });
 
 server.registerTool(
   "list_activities",

@@ -109,9 +109,14 @@ is no database, no session and no storage, because everything the server needs
 arrives in the request.
 
 The remote server has no `create_workout` that writes to disk, because the disk
-it runs on is not the one beside your phone. It returns a link with the workout
-inside it instead. Open that on the phone and the composer loads it ready to
-download. `inspect_workout` takes the same link back.
+it runs on is not the one beside your phone. It attaches the file to its reply
+and gives you a link, and `inspect_workout` takes that link back.
+
+Both, rather than one, because they fail in different places. A client that
+renders attachments gives you the file to save; a link still works where it does
+not, and gets the workout onto a phone either way. What matters is that neither
+asks a model to turn base64 into bytes — asked to do that, one of them dropped a
+byte off the end, and the Watch refused a workout that was otherwise perfect.
 
 ## Using it
 

@@ -12,6 +12,7 @@ import {
   totalDistance,
   workoutLink,
 } from "@dotworkout/domain";
+import { attachment, fileNameFor } from "./attach.js";
 import { precheck } from "./precheck.js";
 import { ACTIVITIES, buildWorkout, workoutShape, type Activity } from "./workout.js";
 
@@ -68,7 +69,7 @@ function describe(activity: Activity): string {
 }
 
 export function createServer(options: ServerOptions): McpServer {
-  const server = new McpServer({ name: "dotworkout", version: "0.4.1" });
+  const server = new McpServer({ name: "dotworkout", version: "0.5.0" });
 
   server.registerTool(
     "list_activities",
@@ -139,13 +140,27 @@ export function createServer(options: ServerOptions): McpServer {
         origin: options.site,
         ...(spec.name === undefined ? {} : { title: spec.name }),
       });
+      const name = fileNameFor(spec.name ?? "workout");
       const head =
         `${custom === undefined ? 0 : steps(custom).length} steps` +
         (summary === "" ? "" : `, ${summary} total`) +
-        ` (${bytes.length} bytes)`;
+        ` — ${name} (${bytes.length} bytes)`;
       const warned = warnings.length === 0 ? "" : `\n\nWarnings:\n${bullets(warnings)}`;
 
-      return text(`${head}${warned}\n\nOpen this on your phone to download it:\n${link}`);
+      // Both, deliberately. The file is the thing to save where a client will
+      // show it; the link is what gets it onto a phone, and it still works
+      // where the file does not. Neither asks anyone to decode base64 by hand.
+      return {
+        content: [
+          {
+            type: "text" as const,
+            text:
+              `${head}${warned}\n\nThe file is attached. Save it and open it on your phone, ` +
+              `or open this there instead:\n${link}`,
+          },
+          attachment(bytes, spec.name ?? "workout", link),
+        ],
+      };
     },
   );
 
