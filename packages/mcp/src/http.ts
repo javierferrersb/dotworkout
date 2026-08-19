@@ -69,7 +69,7 @@ function describe(activity: Activity): string {
 }
 
 export function createServer(options: ServerOptions): McpServer {
-  const server = new McpServer({ name: "dotworkout", version: "0.5.0" });
+  const server = new McpServer({ name: "dotworkout", version: "0.5.1" });
 
   server.registerTool(
     "list_activities",
@@ -118,9 +118,17 @@ export function createServer(options: ServerOptions): McpServer {
       title: "Create a workout",
       description:
         "Build a .workout file and return a link that opens it on a phone, ready to download into the Workout app. Check list_activities first for what the activity supports.",
-      inputSchema: workoutShape,
+      inputSchema: {
+        ...workoutShape,
+        attachFile: z
+          .boolean()
+          .optional()
+          .describe(
+            "also return the file itself, for clients that render an attachment. Off by default: a client that cannot render one rejects the whole reply rather than ignoring it, and then nothing comes back at all.",
+          ),
+      },
     },
-    async (spec) => {
+    async ({ attachFile, ...spec }) => {
       const { errors, warnings } = precheck(spec);
       if (errors.length > 0) return text(`Not built:\n${bullets(errors)}`);
 
@@ -147,17 +155,16 @@ export function createServer(options: ServerOptions): McpServer {
         ` — ${name} (${bytes.length} bytes)`;
       const warned = warnings.length === 0 ? "" : `\n\nWarnings:\n${bullets(warnings)}`;
 
-      // Both, deliberately. The file is the thing to save where a client will
-      // show it; the link is what gets it onto a phone, and it still works
-      // where the file does not. Neither asks anyone to decode base64 by hand.
+      // The attachment is off unless asked for. A client that does not render
+      // embedded resources does not skip the block — it fails the whole reply
+      // against its own schema, and the caller gets an error rather than a
+      // workout. Sending it by default trades a working link for that.
+      const body = `${head}${warned}\n\nOpen this on your phone to download it:\n${link}`;
+      if (attachFile !== true) return text(body);
+
       return {
         content: [
-          {
-            type: "text" as const,
-            text:
-              `${head}${warned}\n\nThe file is attached. Save it and open it on your phone, ` +
-              `or open this there instead:\n${link}`,
-          },
+          { type: "text" as const, text: body },
           attachment(bytes, spec.name ?? "workout", link),
         ],
       };

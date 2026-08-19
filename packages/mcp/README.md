@@ -112,11 +112,15 @@ The remote server has no `create_workout` that writes to disk, because the disk
 it runs on is not the one beside your phone. It attaches the file to its reply
 and gives you a link, and `inspect_workout` takes that link back.
 
-Both, rather than one, because they fail in different places. A client that
-renders attachments gives you the file to save; a link still works where it does
-not, and gets the workout onto a phone either way. What matters is that neither
-asks a model to turn base64 into bytes — asked to do that, one of them dropped a
-byte off the end, and the Watch refused a workout that was otherwise perfect.
+It can also attach the file itself, with `attachFile: true`. That is off by
+default and worth knowing why: a client that does not render embedded resources
+does not ignore the block, it rejects the whole reply against its own schema,
+and the caller gets an error instead of a workout. Claude Code does exactly
+that today. Turn it on for a client you know renders attachments.
+
+The link is the part that always works, and it matters that neither route asks a
+model to turn base64 into bytes. Asked to do that, one dropped a byte off the
+end, and the Watch refused a workout that was otherwise perfect.
 
 ## Using it
 
