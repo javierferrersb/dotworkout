@@ -132,7 +132,9 @@ export function createServer(options: ServerOptions): McpServer {
 
       const custom = decode(bytes).customWorkout;
       const summary =
-        custom === undefined ? "" : totalDistance(custom).total.byUnit.map(formatDistance).join(" + ");
+        custom === undefined
+          ? ""
+          : totalDistance(custom).total.byUnit.map(formatDistance).join(" + ");
       const link = workoutLink(bytes, {
         origin: options.site,
         ...(spec.name === undefined ? {} : { title: spec.name }),

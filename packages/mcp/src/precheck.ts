@@ -44,7 +44,9 @@ export function precheck(spec: WorkoutSpec): Precheck {
 
   const location = spec.location ?? sport.locations[0] ?? "outdoor";
   if (!sport.locations.includes(location)) {
-    errors.push(`${spec.activity} is not offered ${location}s — only ${sport.locations.join(", ")}`);
+    errors.push(
+      `${spec.activity} is not offered ${location}s — only ${sport.locations.join(", ")}`,
+    );
   }
 
   const can = capabilitiesFor(spec.activity, location);
@@ -63,7 +65,9 @@ export function precheck(spec: WorkoutSpec): Precheck {
     if (metric === undefined) return;
     if (can.alerts.includes(metric as (typeof can.alerts)[number])) return;
     if (can.unverifiedAlerts.includes(metric as (typeof can.unverifiedAlerts)[number])) {
-      warnings.push(`${where} with a ${metric} target (${label}) is unverified — allowed, untested`);
+      warnings.push(
+        `${where} with a ${metric} target (${label}) is unverified — allowed, untested`,
+      );
       return;
     }
     const offered = can.alerts.length === 0 ? "none" : can.alerts.join(", ");

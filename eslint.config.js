@@ -12,6 +12,10 @@ export default tseslint.config(
       "**/dist/**",
       "**/dist-test/**",
       "**/node_modules/**",
+      // Bundles workerd builds to run the server locally. Not in the repo, so
+      // CI never sees them, but `wrangler dev` leaves them behind and without
+      // this they are most of what `npm run lint` reports.
+      "**/.wrangler/**",
       "packages/codec/src/gen/**",
       "packages/domain/src/generated/**",
     ],

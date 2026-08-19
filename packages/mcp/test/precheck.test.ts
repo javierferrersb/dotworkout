@@ -25,7 +25,10 @@ describe("the matrix, checked against the request", () => {
 
   it("refuses a send-off on a sport that has no send-off", () => {
     const result = precheck(
-      spec({ activity: "RUNNING", blocks: [{ repeat: 4, work: { distance: "400" }, sendOff: "2:00" }] }),
+      spec({
+        activity: "RUNNING",
+        blocks: [{ repeat: 4, work: { distance: "400" }, sendOff: "2:00" }],
+      }),
     );
     ok(
       result.errors.some((e) => e.includes("DISTANCE_TIME")),
@@ -35,7 +38,11 @@ describe("the matrix, checked against the request", () => {
 
   it("refuses a distance goal on an indoor bike, which measures no distance", () => {
     const result = precheck(
-      spec({ activity: "CYCLING", location: "indoor", blocks: [{ repeat: 4, work: { distance: "1000" } }] }),
+      spec({
+        activity: "CYCLING",
+        location: "indoor",
+        blocks: [{ repeat: 4, work: { distance: "1000" } }],
+      }),
     );
     ok(
       result.errors.some((e) => e.includes("DISTANCE")),
@@ -45,14 +52,20 @@ describe("the matrix, checked against the request", () => {
 
   it("allows a time goal on that same indoor bike", () => {
     const result = precheck(
-      spec({ activity: "CYCLING", location: "indoor", blocks: [{ repeat: 4, work: { time: "5:00" } }] }),
+      spec({
+        activity: "CYCLING",
+        location: "indoor",
+        blocks: [{ repeat: 4, work: { time: "5:00" } }],
+      }),
     );
     deepStrictEqual(result.errors, []);
   });
 
   it("refuses a power target on a swim", () => {
     const result = precheck(
-      spec({ blocks: [{ repeat: 4, work: { distance: "100" }, alert: { kind: "power", watts: 200 } }] }),
+      spec({
+        blocks: [{ repeat: 4, work: { distance: "100" }, alert: { kind: "power", watts: 200 } }],
+      }),
     );
     ok(
       result.errors.some((e) => e.includes("POWER")),
@@ -62,7 +75,11 @@ describe("the matrix, checked against the request", () => {
 
   it("allows a heart-rate target on a swim", () => {
     const result = precheck(
-      spec({ blocks: [{ repeat: 4, work: { distance: "100" }, alert: { kind: "heartRateZone", zone: 3 } }] }),
+      spec({
+        blocks: [
+          { repeat: 4, work: { distance: "100" }, alert: { kind: "heartRateZone", zone: 3 } },
+        ],
+      }),
     );
     deepStrictEqual(result.errors, []);
   });
@@ -76,15 +93,28 @@ describe("the matrix, checked against the request", () => {
         ],
       }),
     );
-    ok(result.errors.some((e) => e.includes("block 2")), JSON.stringify(result.errors));
+    ok(
+      result.errors.some((e) => e.includes("block 2")),
+      JSON.stringify(result.errors),
+    );
   });
 
   it("checks the warm up and the cool down too, not only the sets", () => {
-    const warm = precheck(spec({ warmup: { distance: "400", alert: { kind: "power", watts: 200 } } }));
-    ok(warm.errors.some((e) => e.includes("warmup")), JSON.stringify(warm.errors));
+    const warm = precheck(
+      spec({ warmup: { distance: "400", alert: { kind: "power", watts: 200 } } }),
+    );
+    ok(
+      warm.errors.some((e) => e.includes("warmup")),
+      JSON.stringify(warm.errors),
+    );
 
-    const cool = precheck(spec({ cooldown: { distance: "200", alert: { kind: "power", watts: 200 } } }));
-    ok(cool.errors.some((e) => e.includes("cooldown")), JSON.stringify(cool.errors));
+    const cool = precheck(
+      spec({ cooldown: { distance: "200", alert: { kind: "power", watts: 200 } } }),
+    );
+    ok(
+      cool.errors.some((e) => e.includes("cooldown")),
+      JSON.stringify(cool.errors),
+    );
   });
 
   it("rejects a location the sport is not offered in", () => {
