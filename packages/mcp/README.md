@@ -109,8 +109,8 @@ is no database, no session and no storage, because everything the server needs
 arrives in the request.
 
 The remote server has no `create_workout` that writes to disk, because the disk
-it runs on is not the one beside your phone. It attaches the file to its reply
-and gives you a link, and `inspect_workout` takes that link back.
+it runs on is not the one beside your phone. It returns a link with the workout
+inside it, and `inspect_workout` takes that link back.
 
 It can also attach the file itself, with `attachFile: true`. That is off by
 default and worth knowing why: a client that does not render embedded resources
