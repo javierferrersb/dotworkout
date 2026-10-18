@@ -18,4 +18,8 @@ inputs:
   # Two copies of the extension descriptors are harmless: protobuf-es resolves
   # extensions by field number against the options bytes, not by object
   # identity, so protovalidate reads our options through its copy regardless.
-  - module: buf.build/bufbuild/protovalidate
+  #
+  # Pinned to the commit in buf.lock. Inputs do not read the lock, so unpinned
+  # this pulls the latest module on every run, and an upstream comment edit
+  # fails CI's generated-code diff.
+  - module: buf.build/bufbuild/protovalidate:435963d1631043e694e56e6bcc3c79c3
