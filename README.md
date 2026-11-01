@@ -5,14 +5,43 @@
 [![CI](https://github.com/javierferrersb/dotworkout/actions/workflows/ci.yml/badge.svg)](https://github.com/javierferrersb/dotworkout/actions/workflows/ci.yml)
 [![npm](https://img.shields.io/npm/v/@dotworkout/mcp?label=%40dotworkout%2Fmcp)](https://www.npmjs.com/package/@dotworkout/mcp)
 
-An MCP server that lets Claude, ChatGPT and other agents build custom Apple
-Watch workouts. Describe the session in plain language and get back a
-`.workout` file the Workout app actually accepts.
+Custom Apple Watch workouts as real `.workout` files. Build one in the
+browser, or ask an agent to build it for you; either way it opens in the
+Workout app and syncs to the Watch.
+
+## Build one in the browser
+
+**<https://workout.javierferrersb.dev>** — free, no account, nothing to install.
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/builder-dark.png" />
+  <img src="docs/builder-light.png" alt="The workout builder showing Thursday intervals, an outdoor run of 7.4 km in five steps: a 2 km warm up, 8 × 400 m with 1:30 rest in zone 4, a 3:00 rest, 6 × 200 m with 1:00 rest at 4:10 per km, and a 1 km cool down, under a strip drawing the session's shape." />
+</picture>
+
+Pick a sport and the workout opens as a list of steps — warm up, sets, rests,
+cool down — under a strip that draws the session's shape. Each step takes a
+distance or a time, repeats, rest, and a heart-rate, pace, cadence or power
+target, and only what the Watch supports for that sport is offered.
+
+It is built for the keyboard. `S` adds a set, each choice is one letter and
+Enter moves to the next field, so 8 × 400 m with 90 seconds' rest in zone 4 is
+`S` `D` `400m` `8` `90` `H` `Z` `4`. On a phone every step is a tap.
+
+Download the file on your iPhone and it opens in the Workout app, or send it
+there as a link or a QR code. The workout travels inside the link and nothing
+is uploaded. Install the page as an app and it works offline. More in
+[`packages/pwa/README.md`](packages/pwa/README.md).
+
+## Or ask an agent
+
+An MCP server lets Claude, ChatGPT and other agents build the same workouts.
+Describe the session in plain language and get back a `.workout` file the
+Workout app actually accepts.
 
 > Make me a Norwegian 4×4 — four by four minutes in zone 4 with three minute
 > jogs between. Use dotworkout.
 
-## Connect it
+### Connect it
 
 **Hosted**, for anything that cannot run a process — a phone, ChatGPT, or Claude
 in a browser. Add this as a custom connector; there is nothing to install and no
@@ -34,7 +63,7 @@ claude mcp add -s user dotworkout -- npx -y @dotworkout/mcp
 
 `-s user` registers it everywhere rather than in the current directory only.
 
-## Ask for a workout
+### Ask for a workout
 
 End the request with **use dotworkout** so the model reaches for the tools
 rather than answering from memory:
@@ -51,17 +80,17 @@ running, cycling, rowing, HIIT, strength, yoga and the rest — with warm ups,
 cool downs, repeats, time and distance goals, and heart-rate, pace, power and
 cadence alerts.
 
-## Getting it onto your Watch
+### Getting it onto your Watch
 
 Hosted, the server returns a link with the workout encoded inside it. Open it on
-your iPhone and the composer loads it, ready to download; it lands in the
+your iPhone and the browser app loads it, ready to download; it lands in the
 Workout app and syncs to the Watch. Nothing is uploaded and nothing is stored —
 the link _is_ the workout.
 
 Run locally, it writes the file to a path you give it and prints a QR code that
 opens the same link on your phone.
 
-## Why it works
+### Why it works
 
 A model cannot write this format from memory. It is undocumented binary
 protobuf, and nothing says which goals and alerts each sport allows — ask for a
@@ -87,15 +116,15 @@ free plan are in [`packages/mcp/README.md`](packages/mcp/README.md).
 
 ## Using the libraries directly
 
-The server sits on two TypeScript packages you can use on their own.
+The app and the server sit on two TypeScript packages you can use on their own.
 
-| Package                | What it does                                                             |
-| ---------------------- | ------------------------------------------------------------------------ |
-| `@dotworkout/mcp`      | The MCP server.                                                          |
-| `@dotworkout/domain`   | Builds and validates workouts. Uses the codec.                           |
-| `@dotworkout/codec`    | Decodes and encodes the binary format. Nothing else.                     |
-| `@dotworkout/notation` | Parses sets written as text, like `8x50 on 1:00 Build`. Not published.   |
-| `@dotworkout/pwa`      | The composer the links open. Runs entirely on the client. Not published. |
+| Package                | What it does                                                           |
+| ---------------------- | ---------------------------------------------------------------------- |
+| `@dotworkout/pwa`      | The browser app. Runs entirely on the client. Not published.           |
+| `@dotworkout/mcp`      | The MCP server.                                                        |
+| `@dotworkout/domain`   | Builds and validates workouts. Uses the codec.                         |
+| `@dotworkout/codec`    | Decodes and encodes the binary format. Nothing else.                   |
+| `@dotworkout/notation` | Parses sets written as text, like `8x50 on 1:00 Build`. Not published. |
 
 ```bash
 npm install @dotworkout/domain
@@ -146,12 +175,6 @@ encode(edited);
 ```
 
 Everything you did not touch comes back byte for byte.
-
-### The composer
-
-The links open a browser composer at <https://workout.javierferrersb.dev>. You
-can build workouts there by hand too, though the agent is the better way in.
-Details in [`packages/pwa/README.md`](packages/pwa/README.md).
 
 ## Commands
 
