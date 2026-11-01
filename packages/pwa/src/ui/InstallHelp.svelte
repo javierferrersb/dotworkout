@@ -65,7 +65,7 @@
   .scrim {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.55);
+    background: rgba(0, 0, 0, 0.5);
     display: grid;
     place-items: center;
     padding: 24px;
@@ -82,18 +82,19 @@
     position: relative;
     width: min(400px, 100%);
     background: var(--bg-surface);
-    border-radius: var(--radius-card);
+    border: 1px solid var(--hairline);
+    border-radius: 14px;
     padding: 24px;
     display: grid;
     gap: 16px;
-    box-shadow: var(--shadow);
+    box-shadow: var(--shadow-pop);
   }
 
   h2 {
     margin: 0;
-    font-size: 20px;
-    font-weight: 700;
-    letter-spacing: -0.4px;
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: -0.015em;
   }
 
   ol {
@@ -101,7 +102,7 @@
     margin: 0;
     padding: 0;
     display: grid;
-    gap: 14px;
+    gap: 12px;
   }
 
   li {
@@ -119,11 +120,11 @@
     flex: none;
     width: 22px;
     height: 22px;
+    border: 1px solid var(--hairline-strong);
     border-radius: 50%;
-    background: var(--accent-soft);
-    color: var(--accent);
+    color: var(--text-secondary);
     font-size: 12px;
-    font-weight: 700;
+    font-weight: 500;
   }
 
   .reopen {
@@ -131,9 +132,9 @@
     align-items: flex-start;
     gap: 10px;
     margin: 0;
-    padding: 11px 13px;
+    padding: 10px 12px;
+    border: 1px solid var(--hairline);
     border-radius: var(--radius-control);
-    background: var(--bg-raised);
     color: var(--text-secondary);
     font-size: 13px;
     line-height: 1.45;
@@ -142,7 +143,7 @@
   .reopen :global(svg) {
     flex: none;
     margin-top: 1px;
-    color: var(--accent);
+    color: var(--text-tertiary);
   }
 
   .suppress {
@@ -155,17 +156,22 @@
   }
 
   .suppress input {
-    accent-color: var(--accent);
+    accent-color: var(--ink);
     width: 15px;
     height: 15px;
   }
 
   .close {
-    padding: 13px;
-    border-radius: var(--radius-pill);
-    background: var(--accent);
-    color: var(--on-accent);
-    font-size: 15px;
+    padding: 11px;
+    border-radius: var(--radius-control);
+    background: var(--ink);
+    color: var(--on-ink);
+    font-size: 14px;
     font-weight: 600;
+    transition: background 120ms var(--ease);
+  }
+
+  .close:hover {
+    background: var(--ink-hover);
   }
 </style>

@@ -1,11 +1,11 @@
 <script lang="ts">
   import { fly } from "svelte/transition";
-  import { Check } from "@lucide/svelte";
   import type { CompositionSession } from "../application/compositionSession.svelte.js";
   import { rawAnswer } from "../domain/interview.js";
   import { answerLabel, blockHeading, questionText } from "../i18n/format.js";
   import { t } from "../i18n/locale.svelte.js";
   import { keys } from "../i18n/keys.svelte.js";
+  import Kbd from "./Kbd.svelte";
   import QuestionPrompt from "./QuestionPrompt.svelte";
 
   interface Props {
@@ -42,7 +42,6 @@
         onclick={() => session.focus(question.id)}
         transition:fly={{ y: -6, duration: 200 }}
       >
-        <Check class="tick" size={15} strokeWidth={3} />
         <span class="label">{questionText(question)}</span>
         <span class="value">{answerLabel(session.draft, question.id, session.activity.sport)}</span>
       </button>
@@ -75,7 +74,7 @@
     <div class="finish" transition:fly={{ y: -6, duration: 200 }}>
       <button class="commit" onclick={() => session.commitBlock()}>
         {session.composingNew ? t("block.add") : t("block.done")}
-        <kbd>{keys.enter}</kbd>
+        <Kbd label={keys.enter} tone="onAccent" />
       </button>
     </div>
   {/if}
@@ -85,7 +84,7 @@
   .block {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
-    gap: 14px;
+    gap: 16px;
   }
 
   header {
@@ -101,14 +100,14 @@
 
   h1 {
     margin: 0;
-    font-size: 30px;
-    font-weight: 700;
-    letter-spacing: -0.9px;
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
     overflow-wrap: anywhere;
   }
 
   .who p {
-    margin: 4px 0 0;
+    margin: 2px 0 0;
     color: var(--text-tertiary);
     font-size: 13px;
   }
@@ -121,98 +120,74 @@
     display: inline-flex;
     align-items: center;
     gap: 10px;
-    padding: 11px 18px;
-    border-radius: var(--radius-pill);
-    background: var(--accent);
-    color: var(--on-accent);
+    padding: 9px 12px 9px 16px;
+    border-radius: var(--radius-control);
+    background: var(--ink);
+    color: var(--on-ink);
     font-size: 14px;
     font-weight: 600;
     white-space: nowrap;
-    transition: transform 140ms var(--ease);
+    transition: background 120ms var(--ease);
   }
 
   .commit:hover {
-    transform: translateY(-1px);
-  }
-
-  .commit kbd {
-    padding: 2px 7px;
-    border-radius: 6px;
-    background: rgba(255, 255, 255, 0.22);
-    font-family: var(--sans);
-    font-size: 11px;
+    background: var(--ink-hover);
   }
 
   .answers {
     display: grid;
-    gap: 2px;
+    gap: 1px;
+    margin: -4px -8px;
   }
 
   .answered {
-    display: flex;
-    align-items: baseline;
-    gap: 14px;
+    display: grid;
+    grid-template-columns: 150px minmax(0, 1fr);
+    gap: 12px;
     width: 100%;
-    padding: 8px 12px;
-    border-radius: 10px;
+    padding: 7px 8px;
+    border-radius: var(--radius-sm);
     text-align: left;
-    transition: background 120ms var(--ease);
+    font-size: 14px;
+    transition: background 100ms var(--ease);
   }
 
   .answered:hover {
-    background: var(--bg-surface);
-  }
-
-  .answered :global(.tick) {
-    color: var(--lime);
-    flex: none;
+    background: var(--bg-raised);
   }
 
   .label {
     color: var(--text-tertiary);
-    font-size: 14px;
-    width: 140px;
-    flex: none;
   }
 
   .value {
-    font-family: var(--mono);
-    font-size: 15px;
-    color: var(--text-primary);
+    font-weight: 500;
+    overflow-wrap: anywhere;
   }
 
   .upcoming {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
-    padding: 2px 12px;
+    gap: 6px;
   }
 
   .pending {
+    padding: 2px 8px;
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-sm);
     color: var(--text-tertiary);
     font-size: 12px;
-    padding: 4px 10px;
-    border-radius: var(--radius-pill);
-    background: var(--bg-surface);
   }
+
   @media (max-width: 640px) {
-    header {
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-
     h1 {
-      font-size: 24px;
+      font-size: 20px;
     }
 
-    .label {
-      width: 108px;
-      font-size: 13px;
-    }
-
-    .value {
-      font-size: 14px;
-      overflow-wrap: anywhere;
+    .answered {
+      grid-template-columns: 112px minmax(0, 1fr);
+      gap: 8px;
+      font-size: 13.5px;
     }
   }
 </style>

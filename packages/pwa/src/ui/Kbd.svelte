@@ -15,7 +15,7 @@
   {#each parts as part (part)}
     {@const Glyph = GLYPHS[part as keyof typeof GLYPHS]}
     {#if Glyph}
-      <Glyph size={13} strokeWidth={2.2} />
+      <Glyph size={12} strokeWidth={2} />
     {:else}
       <span>{part}</span>
     {/if}
@@ -27,20 +27,23 @@
     display: inline-flex;
     align-items: center;
     gap: 3px;
-    min-width: 24px;
-    height: 24px;
-    padding: 0 7px;
-    border-radius: 7px;
-    background: var(--bg-raised);
+    min-width: 22px;
+    height: 22px;
+    padding: 0 6px;
+    border-radius: 5px;
+    border: 1px solid var(--hairline-strong);
+    background: var(--bg-surface);
     color: var(--text-secondary);
     font-family: var(--sans);
-    font-size: 12px;
-    font-weight: 600;
+    font-size: 11px;
+    font-weight: 500;
     line-height: 1;
+    justify-content: center;
   }
 
   kbd.onAccent {
-    background: rgba(255, 255, 255, 0.22);
+    border-color: transparent;
+    background: color-mix(in srgb, currentColor 18%, transparent);
     color: inherit;
   }
 </style>

@@ -33,7 +33,7 @@
   </button>
 
   {#if open}
-    <div class="popover" role="menu" transition:fly={{ y: -6, duration: 160 }}>
+    <div class="popover" role="menu" transition:fly={{ y: -4, duration: 140 }}>
       <p class="caption">{label}</p>
       {#each options as option (option.value)}
         <button
@@ -46,7 +46,7 @@
           }}
         >
           <span>{option.label}</span>
-          {#if option.value === selected}<Check size={15} strokeWidth={2.6} />{/if}
+          {#if option.value === selected}<Check size={14} strokeWidth={2} />{/if}
         </button>
       {/each}
     </div>
@@ -61,16 +61,20 @@
   .trigger {
     display: inline-flex;
     align-items: center;
-    gap: 7px;
-    padding: 8px 14px;
-    border-radius: var(--radius-pill);
+    gap: 6px;
+    padding: 6px 10px;
+    border-radius: var(--radius-control);
     color: var(--text-secondary);
-    font-size: 14px;
-    transition: all 140ms var(--ease);
+    font-size: 13px;
+    font-weight: 500;
+    transition:
+      background 120ms var(--ease),
+      color 120ms var(--ease);
   }
 
-  .trigger:hover {
-    background: var(--bg-surface);
+  .trigger:hover,
+  .trigger[aria-expanded="true"] {
+    background: var(--bg-raised);
     color: var(--text-primary);
   }
 
@@ -79,21 +83,18 @@
     top: calc(100% + 6px);
     right: 0;
     z-index: 40;
-    min-width: 190px;
-    padding: 6px;
-    border-radius: 16px;
+    min-width: 180px;
+    padding: 4px;
+    border-radius: 10px;
     background: var(--bg-surface);
-    box-shadow: var(--shadow);
+    box-shadow: var(--shadow-pop);
     border: 1px solid var(--hairline);
   }
 
   .caption {
-    margin: 6px 10px 8px;
+    margin: 6px 8px 4px;
     color: var(--text-tertiary);
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
+    font-size: 12px;
   }
 
   .option {
@@ -102,15 +103,14 @@
     justify-content: space-between;
     gap: 12px;
     width: 100%;
-    padding: 9px 10px;
-    border-radius: 10px;
+    padding: 7px 8px;
+    border-radius: var(--radius-sm);
     color: var(--text-primary);
     font-size: 14px;
     text-align: left;
   }
 
   .option:hover {
-    background: var(--accent-soft);
-    color: var(--accent);
+    background: var(--bg-raised);
   }
 </style>

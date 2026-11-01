@@ -188,17 +188,17 @@
   }
 
   .sheet {
-    width: min(420px, 100%);
+    width: min(400px, 100%);
     display: grid;
-    gap: 14px;
+    gap: 12px;
     text-align: center;
   }
 
   h1 {
     margin: 0;
-    font-size: 28px;
-    font-weight: 700;
-    letter-spacing: -0.8px;
+    font-size: 26px;
+    font-weight: 600;
+    letter-spacing: -0.025em;
   }
 
   .sheet p {
@@ -209,20 +209,21 @@
   }
 
   .done {
-    color: var(--lime);
+    color: var(--success);
   }
 
   button {
-    padding: 14px;
-    border-radius: var(--radius-pill);
-    background: var(--accent);
-    color: var(--on-accent);
+    padding: 12px;
+    border-radius: var(--radius-control);
+    background: var(--ink);
+    color: var(--on-ink);
     font-size: 15px;
     font-weight: 600;
   }
 
   .ghost {
-    background: var(--bg-raised);
+    border: 1px solid var(--hairline-strong);
+    background: var(--bg-surface);
     color: var(--text-primary);
     font-weight: 500;
   }
@@ -239,10 +240,11 @@
     /* Never wider than the screen: Spanish runs 420px, which hangs off both
        edges of a phone, and a narrow phone loses the English wording too. */
     max-width: calc(100% - 24px);
-    padding: 10px 12px 10px 18px;
-    border-radius: var(--radius-pill);
+    padding: 8px 8px 8px 16px;
+    border: 1px solid var(--hairline-strong);
+    border-radius: 12px;
     background: var(--bg-surface);
-    box-shadow: var(--shadow);
+    box-shadow: var(--shadow-pop);
     font-size: 13px;
     white-space: nowrap;
   }
@@ -260,7 +262,6 @@
       max-width: none;
       flex-wrap: wrap;
       justify-content: center;
-      border-radius: 18px;
       padding: 12px 14px;
       white-space: normal;
       text-align: center;
@@ -272,7 +273,7 @@
   }
 
   .resumed button {
-    padding: 7px 14px;
+    padding: 6px 12px;
     font-size: 13px;
   }
 
@@ -280,10 +281,10 @@
     background: none;
     color: var(--text-secondary);
     font-weight: 500;
-    padding: 7px 6px;
+    padding: 6px 6px;
   }
 
   .resumed .link:hover {
-    color: var(--accent);
+    color: var(--text-primary);
   }
 </style>

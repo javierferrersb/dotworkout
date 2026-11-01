@@ -116,7 +116,7 @@
         ? t("rail.blockCount", { count: 1 })
         : t("rail.blockCountPlural", { count: session.blocks.length })}
     </span>
-    <ChevronUp class="chev" size={18} strokeWidth={2.4} />
+    <ChevronUp class="chev" size={16} strokeWidth={2} />
   </button>
 
   <div class="sheet">
@@ -163,9 +163,6 @@
             <span class="row">
               <span class="kind">{block.kind ? blockKindName(block.kind) : t("kind.INTERVAL")}</span
               >
-              {#if block.repetitions && block.repetitions > 1}
-                <span class="reps">×{block.repetitions}</span>
-              {/if}
             </span>
             <span class="row">
               {#if block.label}<span class="name">{block.label}</span>{/if}
@@ -188,7 +185,7 @@
                 aria-label={t("rail.moveUp")}
                 onclick={() => session.moveBlock(index, index - 1)}
               >
-                <ArrowUp size={14} strokeWidth={2.4} />
+                <ArrowUp size={14} strokeWidth={2} />
               </button>
               <button
                 class="tool"
@@ -196,14 +193,14 @@
                 aria-label={t("rail.moveDown")}
                 onclick={() => session.moveBlock(index, index + 1)}
               >
-                <ArrowDown size={14} strokeWidth={2.4} />
+                <ArrowDown size={14} strokeWidth={2} />
               </button>
               <button
                 class="tool"
                 aria-label={t("rail.duplicate")}
                 onclick={() => session.duplicateBlock(index)}
               >
-                <Copy size={14} strokeWidth={2.4} />
+                <Copy size={14} strokeWidth={2} />
               </button>
             {/if}
             <button
@@ -211,7 +208,7 @@
               aria-label={t("rail.remove")}
               onclick={() => session.removeBlock(index)}
             >
-              <Trash2 size={14} strokeWidth={2.4} />
+              <Trash2 size={14} strokeWidth={2} />
             </button>
           </div>
         </div>
@@ -254,18 +251,18 @@
 
     <div class="actions">
       <button class="primary" disabled={blocked} onclick={save}>
-        <Download size={17} strokeWidth={2.2} />
+        <Download size={16} strokeWidth={2} />
         {t("rail.download")}
         <kbd>{keys.save}</kbd>
       </button>
 
       <div class="pair">
         <button class="whatsapp" disabled={blocked} onclick={openWhatsapp}>
-          <Share2 size={16} strokeWidth={2.2} />
+          <Share2 size={16} strokeWidth={2} />
           {t("rail.whatsapp")}
         </button>
         <button class="secondary" disabled={blocked} onclick={() => (sending = true)}>
-          <QrCode size={16} strokeWidth={2.2} />
+          <QrCode size={16} strokeWidth={2} />
           <span class="scanLabel">{t("rail.scan")}</span>
         </button>
       </div>
@@ -288,14 +285,15 @@
 
 <style>
   aside {
-    width: 380px;
+    width: 360px;
     flex: none;
     height: 100%;
-    padding: 26px 20px 20px;
+    padding: 20px 16px 16px;
     display: flex;
     flex-direction: column;
     gap: 14px;
     background: var(--bg-sunken);
+    border-left: 1px solid var(--hairline);
     overflow: hidden;
   }
 
@@ -317,10 +315,10 @@
 
   .title {
     font: inherit;
-    font-size: 24px;
-    font-weight: 700;
-    letter-spacing: -0.6px;
-    line-height: 1.15;
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    line-height: 1.25;
     width: 100%;
     padding: 0;
     border: none;
@@ -337,53 +335,63 @@
 
   .activity {
     margin: 2px 0 0;
-    color: var(--text-secondary);
+    color: var(--text-tertiary);
     font-size: 13px;
   }
 
   .blocks {
     display: grid;
-    gap: 8px;
+    gap: 6px;
     align-content: start;
     overflow-y: auto;
     min-height: 0;
     flex: 1;
-    padding-right: 2px;
   }
 
   .card {
     position: relative;
     background: var(--bg-surface);
-    border: 1px solid transparent;
-    border-radius: 16px;
-    transition: all 140ms var(--ease);
+    border: 1px solid var(--hairline);
+    border-radius: 10px;
+    transition:
+      border-color 100ms var(--ease),
+      background 100ms var(--ease);
+  }
+
+  .card:hover {
+    border-color: var(--hairline-strong);
   }
 
   .card.over {
     border-color: var(--accent);
   }
 
+  .card.on {
+    border-color: var(--accent);
+  }
+
   .pick {
     display: grid;
-    gap: 4px;
+    gap: 2px;
     width: 100%;
-    padding: 12px 14px;
+    padding: 10px 12px;
     text-align: left;
     border-radius: inherit;
   }
 
   .tools {
     position: absolute;
-    top: 6px;
-    right: 6px;
+    top: 5px;
+    right: 5px;
     display: flex;
     align-items: center;
-    gap: 2px;
+    gap: 1px;
     padding: 2px;
-    border-radius: var(--radius-pill);
-    background: var(--bg-raised);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-control);
+    background: var(--bg-surface);
     opacity: 0;
-    transition: opacity 120ms var(--ease);
+    transition: opacity 100ms var(--ease);
   }
 
   .card:hover .tools,
@@ -403,32 +411,23 @@
     display: grid;
     place-items: center;
     padding: 4px;
-    border-radius: 6px;
+    border-radius: 5px;
     color: var(--text-secondary);
   }
 
   .tool:hover:not(:disabled) {
-    background: var(--accent-soft);
-    color: var(--accent);
+    background: var(--bg-raised);
+    color: var(--text-primary);
   }
 
   .tool.danger:hover:not(:disabled) {
-    background: color-mix(in srgb, var(--danger) 16%, transparent);
+    background: color-mix(in srgb, var(--danger) 14%, transparent);
     color: var(--danger);
   }
 
   .tool:disabled {
     opacity: 0.3;
     cursor: default;
-  }
-
-  .card:hover {
-    border-color: var(--hairline);
-  }
-
-  .card.on {
-    background: var(--accent-soft);
-    border-color: var(--accent-edge);
   }
 
   .row {
@@ -439,36 +438,28 @@
   }
 
   .kind {
-    font-size: 13px;
-    font-weight: 600;
     flex: 1;
     color: var(--text-secondary);
-  }
-
-  .reps {
-    color: var(--accent);
-    font-family: var(--mono);
-    font-size: 13px;
-    font-weight: 600;
+    font-size: 12px;
+    font-weight: 500;
   }
 
   .name {
     flex: 1;
-    font-size: 15px;
+    font-size: 14.5px;
     overflow-wrap: anywhere;
   }
 
   .measure {
-    font-family: var(--mono);
-    font-size: 13px;
     color: var(--text-secondary);
+    font-size: 13px;
     white-space: nowrap;
   }
 
   .measure.alone {
     flex: 1;
     color: var(--text-primary);
-    font-size: 15px;
+    font-size: 14.5px;
   }
 
   .target {
@@ -508,19 +499,18 @@
     align-items: baseline;
     justify-content: space-between;
     gap: 10px;
-    padding: 0 4px;
+    padding: 4px 4px 0;
   }
 
   .word {
     color: var(--text-secondary);
-    font-size: 14px;
+    font-size: 13px;
   }
 
   .amount {
-    font-family: var(--mono);
-    font-size: 26px;
-    font-weight: 700;
-    letter-spacing: -0.7px;
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
     text-align: right;
     overflow-wrap: anywhere;
   }
@@ -533,16 +523,15 @@
   }
 
   .chip {
-    padding: 4px 10px;
-    border-radius: var(--radius-pill);
-    background: var(--bg-raised);
+    padding: 2px 8px;
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-sm);
     color: var(--text-secondary);
-    font-size: 11px;
+    font-size: 11.5px;
     overflow-wrap: anywhere;
   }
 
   .chip b {
-    font-family: var(--mono);
     font-weight: 400;
     color: var(--text-tertiary);
   }
@@ -563,56 +552,59 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 9px;
-    border-radius: var(--radius-pill);
+    gap: 8px;
+    border-radius: var(--radius-control);
     font-weight: 600;
     white-space: nowrap;
-    transition: background 140ms var(--ease);
+    transition:
+      background 100ms var(--ease),
+      border-color 100ms var(--ease);
   }
 
   .primary {
-    padding: 14px;
-    background: var(--accent);
-    color: var(--on-accent);
-    font-size: 15px;
+    padding: 11px;
+    background: var(--ink);
+    color: var(--on-ink);
+    font-size: 14px;
+  }
+
+  .primary:hover:not(:disabled) {
+    background: var(--ink-hover);
+  }
+
+  .primary:disabled {
+    background: var(--bg-raised);
+    color: var(--text-tertiary);
+    opacity: 1;
   }
 
   .primary kbd {
-    padding: 2px 7px;
-    border-radius: 6px;
-    background: rgba(255, 255, 255, 0.22);
+    padding: 2px 6px;
+    border-radius: 5px;
+    background: color-mix(in srgb, currentColor 18%, transparent);
     font-family: var(--sans);
     font-size: 11px;
     font-weight: 500;
   }
 
-  .whatsapp {
-    flex: 1;
-    padding: 11px;
-    background: var(--whatsapp);
-    color: var(--on-whatsapp);
-    font-size: 14px;
-  }
-
-  .whatsapp:hover:not(:disabled) {
-    background: var(--whatsapp-hover);
-  }
-
+  .whatsapp,
   .secondary {
     flex: 1;
-    padding: 11px;
-    background: var(--bg-raised);
+    padding: 9px;
+    border: 1px solid var(--hairline-strong);
+    background: var(--bg-surface);
     color: var(--text-primary);
-    font-size: 14px;
+    font-size: 13.5px;
     font-weight: 500;
   }
 
+  .whatsapp:hover:not(:disabled),
   .secondary:hover:not(:disabled) {
-    background: var(--bg-surface);
+    background: var(--bg-raised);
   }
 
   button:disabled {
-    opacity: 0.35;
+    opacity: 0.4;
     cursor: default;
   }
 
@@ -620,11 +612,11 @@
   .privacy {
     margin: 0;
     text-align: center;
-    font-size: 11px;
+    font-size: 12px;
   }
 
   .notice {
-    color: var(--lime);
+    color: var(--success);
   }
 
   .privacy {
@@ -644,9 +636,10 @@
       padding: 0;
       gap: 0;
       background: var(--bg-surface);
+      border-left: none;
       border-top: 1px solid var(--hairline);
-      box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.22);
-      border-radius: 20px 20px 0 0;
+      box-shadow: 0 -8px 28px rgba(0, 0, 0, 0.12);
+      border-radius: 16px 16px 0 0;
     }
 
     .peek {
@@ -659,9 +652,8 @@
     }
 
     .peekTotal {
-      font-family: var(--mono);
       font-size: 17px;
-      font-weight: 700;
+      font-weight: 600;
     }
 
     .peekCount {
@@ -715,7 +707,7 @@
     }
 
     .primary {
-      padding: 13px;
+      padding: 12px;
     }
 
     .primary kbd {

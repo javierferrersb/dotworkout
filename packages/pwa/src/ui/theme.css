@@ -1,31 +1,40 @@
 :root {
-  --bg-canvas: #101013;
-  --bg-surface: #1a1a1f;
-  --bg-raised: #26262c;
-  --bg-sunken: #0b0b0e;
-  --hairline: #2e2e36;
-  --text-primary: #f5f5f7;
-  --text-secondary: #a1a1ac;
-  --text-tertiary: #71717d;
-  --accent: #4fb0ff;
-  --accent-soft: rgba(79, 176, 255, 0.14);
-  --accent-edge: rgba(79, 176, 255, 0.42);
-  --on-accent: #001a2e;
-  --lime: #b4ff39;
-  --danger: #ff6b6b;
-  --shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
-  --whatsapp: #1f8a5f;
-  --whatsapp-hover: #269c6c;
-  --on-whatsapp: #ffffff;
+  /* Surfaces step by lightness, never by shadow: canvas, then surface (cards,
+     fields), then raised (hover and pressed fills). */
+  --bg-canvas: #0d0d0e;
+  --bg-surface: #151516;
+  --bg-raised: #1e1e20;
+  --bg-sunken: #0d0d0e;
+  --hairline: #262629;
+  --hairline-strong: #36363b;
 
-  --radius-card: 22px;
-  --radius-control: 14px;
+  --text-primary: #ededef;
+  --text-secondary: #a3a3aa;
+  --text-tertiary: #7a7a82;
+
+  /* One accent, kept for focus and for the thing that is selected. Primary
+     actions are ink: the strongest colour on the page is the text colour. */
+  --accent: #5aa8ff;
+  --accent-soft: rgba(90, 168, 255, 0.1);
+  --accent-edge: rgba(90, 168, 255, 0.4);
+  --on-accent: #06182b;
+  --ink: #ededef;
+  --ink-hover: #ffffff;
+  --on-ink: #0d0d0e;
+
+  --success: #5fcf93;
+  --danger: #ff7b72;
+
+  --shadow-pop: 0 1px 2px rgba(0, 0, 0, 0.4), 0 14px 36px rgba(0, 0, 0, 0.45);
+
+  --radius-card: 12px;
+  --radius-control: 8px;
+  --radius-sm: 6px;
   --radius-pill: 999px;
 
   --sans:
-    -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Inter, system-ui,
+    -apple-system, BlinkMacSystemFont, "Segoe UI Variable Text", "Segoe UI", Inter, system-ui,
     sans-serif;
-  --mono: "SF Mono", "Cascadia Code", "Segoe UI Mono", "JetBrains Mono", ui-monospace, monospace;
 
   --ease: cubic-bezier(0.32, 0.72, 0, 1);
 
@@ -33,24 +42,29 @@
 }
 
 :root[data-theme="light"] {
-  --bg-canvas: #f2f2f6;
+  --bg-canvas: #fafaf9;
   --bg-surface: #ffffff;
-  --bg-raised: #e9e9ef;
-  --bg-sunken: #e4e4ea;
-  --hairline: #dcdce3;
-  --text-primary: #16161a;
-  --text-secondary: #5b5b66;
-  --text-tertiary: #92929e;
-  --accent: #0b64d0;
-  --accent-soft: rgba(11, 100, 208, 0.09);
-  --accent-edge: rgba(11, 100, 208, 0.32);
+  --bg-raised: #f1f1ef;
+  --bg-sunken: #fafaf9;
+  --hairline: #e6e6e2;
+  --hairline-strong: #d3d3ce;
+
+  --text-primary: #151514;
+  --text-secondary: #5a5a55;
+  --text-tertiary: #78786f;
+
+  --accent: #0a5fd0;
+  --accent-soft: rgba(10, 95, 208, 0.07);
+  --accent-edge: rgba(10, 95, 208, 0.34);
   --on-accent: #ffffff;
-  --lime: #4e7a00;
-  --danger: #c81e1e;
-  --shadow: 0 10px 30px rgba(20, 20, 40, 0.1);
-  --whatsapp: #127a4c;
-  --whatsapp-hover: #0e6440;
-  --on-whatsapp: #ffffff;
+  --ink: #151514;
+  --ink-hover: #000000;
+  --on-ink: #fafaf9;
+
+  --success: #1a7f4b;
+  --danger: #c62828;
+
+  --shadow-pop: 0 1px 2px rgba(20, 20, 18, 0.06), 0 14px 36px rgba(20, 20, 18, 0.12);
 
   color-scheme: light;
 }
@@ -66,6 +80,8 @@ body {
   background: var(--bg-canvas);
   color: var(--text-primary);
   font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.45;
   -webkit-font-smoothing: antialiased;
   font-variant-numeric: tabular-nums;
   -webkit-tap-highlight-color: transparent;
@@ -73,6 +89,12 @@ body {
 
 #app {
   height: 100%;
+}
+
+h1,
+h2,
+h3 {
+  text-wrap: balance;
 }
 
 button {
@@ -94,15 +116,13 @@ input {
   border: none;
 }
 
-input:focus,
-button:focus-visible {
+input:focus {
   outline: none;
 }
 
 :focus-visible {
   outline: 2px solid var(--accent);
-  outline-offset: 3px;
-  border-radius: 6px;
+  outline-offset: 2px;
 }
 
 @keyframes confirm-blink {
@@ -110,8 +130,8 @@ button:focus-visible {
   34%,
   68%,
   100% {
-    background: var(--accent);
-    color: var(--on-accent);
+    background: var(--ink);
+    color: var(--on-ink);
   }
   17%,
   51% {

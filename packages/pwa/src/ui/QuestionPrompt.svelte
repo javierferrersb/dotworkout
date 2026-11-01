@@ -73,7 +73,7 @@
           <kbd>{choiceKey(choice, activityId)}</kbd>
           <span>{choiceText(choice, activityId)}</span>
           {#if choice.caution}<span class="flag">{t("prompt.notVerified")}</span>{/if}
-          {#if chosen === choice.value}<Check class="current" size={17} strokeWidth={3} />{/if}
+          {#if chosen === choice.value}<Check class="current" size={15} strokeWidth={2} />{/if}
         </button>
       {/each}
     </div>
@@ -93,7 +93,7 @@
       />
       {#if question.form.type === "distance"}<span class="unit">{question.form.unit}</span>{/if}
       <button type="submit" class="go" aria-label={t("prompt.confirm")}>
-        <CornerDownLeft size={15} strokeWidth={2.4} />
+        <CornerDownLeft size={14} strokeWidth={2} />
         {keys.enter}
       </button>
     </form>
@@ -117,13 +117,12 @@
 <style>
   .prompt {
     background: var(--bg-surface);
-    border: 1px solid var(--accent-edge);
+    border: 1px solid var(--hairline);
     border-radius: var(--radius-card);
-    padding: 22px 24px 24px;
+    padding: 20px;
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     gap: 14px;
-    box-shadow: var(--shadow);
   }
 
   header {
@@ -134,9 +133,9 @@
 
   h2 {
     margin: 0;
-    font-size: 24px;
-    font-weight: 700;
-    letter-spacing: -0.5px;
+    font-size: 19px;
+    font-weight: 600;
+    letter-spacing: -0.015em;
   }
 
   .tag {
@@ -154,34 +153,36 @@
   .choices {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 8px;
   }
 
   .choice {
     display: inline-flex;
     align-items: center;
     gap: 10px;
-    padding: 11px 18px 11px 11px;
+    padding: 8px 14px 8px 8px;
+    border: 1px solid var(--hairline-strong);
     border-radius: var(--radius-control);
-    background: var(--bg-raised);
-    font-size: 15px;
+    background: var(--bg-surface);
+    font-size: 14.5px;
     transition:
-      transform 120ms var(--ease),
-      background 120ms var(--ease);
+      background 100ms var(--ease),
+      border-color 100ms var(--ease);
   }
 
   .choice:hover {
-    background: var(--accent-soft);
-    transform: translateY(-1px);
+    background: var(--bg-raised);
   }
 
   .choice.chosen {
-    background: var(--accent);
-    color: var(--on-accent);
+    border-color: var(--ink);
+    background: var(--ink);
+    color: var(--on-ink);
   }
 
   .choice.chosen kbd {
-    background: rgba(255, 255, 255, 0.22);
+    border-color: transparent;
+    background: color-mix(in srgb, currentColor 18%, transparent);
     color: inherit;
   }
 
@@ -192,15 +193,16 @@
   kbd {
     display: grid;
     place-items: center;
-    min-width: 24px;
-    height: 24px;
+    min-width: 22px;
+    height: 22px;
     padding: 0 6px;
-    border-radius: 7px;
-    background: var(--bg-surface);
+    border: 1px solid var(--hairline-strong);
+    border-radius: 5px;
+    background: var(--bg-raised);
     color: var(--text-secondary);
     font-family: var(--sans);
-    font-size: 12px;
-    font-weight: 600;
+    font-size: 11px;
+    font-weight: 500;
   }
 
   .flag {
@@ -211,22 +213,32 @@
   form {
     display: flex;
     align-items: center;
-    gap: 12px;
-    background: var(--bg-raised);
-    border-radius: var(--radius-control);
-    padding: 4px 6px 4px 18px;
+    gap: 10px;
+    padding: 4px 4px 4px 14px;
+    border: 1px solid var(--hairline-strong);
+    border-radius: 10px;
+    background: var(--bg-surface);
+    transition:
+      border-color 120ms var(--ease),
+      box-shadow 120ms var(--ease);
+  }
+
+  form:focus-within {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
   }
 
   input {
     flex: 1;
-    font-family: var(--mono);
-    font-size: 22px;
-    padding: 12px 0;
+    font-size: 20px;
+    font-weight: 500;
+    padding: 10px 0;
     min-width: 0;
   }
 
   input::placeholder {
     color: var(--text-tertiary);
+    font-weight: 400;
   }
 
   .unit {
@@ -237,34 +249,41 @@
   .go {
     display: inline-flex;
     align-items: center;
-    gap: 7px;
-    padding: 10px 16px;
-    border-radius: 10px;
-    background: var(--accent);
-    color: var(--on-accent);
+    gap: 6px;
+    padding: 9px 12px;
+    border-radius: 7px;
+    background: var(--ink);
+    color: var(--on-ink);
     font-size: 13px;
     font-weight: 600;
     white-space: nowrap;
+    transition: background 120ms var(--ease);
+  }
+
+  .go:hover {
+    background: var(--ink-hover);
   }
 
   .suggestions {
     display: flex;
     flex-wrap: wrap;
-    gap: 7px;
+    gap: 6px;
   }
 
   .suggestion {
-    padding: 7px 14px;
-    border-radius: var(--radius-pill);
-    background: var(--bg-raised);
+    padding: 5px 10px;
+    border: 1px solid var(--hairline-strong);
+    border-radius: var(--radius-control);
     color: var(--text-secondary);
     font-size: 13px;
-    transition: all 120ms var(--ease);
+    transition:
+      background 100ms var(--ease),
+      color 100ms var(--ease);
   }
 
   .suggestion:hover {
-    background: var(--accent-soft);
-    color: var(--accent);
+    background: var(--bg-raised);
+    color: var(--text-primary);
   }
 
   .hint,
@@ -280,13 +299,14 @@
   .problem {
     color: var(--danger);
   }
+
   @media (max-width: 640px) {
     .prompt {
-      padding: 18px 16px 20px;
+      padding: 16px;
     }
 
     h2 {
-      font-size: 20px;
+      font-size: 18px;
     }
 
     input {
@@ -294,18 +314,18 @@
     }
 
     form {
-      padding: 4px 5px 4px 14px;
+      padding: 4px 4px 4px 12px;
       gap: 8px;
     }
 
     .go {
-      padding: 10px 12px;
+      padding: 9px 11px;
       font-size: 12px;
     }
 
     .choice {
       font-size: 14px;
-      padding: 10px 14px 10px 10px;
+      padding: 7px 12px 7px 7px;
     }
   }
 </style>

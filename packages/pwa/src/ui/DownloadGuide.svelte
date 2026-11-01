@@ -71,17 +71,16 @@
   section {
     text-align: left;
     padding: 16px 16px 14px;
-    border-radius: 16px;
-    background: var(--bg-sunken);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-card);
+    background: var(--bg-surface);
   }
 
   h2 {
     margin: 0 0 12px;
     font-size: 13px;
     font-weight: 600;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    color: var(--text-tertiary);
+    color: var(--text-secondary);
   }
 
   ol {

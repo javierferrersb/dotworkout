@@ -39,7 +39,7 @@
     transition:fly={{ y: 12, duration: 220 }}
   >
     <header>
-      <img src="/favicon.svg" alt="" width="44" height="44" />
+      <img src="/favicon.svg" alt="" width="32" height="32" />
       <h2>{t("about.heading")}</h2>
     </header>
 
@@ -57,7 +57,7 @@
         <li>
           <a href={link.href} target="_blank" rel="noopener noreferrer">
             {t(link.key)}
-            <ExternalLink size={14} strokeWidth={2.2} />
+            <ExternalLink size={14} strokeWidth={2} />
           </a>
         </li>
       {/each}
@@ -73,7 +73,7 @@
   .scrim {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.55);
+    background: rgba(0, 0, 0, 0.5);
     display: grid;
     place-items: center;
     padding: 24px;
@@ -91,25 +91,30 @@
     position: relative;
     width: min(440px, 100%);
     background: var(--bg-surface);
-    border-radius: var(--radius-card);
+    border: 1px solid var(--hairline);
+    border-radius: 14px;
     padding: 24px;
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     gap: 16px;
-    box-shadow: var(--shadow);
+    box-shadow: var(--shadow-pop);
   }
 
   header {
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 12px;
+  }
+
+  header img {
+    border-radius: 7px;
   }
 
   h2 {
     margin: 0;
-    font-size: 22px;
-    font-weight: 700;
-    letter-spacing: -0.5px;
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: -0.015em;
   }
 
   .lede {
@@ -121,7 +126,7 @@
 
   section {
     display: grid;
-    gap: 4px;
+    gap: 2px;
   }
 
   h3 {
@@ -142,25 +147,29 @@
     margin: 0;
     padding: 0;
     display: grid;
-    gap: 2px;
+    gap: 6px;
   }
 
   a {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 8px;
-    padding: 10px 12px;
+    padding: 9px 12px;
+    border: 1px solid var(--hairline);
     border-radius: var(--radius-control);
-    background: var(--bg-raised);
     color: var(--text-primary);
     text-decoration: none;
     font-size: 14px;
-    transition: background 120ms var(--ease);
+    transition: background 100ms var(--ease);
   }
 
   a:hover {
-    background: var(--accent-soft);
-    color: var(--accent);
+    background: var(--bg-raised);
+  }
+
+  a :global(svg) {
+    color: var(--text-tertiary);
   }
 
   .fine {
@@ -170,11 +179,16 @@
   }
 
   .ok {
-    padding: 13px;
-    border-radius: var(--radius-pill);
-    background: var(--accent);
-    color: var(--on-accent);
-    font-size: 15px;
+    padding: 11px;
+    border-radius: var(--radius-control);
+    background: var(--ink);
+    color: var(--on-ink);
+    font-size: 14px;
     font-weight: 600;
+    transition: background 120ms var(--ease);
+  }
+
+  .ok:hover {
+    background: var(--ink-hover);
   }
 </style>

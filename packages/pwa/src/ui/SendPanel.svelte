@@ -85,7 +85,7 @@
   .scrim {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.55);
+    background: rgba(0, 0, 0, 0.5);
     display: grid;
     place-items: center;
     padding: 24px;
@@ -102,18 +102,19 @@
     position: relative;
     width: min(360px, 100%);
     background: var(--bg-surface);
-    border-radius: var(--radius-card);
+    border: 1px solid var(--hairline);
+    border-radius: 14px;
     padding: 24px;
     display: grid;
     gap: 12px;
-    box-shadow: var(--shadow);
+    box-shadow: var(--shadow-pop);
   }
 
   h2 {
     margin: 0;
-    font-size: 20px;
-    font-weight: 700;
-    letter-spacing: -0.4px;
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: -0.015em;
   }
 
   .body {
@@ -129,10 +130,11 @@
     width: 100%;
     max-width: 260px;
     aspect-ratio: 1;
-    margin: 2px auto;
+    margin: 4px auto;
     padding: 14px;
+    border: 1px solid var(--hairline);
     background: #ffffff;
-    border-radius: 14px;
+    border-radius: 12px;
   }
 
   .qr i {
@@ -148,9 +150,9 @@
     align-items: flex-start;
     gap: 9px;
     margin: 0;
-    padding: 11px 13px;
+    padding: 10px 12px;
+    border: 1px solid var(--hairline);
     border-radius: var(--radius-control);
-    background: var(--bg-raised);
     color: var(--text-secondary);
     font-size: 13px;
     line-height: 1.45;
@@ -168,19 +170,32 @@
     align-items: center;
     justify-content: center;
     gap: 8px;
-    padding: 12px;
-    border-radius: var(--radius-pill);
+    padding: 10px;
+    border-radius: var(--radius-control);
     font-size: 14px;
     font-weight: 600;
+    transition:
+      background 100ms var(--ease),
+      border-color 100ms var(--ease);
   }
 
   .copy {
-    background: var(--bg-raised);
+    border: 1px solid var(--hairline-strong);
+    background: var(--bg-surface);
     color: var(--text-primary);
+    font-weight: 500;
+  }
+
+  .copy:hover {
+    background: var(--bg-raised);
   }
 
   .close {
-    background: var(--accent);
-    color: var(--on-accent);
+    background: var(--ink);
+    color: var(--on-ink);
+  }
+
+  .close:hover {
+    background: var(--ink-hover);
   }
 </style>

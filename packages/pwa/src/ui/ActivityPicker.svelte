@@ -70,7 +70,7 @@
     <h1>{t("picker.heading")}</h1>
 
     <div class="search">
-      <Search size={19} strokeWidth={2.2} />
+      <Search size={17} strokeWidth={2} />
       <input
         bind:this={field}
         bind:value={query}
@@ -106,36 +106,45 @@
     height: 100%;
     display: grid;
     place-items: start center;
-    padding: 12vh 24px 32px;
+    padding: 14vh 24px 32px;
     overflow-y: auto;
   }
 
   .panel {
-    width: min(560px, 100%);
+    width: min(520px, 100%);
   }
 
   h1 {
-    margin: 0 0 22px;
-    font-size: clamp(24px, 5vw, 30px);
-    font-weight: 700;
-    letter-spacing: -0.8px;
+    margin: 0 0 20px;
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
   }
 
   .search {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 15px 18px;
-    border-radius: var(--radius-control);
+    gap: 10px;
+    padding: 10px 14px;
+    border: 1px solid var(--hairline-strong);
+    border-radius: 10px;
     background: var(--bg-surface);
     color: var(--text-tertiary);
-    box-shadow: var(--shadow);
+    transition:
+      border-color 120ms var(--ease),
+      box-shadow 120ms var(--ease);
+  }
+
+  .search:focus-within {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
   }
 
   input {
     flex: 1;
-    font-size: 18px;
+    font-size: 16px;
     min-width: 0;
+    padding: 2px 0;
     color: var(--text-primary);
   }
 
@@ -145,10 +154,10 @@
 
   ul {
     list-style: none;
-    margin: 16px 0 0;
+    margin: 12px 0 0;
     padding: 0;
     display: grid;
-    gap: 3px;
+    gap: 1px;
   }
 
   .row {
@@ -156,46 +165,41 @@
     align-items: baseline;
     gap: 14px;
     width: 100%;
-    padding: 14px 16px;
+    padding: 10px 12px;
     border-radius: var(--radius-control);
     text-align: left;
-    transition: background 120ms var(--ease);
+    transition: background 100ms var(--ease);
   }
 
   .row.on {
-    background: var(--accent-soft);
+    background: var(--bg-raised);
   }
 
   .title {
     flex: 1;
-    font-size: 16px;
-  }
-
-  .row.on .title {
-    color: var(--accent);
-    font-weight: 600;
+    font-size: 15px;
   }
 
   .detail {
     color: var(--text-tertiary);
-    font-size: 12px;
+    font-size: 13px;
   }
 
   .none {
-    padding: 14px 16px;
+    padding: 10px 12px;
     color: var(--text-tertiary);
     font-size: 14px;
   }
 
   @media (max-width: 640px) {
     .picker {
-      padding: 84px 18px 28px;
+      padding: 72px 16px 28px;
     }
 
     .row {
       flex-direction: column;
       align-items: flex-start;
-      gap: 3px;
+      gap: 2px;
     }
   }
 </style>

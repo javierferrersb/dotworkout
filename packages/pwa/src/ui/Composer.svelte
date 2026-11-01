@@ -140,7 +140,7 @@
         onselect={(value) => locale.set(value as LocaleCode)}
       >
         {#snippet trigger()}
-          <Languages size={16} strokeWidth={2.2} />
+          <Languages size={16} strokeWidth={2} />
           <span class="only-wide">{locale.code.toUpperCase()}</span>
         {/snippet}
       </Menu>
@@ -153,18 +153,17 @@
       >
         {#snippet trigger()}
           {#if themeChoice === "system"}
-            <Monitor size={16} strokeWidth={2.2} />
+            <Monitor size={16} strokeWidth={2} />
           {:else if themeChoice === "light"}
-            <Sun size={16} strokeWidth={2.2} />
+            <Sun size={16} strokeWidth={2} />
           {:else}
-            <Moon size={16} strokeWidth={2.2} />
+            <Moon size={16} strokeWidth={2} />
           {/if}
         {/snippet}
       </Menu>
 
-      <button class="mark" onclick={() => (about = true)} aria-label={t("about.open")}>
-        <img src="/favicon.svg" alt="" width="20" height="20" />
-        <Info size={13} strokeWidth={2.6} />
+      <button class="about" onclick={() => (about = true)} aria-label={t("about.open")}>
+        <Info size={16} strokeWidth={2} />
       </button>
     </nav>
 
@@ -208,9 +207,9 @@
   nav {
     display: flex;
     align-items: center;
-    gap: 4px;
-    padding: 20px 24px 0;
-    min-height: 42px;
+    gap: 2px;
+    padding: 16px 20px 0;
+    min-height: 48px;
   }
 
   .grow {
@@ -223,41 +222,38 @@
     overflow-y: auto;
     display: grid;
     grid-template-columns: minmax(0, 1fr);
-    align-content: center;
-    padding: 24px 32px;
+    align-content: start;
+    padding: clamp(24px, 9vh, 88px) 32px 24px;
   }
 
   .column {
-    width: min(680px, 100%);
+    width: min(640px, 100%);
     margin: 0 auto;
   }
 
-  .mark {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
+  .about {
+    display: grid;
+    place-items: center;
     flex: none;
-    padding: 5px 8px 5px 6px;
-    margin-left: 4px;
-    border-radius: var(--radius-pill);
-    color: var(--text-tertiary);
-    transition: all 140ms var(--ease);
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-control);
+    color: var(--text-secondary);
+    transition:
+      background 120ms var(--ease),
+      color 120ms var(--ease);
   }
 
-  .mark:hover {
-    background: var(--bg-surface);
+  .about:hover {
+    background: var(--bg-raised);
     color: var(--text-primary);
-  }
-
-  .mark img {
-    display: block;
   }
 
   footer {
     display: flex;
     flex-wrap: wrap;
-    gap: 18px;
-    padding: 14px 32px 20px;
+    gap: 8px 20px;
+    padding: 12px 32px 18px;
   }
 
   .legend {
@@ -280,7 +276,7 @@
     .scroll {
       align-content: start;
       overflow-y: auto;
-      padding: 16px 16px 132px;
+      padding: 8px 16px 132px;
     }
 
     footer {
@@ -290,7 +286,7 @@
 
   @media (max-width: 640px) {
     nav {
-      padding: 18px 14px 0;
+      padding: 16px 12px 0;
     }
 
     .only-wide {

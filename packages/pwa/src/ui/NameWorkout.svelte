@@ -59,7 +59,7 @@
       />
       <button type="submit">
         {t("naming.continue")}
-        <CornerDownLeft size={15} strokeWidth={2.4} />
+        <CornerDownLeft size={14} strokeWidth={2} />
       </button>
     </form>
 
@@ -72,51 +72,58 @@
     height: 100%;
     display: grid;
     place-items: center;
-    padding: 32px;
+    padding: 32px 24px;
     overflow-y: auto;
   }
 
   .panel {
-    width: min(560px, 100%);
+    width: min(520px, 100%);
   }
 
   .eyebrow {
-    margin: 0 0 10px;
-    color: var(--accent);
+    margin: 0 0 8px;
+    color: var(--text-tertiary);
     font-size: 13px;
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
+    font-weight: 500;
   }
 
   h1 {
-    margin: 0 0 10px;
-    font-size: clamp(28px, 4vw, 38px);
-    font-weight: 700;
-    letter-spacing: -1px;
+    margin: 0 0 8px;
+    font-size: clamp(24px, 4vw, 30px);
+    font-weight: 600;
+    letter-spacing: -0.025em;
   }
 
   .lede {
-    margin: 0 0 26px;
+    margin: 0 0 24px;
     color: var(--text-secondary);
-    font-size: 16px;
+    font-size: 15px;
+    line-height: 1.5;
   }
 
   form {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 6px 6px 6px 20px;
-    border-radius: var(--radius-control);
+    gap: 8px;
+    padding: 4px 4px 4px 14px;
+    border: 1px solid var(--hairline-strong);
+    border-radius: 10px;
     background: var(--bg-surface);
-    box-shadow: var(--shadow);
+    transition:
+      border-color 120ms var(--ease),
+      box-shadow 120ms var(--ease);
+  }
+
+  form:focus-within {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
   }
 
   input {
     flex: 1;
     min-width: 0;
-    font-size: 20px;
-    padding: 12px 0;
+    font-size: 17px;
+    padding: 10px 0;
   }
 
   input::placeholder {
@@ -127,17 +134,22 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    padding: 13px 20px;
-    border-radius: 10px;
-    background: var(--accent);
-    color: var(--on-accent);
-    font-size: 15px;
+    padding: 10px 14px;
+    border-radius: 7px;
+    background: var(--ink);
+    color: var(--on-ink);
+    font-size: 14px;
     font-weight: 600;
     white-space: nowrap;
+    transition: background 120ms var(--ease);
+  }
+
+  button:hover {
+    background: var(--ink-hover);
   }
 
   .hint {
-    margin: 16px 0 0;
+    margin: 14px 0 0;
     color: var(--text-tertiary);
     font-size: 13px;
   }
@@ -146,7 +158,7 @@
     form {
       flex-direction: column;
       align-items: stretch;
-      padding: 14px;
+      padding: 12px;
       gap: 12px;
     }
 
@@ -156,6 +168,7 @@
 
     button {
       justify-content: center;
+      padding: 12px;
     }
   }
 </style>
