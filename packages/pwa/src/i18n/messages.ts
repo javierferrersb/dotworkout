@@ -47,9 +47,11 @@ const en = {
   "nav.back": "Back",
   "picker.heading": "What are you training?",
   "picker.search": "Search activities",
-  "picker.goalTypes": "{count} goal types",
-  "picker.targets": "{count} targets",
-  "picker.target": "{count} target",
+  "picker.lede":
+    "The builder only offers the goals and targets your Watch supports for the sport you pick.",
+  "picker.cardio": "Cardio",
+  "picker.studio": "Strength and studio",
+  "picker.current": "In progress",
   "picker.noMatch": "Nothing matches “{query}”",
 
   "naming.lede": "This is the name you’ll see in the Workout app on your Watch.",
@@ -340,9 +342,11 @@ const es: Record<MessageKey, string> = {
   "nav.back": "Atrás",
   "picker.heading": "¿Qué vas a entrenar?",
   "picker.search": "Buscar actividades",
-  "picker.goalTypes": "{count} tipos de objetivo",
-  "picker.targets": "{count} objetivos",
-  "picker.target": "{count} objetivo",
+  "picker.lede":
+    "El editor solo ofrece los objetivos y alertas que el reloj admite para el deporte que elijas.",
+  "picker.cardio": "Cardio",
+  "picker.studio": "Fuerza y sala",
+  "picker.current": "En curso",
   "picker.noMatch": "No hay nada que coincida con «{query}»",
 
   "naming.lede": "Este es el nombre que verás en la app Entreno del reloj.",

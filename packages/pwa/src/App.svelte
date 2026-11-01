@@ -138,7 +138,11 @@
     </div>
   {:else if flow.stage === "choose"}
     <div class="screen" out:fade={{ duration: 120 }}>
-      <ActivityPicker onpick={pick} onback={() => flow.go("welcome")} />
+      <ActivityPicker
+        onpick={pick}
+        onback={() => flow.go("welcome")}
+        current={session.steps.length > 0 ? session.activity.id : undefined}
+      />
     </div>
   {:else}
     <div class="screen">
