@@ -11,10 +11,9 @@ const en = {
   "welcome.headingAfter": " online.",
   "welcome.lede":
     "Put the whole session together in your browser and get a real .workout file — the format that syncs straight to the Workout app on your Watch. Intervals, repetitions and heart-rate zones, with nothing to install.",
-  "welcome.fix0.title": "Typed start to finish, no mouse needed",
-  "welcome.fix1.title": "8 × 400 m with rests in a few keystrokes",
+  "welcome.fix0.title": "Keyboard shortcuts for everything",
   "welcome.fix2.title": "Heart-rate, pace, cadence and power targets",
-  "welcome.fix3.title": "Straight to the Workout app on your Watch",
+  "welcome.fix3.title": "Send it to the Workout app on your Watch",
   "welcome.cta": "Build a workout",
   "welcome.privacy":
     "Runs entirely on your device. Nothing is uploaded, so your workouts stay yours.",
@@ -297,10 +296,9 @@ const es: Record<MessageKey, string> = {
   "welcome.headingAfter": " online.",
   "welcome.lede":
     "Monta el entrenamiento entero en el navegador y obtén un archivo .workout real, el formato que se sincroniza directamente con la app Entreno del reloj. Series, repeticiones y zonas de frecuencia cardíaca, sin instalar nada.",
-  "welcome.fix0.title": "Se escribe de principio a fin, sin ratón",
-  "welcome.fix1.title": "8 × 400 m con descansos en unas pocas teclas",
+  "welcome.fix0.title": "Atajos de teclado para todo",
   "welcome.fix2.title": "Alertas de pulso, ritmo, cadencia y potencia",
-  "welcome.fix3.title": "Directo a la app Entreno del reloj",
+  "welcome.fix3.title": "Envíalo a la app Entreno del reloj",
   "welcome.cta": "Crear un entrenamiento",
   "welcome.privacy": "Nada se guarda online: se respeta tu privacidad.",
   "welcome.source": "Mira el código y contribuye en GitHub",

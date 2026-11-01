@@ -1,6 +1,6 @@
 <script lang="ts">
   import { fly } from "svelte/transition";
-  import { Code, HeartPulse, Keyboard, Languages, Repeat, Rows3, Watch } from "@lucide/svelte";
+  import { Code, HeartPulse, Keyboard, Languages, Rows3, Watch } from "@lucide/svelte";
   import { locale, t } from "../i18n/locale.svelte.js";
   import { keys } from "../i18n/keys.svelte.js";
   import { LOCALES, type LocaleCode } from "../i18n/messages.js";
@@ -30,7 +30,6 @@
         ] as const)
       : ([
           { title: "welcome.fix0.title", icon: Keyboard },
-          { title: "welcome.fix1.title", icon: Repeat },
           { title: "welcome.fix2.title", icon: HeartPulse },
           { title: "welcome.fix3.title", icon: Watch },
         ] as const),
