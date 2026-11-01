@@ -29,6 +29,7 @@
   import { isAnswered, type Question } from "../../domain/interview.js";
   import {
     blockKindName,
+    choiceKey,
     choiceText,
     fieldName,
     questionNote,
@@ -65,7 +66,11 @@
   let ends = $derived(rangeEnds(draft));
 
   let kindOptions = $derived(
-    session.kindsAt(index).map((kind) => ({ value: kind, label: blockKindName(kind) })),
+    session.kindsAt(index).map((kind) => ({
+      value: kind,
+      label: blockKindName(kind),
+      key: choiceKey({ value: kind, group: "kind", caution: false }, sport),
+    })),
   );
 
   function edit(change: Parameters<CompositionSession["edit"]>[1], key?: string) {
@@ -77,6 +82,7 @@
     return question.form.choices.map((choice) => ({
       value: choice.value,
       label: choiceText(choice, sport),
+      key: choiceKey(choice, sport),
       note: choice.caution ? t("prompt.notVerified") : undefined,
     }));
   }
@@ -168,14 +174,20 @@
     }
   }
 
+  /** A choice picked by its key moves straight on, once the fields it reveals are drawn. */
+  function advance(from: HTMLElement) {
+    void tick().then(() => {
+      if (!move(from, 1)) ondone();
+    });
+  }
+
   $effect(() => {
     const request = session.focusRequest;
     if (request === undefined || request.id !== id) return;
     void tick().then(() => {
+      const first = root?.querySelector("[data-field] + [data-field]");
       const waiting = root?.querySelector("[data-field][data-missing='true']");
-      focusField(
-        focusable(waiting) ?? focusable(root?.querySelector("[data-field] + [data-field]")),
-      );
+      focusField(focusable(request.from === "start" ? first : (waiting ?? first)));
       session.focusRequest = undefined;
     });
   });
@@ -185,6 +197,7 @@
 <div class="editor" bind:this={root} {onkeydown}>
   <FieldRow label={t("field.kind")} field="kind">
     <Segmented
+      onpick={advance}
       label={t("field.kind")}
       options={kindOptions}
       selected={draft.kind}
@@ -199,6 +212,7 @@
     {#if question.id === "goal"}
       <FieldRow {label} field="goal" missing={missing(question)}>
         <Segmented
+          onpick={advance}
           {label}
           options={options(question)}
           selected={draft.goalKind}
@@ -239,6 +253,7 @@
     {:else if question.id === "alert"}
       <FieldRow {label} field="alert" optional>
         <Segmented
+          onpick={advance}
           {label}
           options={options(question)}
           selected={draft.alertMetric ?? "NONE"}
@@ -249,6 +264,7 @@
     {:else if question.id === "alertReading"}
       <FieldRow {label} field="alertReading" {note}>
         <Segmented
+          onpick={advance}
           {label}
           options={options(question)}
           selected={draft.alertReading}
@@ -258,6 +274,7 @@
     {:else if question.id === "alertStyle"}
       <FieldRow {label} field="alertStyle">
         <Segmented
+          onpick={advance}
           {label}
           options={options(question)}
           selected={style}
@@ -301,6 +318,7 @@
       {#if question.form.type === "choice"}
         <FieldRow {label} field="zone" missing={missing(question)} {note}>
           <Segmented
+            onpick={advance}
             {label}
             options={options(question)}
             selected={draft.alert?.metric === "HEART_RATE" && draft.alert.style === "ZONE"

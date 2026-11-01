@@ -1,7 +1,10 @@
 <script lang="ts">
   import type { Snippet } from "svelte";
+  import { tick } from "svelte";
   import { fly } from "svelte/transition";
   import { Check } from "@lucide/svelte";
+  import { menuKeydown } from "./menuKeys.js";
+  import { ms } from "./motion.js";
 
   interface Option {
     value: string;
@@ -19,30 +22,69 @@
 
   let open = $state(false);
   let root = $state<HTMLDivElement | undefined>(undefined);
+  let button = $state<HTMLButtonElement | undefined>(undefined);
+  let items = $state<HTMLButtonElement[]>([]);
+
+  // Opening puts focus on the current choice, so the arrows start from there.
+  function show() {
+    open = true;
+    void tick().then(() => {
+      const current = options.findIndex((option) => option.value === selected);
+      items[Math.max(0, current)]?.focus();
+    });
+  }
+
+  function hide(refocus: boolean) {
+    open = false;
+    if (refocus) button?.focus();
+  }
+
+  function onTriggerKey(event: KeyboardEvent) {
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      event.preventDefault();
+      show();
+    }
+  }
 
   function away(event: MouseEvent) {
     if (open && root !== undefined && !root.contains(event.target as Node)) open = false;
   }
 </script>
 
-<svelte:window onclick={away} onkeydown={(event) => event.key === "Escape" && (open = false)} />
+<svelte:window onclick={away} />
 
 <div class="menu" bind:this={root}>
-  <button class="trigger" onclick={() => (open = !open)} aria-haspopup="menu" aria-expanded={open}>
+  <button
+    bind:this={button}
+    class="trigger"
+    onclick={() => (open ? hide(false) : show())}
+    onkeydown={onTriggerKey}
+    aria-haspopup="menu"
+    aria-expanded={open}
+    aria-label={label}
+  >
     {@render trigger()}
   </button>
 
   {#if open}
-    <div class="popover" role="menu" transition:fly={{ y: -4, duration: 140 }}>
-      <p class="caption">{label}</p>
-      {#each options as option (option.value)}
+    <div
+      class="popover"
+      role="menu"
+      aria-label={label}
+      tabindex="-1"
+      transition:fly={{ y: -4, duration: ms(140) }}
+      onkeydown={(event) => menuKeydown(event, items, hide)}
+    >
+      <p class="caption" aria-hidden="true">{label}</p>
+      {#each options as option, index (option.value)}
         <button
+          bind:this={items[index]}
           class="option"
           role="menuitemradio"
           aria-checked={option.value === selected}
           onclick={() => {
             onselect(option.value);
-            open = false;
+            hide(true);
           }}
         >
           <span>{option.label}</span>
@@ -91,6 +133,10 @@
     border: 1px solid var(--hairline);
   }
 
+  .popover:focus {
+    outline: none;
+  }
+
   .caption {
     margin: 6px 8px 4px;
     color: var(--text-tertiary);
@@ -110,7 +156,9 @@
     text-align: left;
   }
 
-  .option:hover {
+  .option:hover,
+  .option:focus-visible {
     background: var(--bg-raised);
+    outline: none;
   }
 </style>

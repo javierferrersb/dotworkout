@@ -23,7 +23,9 @@
     { title: "about.privacy.title", body: "about.privacy.body" },
   ] as const;
 
-  $effect(() => modals.enter());
+  let sheet = $state<HTMLElement | undefined>(undefined);
+
+  $effect(() => (sheet === undefined ? undefined : modals.enter(sheet)));
 </script>
 
 <svelte:window onkeydown={(event) => event.key === "Escape" && onclose()} />
@@ -33,6 +35,8 @@
 
   <div
     class="sheet"
+    bind:this={sheet}
+    tabindex="-1"
     role="dialog"
     aria-modal="true"
     aria-label={t("about.heading")}
@@ -85,6 +89,10 @@
     position: absolute;
     inset: 0;
     cursor: default;
+  }
+
+  .sheet:focus {
+    outline: none;
   }
 
   .sheet {

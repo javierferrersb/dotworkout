@@ -29,7 +29,9 @@
     setTimeout(() => (copied = false), 2000);
   }
 
-  $effect(() => modals.enter());
+  let sheet = $state<HTMLElement | undefined>(undefined);
+
+  $effect(() => (sheet === undefined ? undefined : modals.enter(sheet)));
 </script>
 
 <svelte:window onkeydown={(event) => event.key === "Escape" && onclose()} />
@@ -39,6 +41,8 @@
 
   <div
     class="sheet"
+    bind:this={sheet}
+    tabindex="-1"
     role="dialog"
     aria-modal="true"
     aria-label={t("send.heading")}
@@ -96,6 +100,10 @@
     position: absolute;
     inset: 0;
     cursor: default;
+  }
+
+  .sheet:focus {
+    outline: none;
   }
 
   .sheet {

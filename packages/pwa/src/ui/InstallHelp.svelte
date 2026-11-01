@@ -21,7 +21,9 @@
 
   let steps = $derived(ROUTES[source]);
 
-  $effect(() => modals.enter());
+  let sheet = $state<HTMLElement | undefined>(undefined);
+
+  $effect(() => (sheet === undefined ? undefined : modals.enter(sheet)));
 </script>
 
 <svelte:window onkeydown={(event) => event.key === "Escape" && onclose(suppress)} />
@@ -31,6 +33,8 @@
 
   <div
     class="sheet"
+    bind:this={sheet}
+    tabindex="-1"
     role="dialog"
     aria-modal="true"
     aria-label={t("install.heading")}
@@ -76,6 +80,10 @@
     position: absolute;
     inset: 0;
     cursor: default;
+  }
+
+  .sheet:focus {
+    outline: none;
   }
 
   .sheet {

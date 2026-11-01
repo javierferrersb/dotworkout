@@ -110,7 +110,8 @@
   }
 
   function onKeydown(event: KeyboardEvent) {
-    if (modals.any) return;
+    // A menu, a field or a choice that already acted on the key keeps it.
+    if (modals.any || event.defaultPrevented) return;
     const meta = event.metaKey || event.ctrlKey;
     const key = event.key.toLowerCase();
     const typing = editing(event.target);
@@ -141,8 +142,8 @@
     if (typing || meta || event.altKey) return;
 
     const target = event.target instanceof HTMLElement ? event.target : undefined;
-    // The step editor owns its own keys: arrows between fields, Escape to close.
-    if (target?.closest(".editor") !== null && target !== undefined) return;
+    // The step editor and open menus own their keys: arrows, letters, Escape.
+    if (target !== undefined && target.closest(".editor, [role='menu']") !== null) return;
 
     if (event.key === "ArrowUp" || event.key === "ArrowDown") {
       event.preventDefault();

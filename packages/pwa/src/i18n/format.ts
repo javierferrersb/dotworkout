@@ -43,6 +43,25 @@ export function choiceText(choice: Choice, sport: string): string {
   return choice.value;
 }
 
+/** The key that picks a choice when its field has focus: a letter, or the zone's own number. */
+export function choiceKey(choice: Choice, sport: string): string {
+  if (choice.group === "zone") return choice.value;
+  if (choice.group === "alert" && choice.value === "SPEED") {
+    return showsPace(sport) ? t("alertKey.SPEED.pace") : t("alertKey.SPEED.speed");
+  }
+  const prefix =
+    choice.group === "kind"
+      ? "kindKey"
+      : choice.group === "goal"
+        ? "goalKey"
+        : choice.group === "reading"
+          ? "readingKey"
+          : choice.group === "style"
+            ? "styleKey"
+            : "alertKey";
+  return t(`${prefix}.${choice.value}` as MessageKey);
+}
+
 /** Metres per second as minutes and seconds per kilometre. */
 export function formatPace(metersPerSecond: number): string {
   const seconds = Math.round(1000 / metersPerSecond);

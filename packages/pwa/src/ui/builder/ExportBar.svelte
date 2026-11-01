@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { tick } from "svelte";
   import { fly } from "svelte/transition";
   import { ChevronDown, Download, MessageCircle, QrCode } from "@lucide/svelte";
   import type { CompositionSession } from "../../application/compositionSession.svelte.js";
@@ -10,6 +11,7 @@
   import InstallHelp from "../InstallHelp.svelte";
   import Kbd from "../Kbd.svelte";
   import SendPanel from "../SendPanel.svelte";
+  import { menuKeydown } from "../menuKeys.js";
   import { ms } from "../motion.js";
   import { toasts } from "../toast.svelte.js";
 
@@ -21,6 +23,8 @@
   let { session }: Props = $props();
 
   let menu = $state(false);
+  let shareButton = $state<HTMLButtonElement | undefined>(undefined);
+  let shareItems = $state<HTMLButtonElement[]>([]);
   let sending = $state(false);
   let helping = $state<ShareRoute | undefined>(undefined);
   let root = $state<HTMLDivElement | undefined>(undefined);
@@ -86,33 +90,56 @@
     if (ready()) sending = true;
   }
 
+  function openShare() {
+    menu = true;
+    void tick().then(() => shareItems[0]?.focus());
+  }
+
+  function closeShare(refocus: boolean) {
+    menu = false;
+    if (refocus) shareButton?.focus();
+  }
+
   function away(event: MouseEvent) {
     if (menu && root !== undefined && !root.contains(event.target as Node)) menu = false;
   }
 </script>
 
-<svelte:window onclick={away} onkeydown={(event) => event.key === "Escape" && (menu = false)} />
+<svelte:window onclick={away} />
 
 <div class="export" bind:this={root}>
   <div class="share">
     <button
+      bind:this={shareButton}
       type="button"
       class="secondary"
       aria-haspopup="menu"
       aria-expanded={menu}
       disabled={empty}
-      onclick={() => (menu = !menu)}
+      onclick={() => (menu ? closeShare(false) : openShare())}
+      onkeydown={(event) => {
+        if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+          event.preventDefault();
+          openShare();
+        }
+      }}
     >
       {t("builder.share")}
       <ChevronDown size={14} strokeWidth={2} />
     </button>
     {#if menu}
-      <div class="popover" role="menu" transition:fly={{ y: -4, duration: ms(140) }}>
-        <button type="button" role="menuitem" onclick={whatsapp}>
+      <div
+        class="popover"
+        role="menu"
+        tabindex="-1"
+        transition:fly={{ y: -4, duration: ms(140) }}
+        onkeydown={(event) => menuKeydown(event, shareItems, closeShare)}
+      >
+        <button bind:this={shareItems[0]} type="button" role="menuitem" onclick={whatsapp}>
           <MessageCircle size={15} strokeWidth={2} />
           {t("builder.whatsapp")}
         </button>
-        <button type="button" role="menuitem" onclick={scan}>
+        <button bind:this={shareItems[1]} type="button" role="menuitem" onclick={scan}>
           <QrCode size={15} strokeWidth={2} />
           {t("rail.scan")}
         </button>
@@ -213,7 +240,13 @@
     text-align: left;
   }
 
-  [role="menuitem"]:hover {
+  .popover:focus {
+    outline: none;
+  }
+
+  [role="menuitem"]:hover,
+  [role="menuitem"]:focus-visible {
+    outline: none;
     background: var(--bg-raised);
   }
 

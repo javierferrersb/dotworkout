@@ -11,6 +11,7 @@
   import ActivityPicker from "./ui/ActivityPicker.svelte";
   import Composer from "./ui/Composer.svelte";
   import DownloadGuide from "./ui/DownloadGuide.svelte";
+  import { watchModality } from "./ui/modality.js";
   import { isIos } from "./ui/platform.js";
   import Welcome from "./ui/Welcome.svelte";
 
@@ -45,6 +46,8 @@
   });
 
   $effect(() => flow.watchSystem());
+
+  $effect(() => watchModality());
 
   const resumedSnapshot = JSON.stringify(session.snapshot);
 

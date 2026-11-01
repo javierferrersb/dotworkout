@@ -51,8 +51,14 @@ export class CompositionSession {
   steps = $state.raw<readonly Step[]>([]);
   /** The step whose editor is open. One at a time, like a disclosure list. */
   open = $state<number | undefined>(undefined);
-  /** A step whose first missing field should take focus once its editor is drawn. */
-  focusRequest = $state<{ readonly id: number; readonly at: number } | undefined>(undefined);
+  /**
+   * Where focus goes once a step's editor is drawn: the first field after its
+   * kind for a step just added, so a new step is filled in from the top; the
+   * first missing one when Download sends someone back to finish it.
+   */
+  focusRequest = $state<{ readonly id: number; readonly from: "start" | "missing" } | undefined>(
+    undefined,
+  );
 
   private past = $state.raw<readonly Moment[]>([]);
   private future = $state.raw<readonly Moment[]>([]);
@@ -151,7 +157,7 @@ export class CompositionSession {
     const added = step(newStep(kind, this.capabilities));
     this.steps = ordered([...this.steps, added]);
     this.open = added.id;
-    this.focusRequest = { id: added.id, at: Date.now() };
+    this.focusRequest = { id: added.id, from: "start" };
     return added.id;
   }
 
@@ -243,7 +249,7 @@ export class CompositionSession {
     const target = this.steps[first.index];
     if (target === undefined) return false;
     this.open = target.id;
-    this.focusRequest = { id: target.id, at: Date.now() };
+    this.focusRequest = { id: target.id, from: "missing" };
     return true;
   }
 
