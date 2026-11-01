@@ -203,7 +203,6 @@
 <div class="picker">
   <div class="panel" in:fly={{ y: 12, duration: ms(340) }}>
     <h1>{t("picker.heading")}</h1>
-    <p class="lede">{t("picker.lede")}</p>
 
     <div class="search">
       <Search size={17} strokeWidth={2} />
@@ -270,18 +269,10 @@
   }
 
   h1 {
-    margin: 0;
+    margin: 0 0 20px;
     font-size: 26px;
     font-weight: 600;
     letter-spacing: -0.025em;
-  }
-
-  .lede {
-    margin: 6px 0 22px;
-    max-width: 520px;
-    color: var(--text-secondary);
-    font-size: 15px;
-    line-height: 1.5;
   }
 
   .search {

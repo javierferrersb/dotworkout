@@ -56,14 +56,31 @@
   ]);
   let localeOptions = $derived(LOCALES.map((entry) => ({ value: entry.code, label: entry.label })));
 
-  let legend = $derived([
-    { key: KINDS.map((kind) => kindKey(kind)).join(" "), what: t("legend.add") },
-    { key: `${keys.up} ${keys.down}`, what: t("legend.steps") },
-    { key: keys.enter, what: t("legend.next") },
-    { key: keys.escape, what: t("legend.close") },
-    { key: `${keys.primary}${keys.primary === "⌘" ? "" : "+"}Z`, what: t("legend.undo") },
-    { key: keys.save, what: t("legend.download") },
-  ]);
+  // The keys that work right now: adding and moving between steps from the
+  // list, filling in fields once a step is open.
+  let legend = $derived(
+    session.open !== undefined
+      ? [
+          { key: t("key.letter"), what: t("legend.pick") },
+          { key: keys.enter, what: t("legend.next") },
+          { key: `${keys.up} ${keys.down}`, what: t("legend.fields") },
+          { key: keys.reorder, what: t("legend.reorder") },
+          { key: keys.escape, what: t("legend.done") },
+        ]
+      : [
+          ...(addable.length > 0
+            ? [{ key: addable.map((kind) => kindKey(kind)).join(" "), what: t("legend.add") }]
+            : []),
+          ...(count > 0
+            ? [
+                { key: `${keys.up} ${keys.down}`, what: t("legend.open") },
+                { key: keys.remove, what: t("legend.remove") },
+              ]
+            : []),
+          ...(session.canUndo ? [{ key: keys.undo, what: t("legend.undo") }] : []),
+          ...(count > 0 ? [{ key: keys.save, what: t("legend.download") }] : []),
+        ],
+  );
 
   function kindKey(kind: BlockKind): string {
     return t(`kindKey.${kind}` as MessageKey);
@@ -264,11 +281,6 @@
             </li>
           {/each}
         </ol>
-      {:else}
-        <div class="empty">
-          <p class="emptyTitle">{t("builder.empty.title")}</p>
-          <p class="emptyBody">{t("builder.empty.body")}</p>
-        </div>
       {/if}
 
       <div class="add" role="group" aria-label={t("builder.add")}>
@@ -285,8 +297,6 @@
           </button>
         {/each}
       </div>
-
-      <p class="privacy">{t("rail.privacy")}</p>
     </div>
   </div>
 
@@ -444,26 +454,6 @@
     border-top: 1px solid var(--hairline);
   }
 
-  .empty {
-    padding: 28px 24px;
-    border: 1px dashed var(--hairline-strong);
-    border-radius: var(--radius-card);
-  }
-
-  .emptyTitle {
-    margin: 0 0 4px;
-    font-size: 16px;
-    font-weight: 600;
-  }
-
-  .emptyBody {
-    margin: 0;
-    max-width: 460px;
-    color: var(--text-secondary);
-    font-size: 14px;
-    line-height: 1.5;
-  }
-
   .add {
     display: flex;
     flex-wrap: wrap;
@@ -497,12 +487,6 @@
   .key {
     display: inline-flex;
     margin-left: 4px;
-  }
-
-  .privacy {
-    margin: 28px 0 0;
-    color: var(--text-tertiary);
-    font-size: 12.5px;
   }
 
   .legend {

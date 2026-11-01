@@ -11,18 +11,10 @@ const en = {
   "welcome.headingAfter": " online.",
   "welcome.lede":
     "Put the whole session together in your browser and get a real .workout file — the format that syncs straight to the Workout app on your Watch. Intervals, repetitions and heart-rate zones, with nothing to install.",
-  "welcome.fix0.title": "Made for a keyboard",
-  "welcome.fix0.body":
-    "Letters add steps and Enter moves to the next field, so a whole session is typed without reaching for the mouse.",
-  "welcome.fix1.title": "Series and repetitions in seconds",
-  "welcome.fix1.body":
-    "8 × 400 m with 90 seconds recovery takes four keystrokes here. On the phone it takes forty taps.",
-  "welcome.fix2.title": "Target a heart-rate zone",
-  "welcome.fix2.body":
-    "Pin any interval to a zone, a pace, a cadence or a power number, and only the ones your sport actually supports are offered.",
-  "welcome.fix3.title": "Straight onto the Watch",
-  "welcome.fix3.body":
-    "Get a real .workout file. Send it to yourself, open it on your phone, and it lands in the Workout app on your Watch.",
+  "welcome.fix0.title": "Typed start to finish, no mouse needed",
+  "welcome.fix1.title": "8 × 400 m with rests in a few keystrokes",
+  "welcome.fix2.title": "Heart-rate, pace, cadence and power targets",
+  "welcome.fix3.title": "Straight to the Workout app on your Watch",
   "welcome.cta": "Build a workout",
   "welcome.privacy":
     "Runs entirely on your device. Nothing is uploaded, so your workouts stay yours.",
@@ -47,8 +39,6 @@ const en = {
   "nav.back": "Back",
   "picker.heading": "What are you training?",
   "picker.search": "Search activities",
-  "picker.lede":
-    "The builder only offers the goals and targets your Watch supports for the sport you pick.",
   "picker.cardio": "Cardio",
   "picker.studio": "Strength and studio",
   "picker.current": "In progress",
@@ -160,9 +150,6 @@ const en = {
 
   "builder.step": "{count} step",
   "builder.steps": "{count} steps",
-  "builder.empty.title": "Build it step by step",
-  "builder.empty.body":
-    "Add the steps in the order you will do them. A warm up always goes first and a cool down last, whenever you add them.",
   "builder.add": "Add a step",
   "builder.structure": "Shape of the workout",
   "builder.unfinished": "Finish this step before downloading",
@@ -204,9 +191,13 @@ const en = {
   "step.moveDown": "Move down",
 
   "legend.add": "add a step",
-  "legend.steps": "move between steps",
+  "legend.open": "open a step",
+  "legend.remove": "delete",
+  "legend.pick": "pick a choice",
+  "legend.fields": "move between fields",
+  "legend.reorder": "move the step",
+  "legend.done": "done",
   "legend.next": "next field",
-  "legend.close": "close",
   "legend.undo": "undo",
   "legend.download": "download",
 
@@ -219,7 +210,6 @@ const en = {
   "rail.name": "Workout name",
   "rail.download": "Download",
   "rail.scan": "Scan to phone",
-  "rail.privacy": "Nothing leaves this device unless you share it.",
   "rail.saved": "Saved {file}",
 
   "send.heading": "Scan with your phone",
@@ -244,9 +234,7 @@ const en = {
 
   "welcome.lede.touch":
     "Put the whole session together in your browser and get a real .workout file. Apple buries custom workouts deep in the Watch app; here every step is one line you tap to edit, with nothing to install.",
-  "welcome.fix1.title.touch": "The whole workout on one screen",
-  "welcome.fix1.body.touch":
-    "8 × 400 m with 90 seconds recovery is a handful of taps here, instead of a trip through four nested screens.",
+  "welcome.fix1.title.touch": "Every step on one screen",
   "welcome.desktopHint":
     "On a computer it is quicker still — the whole workout is keyboard-driven.",
 
@@ -278,6 +266,8 @@ const en = {
   "key.enter": "Enter",
   "key.esc": "Esc",
   "key.tab": "Tab",
+  "key.delete": "Del",
+  "key.letter": "Letter",
 
   "activity.SWIMMING": "Pool Swim",
   "activity.RUNNING": "Outdoor Run",
@@ -307,18 +297,10 @@ const es: Record<MessageKey, string> = {
   "welcome.headingAfter": " online.",
   "welcome.lede":
     "Monta el entrenamiento entero en el navegador y obtén un archivo .workout real, el formato que se sincroniza directamente con la app Entreno del reloj. Series, repeticiones y zonas de frecuencia cardíaca, sin instalar nada.",
-  "welcome.fix0.title": "Pensado para el teclado",
-  "welcome.fix0.body":
-    "Las letras añaden pasos e Intro salta al siguiente campo, así que montas una sesión entera sin tocar el ratón.",
-  "welcome.fix1.title": "Series y repeticiones en segundos",
-  "welcome.fix1.body":
-    "8 × 400 m con 90 segundos de recuperación son cuatro pulsaciones aquí. En el móvil son cuarenta toques.",
-  "welcome.fix2.title": "Fija una zona de frecuencia cardíaca",
-  "welcome.fix2.body":
-    "Asigna a cualquier intervalo una zona, un ritmo, una cadencia o una potencia. Solo aparecen las que tu deporte admite de verdad.",
-  "welcome.fix3.title": "Directo al reloj",
-  "welcome.fix3.body":
-    "Obtienes un archivo .workout real. Envíatelo, ábrelo en el móvil y llega a la app Entreno del reloj.",
+  "welcome.fix0.title": "Se escribe de principio a fin, sin ratón",
+  "welcome.fix1.title": "8 × 400 m con descansos en unas pocas teclas",
+  "welcome.fix2.title": "Alertas de pulso, ritmo, cadencia y potencia",
+  "welcome.fix3.title": "Directo a la app Entreno del reloj",
   "welcome.cta": "Crear un entrenamiento",
   "welcome.privacy": "Nada se guarda online: se respeta tu privacidad.",
   "welcome.source": "Mira el código y contribuye en GitHub",
@@ -342,8 +324,6 @@ const es: Record<MessageKey, string> = {
   "nav.back": "Atrás",
   "picker.heading": "¿Qué vas a entrenar?",
   "picker.search": "Buscar actividades",
-  "picker.lede":
-    "El editor solo ofrece los objetivos y alertas que el reloj admite para el deporte que elijas.",
   "picker.cardio": "Cardio",
   "picker.studio": "Fuerza y sala",
   "picker.current": "En curso",
@@ -456,9 +436,6 @@ const es: Record<MessageKey, string> = {
 
   "builder.step": "{count} paso",
   "builder.steps": "{count} pasos",
-  "builder.empty.title": "Móntalo paso a paso",
-  "builder.empty.body":
-    "Añade los pasos en el orden en que los harás. El calentamiento va siempre primero y la vuelta a la calma al final, los añadas cuando los añadas.",
   "builder.add": "Añadir un paso",
   "builder.structure": "Forma del entrenamiento",
   "builder.unfinished": "Termina este paso antes de descargar",
@@ -500,9 +477,13 @@ const es: Record<MessageKey, string> = {
   "step.moveDown": "Bajar",
 
   "legend.add": "añadir un paso",
-  "legend.steps": "moverte entre pasos",
+  "legend.open": "abrir un paso",
+  "legend.remove": "eliminar",
+  "legend.pick": "elegir una opción",
+  "legend.fields": "moverte entre campos",
+  "legend.reorder": "mover el paso",
+  "legend.done": "listo",
   "legend.next": "siguiente campo",
-  "legend.close": "cerrar",
   "legend.undo": "deshacer",
   "legend.download": "descargar",
 
@@ -515,7 +496,6 @@ const es: Record<MessageKey, string> = {
   "rail.name": "Nombre del entrenamiento",
   "rail.download": "Descargar",
   "rail.scan": "Escanear en el móvil",
-  "rail.privacy": "No sale nada de este dispositivo salvo que tú lo compartas.",
   "rail.saved": "Guardado {file}",
 
   "send.heading": "Escanea con el móvil",
@@ -540,9 +520,7 @@ const es: Record<MessageKey, string> = {
 
   "welcome.lede.touch":
     "Monta el entrenamiento entero en el navegador y obtén un archivo .workout real. Apple los esconde en la app del reloj; aquí cada paso es una línea que tocas para editar, sin instalar nada.",
-  "welcome.fix1.title.touch": "Todo el entrenamiento en una pantalla",
-  "welcome.fix1.body.touch":
-    "8 × 400 m con 90 segundos de recuperación son unos pocos toques aquí, en vez de un paseo por cuatro pantallas anidadas.",
+  "welcome.fix1.title.touch": "Todos los pasos en una pantalla",
   "welcome.desktopHint": "En el ordenador es aún más rápido: se hace entero con el teclado.",
 
   "guide.heading": "Cómo encontrarlo en Safari",
@@ -574,6 +552,8 @@ const es: Record<MessageKey, string> = {
   "key.enter": "Intro",
   "key.esc": "Esc",
   "key.tab": "Tab",
+  "key.delete": "Supr",
+  "key.letter": "Letra",
 
   "activity.SWIMMING": "Natación en piscina",
   "activity.RUNNING": "Carrera al aire libre",

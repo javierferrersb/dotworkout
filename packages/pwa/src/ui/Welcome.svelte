@@ -1,6 +1,6 @@
 <script lang="ts">
   import { fly } from "svelte/transition";
-  import { Code, Languages } from "@lucide/svelte";
+  import { Code, HeartPulse, Keyboard, Languages, Repeat, Rows3, Watch } from "@lucide/svelte";
   import { locale, t } from "../i18n/locale.svelte.js";
   import { keys } from "../i18n/keys.svelte.js";
   import { LOCALES, type LocaleCode } from "../i18n/messages.js";
@@ -24,15 +24,15 @@
   let fixes = $derived(
     touch
       ? ([
-          { title: "welcome.fix1.title.touch", body: "welcome.fix1.body.touch" },
-          { title: "welcome.fix2.title", body: "welcome.fix2.body" },
-          { title: "welcome.fix3.title", body: "welcome.fix3.body" },
+          { title: "welcome.fix1.title.touch", icon: Rows3 },
+          { title: "welcome.fix2.title", icon: HeartPulse },
+          { title: "welcome.fix3.title", icon: Watch },
         ] as const)
       : ([
-          { title: "welcome.fix0.title", body: "welcome.fix0.body" },
-          { title: "welcome.fix1.title", body: "welcome.fix1.body" },
-          { title: "welcome.fix2.title", body: "welcome.fix2.body" },
-          { title: "welcome.fix3.title", body: "welcome.fix3.body" },
+          { title: "welcome.fix0.title", icon: Keyboard },
+          { title: "welcome.fix1.title", icon: Repeat },
+          { title: "welcome.fix2.title", icon: HeartPulse },
+          { title: "welcome.fix3.title", icon: Watch },
         ] as const),
   );
 
@@ -97,8 +97,8 @@
       <ul>
         {#each fixes as fix (fix.title)}
           <li>
+            <fix.icon size={16} strokeWidth={2} aria-hidden="true" />
             <h2>{t(fix.title)}</h2>
-            <p>{t(fix.body)}</p>
           </li>
         {/each}
       </ul>
@@ -260,21 +260,25 @@
   }
 
   li {
-    padding: 14px 0 15px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 13px 0;
     border-bottom: 1px solid var(--hairline);
+    color: var(--text-tertiary);
+  }
+
+  li :global(svg) {
+    flex: none;
+    margin-top: 2px;
   }
 
   li h2 {
-    margin: 0 0 3px;
-    font-size: 14px;
-    font-weight: 600;
-  }
-
-  li p {
     margin: 0;
-    color: var(--text-secondary);
-    font-size: 14px;
-    line-height: 1.5;
+    color: var(--text-primary);
+    font-size: 14.5px;
+    font-weight: 500;
+    line-height: 1.4;
   }
 
   .privacy {
@@ -328,10 +332,6 @@
     li {
       padding: 0;
       border-bottom: none;
-    }
-
-    li h2 {
-      margin-bottom: 4px;
     }
 
     .privacy {

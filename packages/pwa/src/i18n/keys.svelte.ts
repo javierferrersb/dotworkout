@@ -15,6 +15,9 @@ class KeyLabels {
   down = "↓";
 
   save = $derived(join(this.primary, "S"));
+  undo = $derived(join(this.primary, "Z"));
+  remove = $derived(isApple ? "⌫" : t("key.delete"));
+  reorder = $derived(`${this.alt} ${this.up} ${this.down}`);
   blockUp = $derived(join(this.alt, this.up));
   blockDown = $derived(join(this.alt, this.down));
 }
