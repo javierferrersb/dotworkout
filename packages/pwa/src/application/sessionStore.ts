@@ -37,10 +37,13 @@ export function loadSession(): SessionSnapshot | undefined {
       title: typeof parsed.title === "string" ? parsed.title : "Workout",
       blocks: parsed.blocks as BlockDraft[],
       cursor: typeof parsed.cursor === "number" ? parsed.cursor : parsed.blocks.length,
+      // "name" was a screen of its own before the title moved into the builder.
       stage:
-        parsed.stage === "compose" || parsed.stage === "choose" || parsed.stage === "name"
-          ? parsed.stage
-          : "welcome",
+        parsed.stage === "compose" || (parsed.stage as string) === "name"
+          ? "compose"
+          : parsed.stage === "choose"
+            ? "choose"
+            : "welcome",
     };
   } catch {
     return undefined;

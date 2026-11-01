@@ -62,6 +62,8 @@ export interface BlockDraft {
   readonly alertReading?: AlertReading;
   readonly alertStyle?: AlertStyle;
   readonly alertFrom?: number;
+  /** The other end of a range, held until both ends are there to build the alert from. */
+  readonly alertTo?: number;
   readonly alert?: AlertDraft;
   readonly label?: string;
   readonly skipped?: readonly string[];

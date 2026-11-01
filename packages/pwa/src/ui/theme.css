@@ -24,6 +24,8 @@
 
   --success: #5fcf93;
   --danger: #ff7b72;
+  --warn: #f2b45a;
+  --segment-on: #2e2e32;
 
   --shadow-pop: 0 1px 2px rgba(0, 0, 0, 0.4), 0 14px 36px rgba(0, 0, 0, 0.45);
 
@@ -63,6 +65,8 @@
 
   --success: #1a7f4b;
   --danger: #c62828;
+  --warn: #a35a00;
+  --segment-on: #ffffff;
 
   --shadow-pop: 0 1px 2px rgba(20, 20, 18, 0.06), 0 14px 36px rgba(20, 20, 18, 0.12);
 
@@ -123,29 +127,4 @@ input:focus {
 :focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
-}
-
-@keyframes confirm-blink {
-  0%,
-  34%,
-  68%,
-  100% {
-    background: var(--ink);
-    color: var(--on-ink);
-  }
-  17%,
-  51% {
-    background: var(--bg-raised);
-    color: var(--text-primary);
-  }
-}
-
-.confirming {
-  animation: confirm-blink 420ms steps(1, end);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .confirming {
-    animation: none;
-  }
 }

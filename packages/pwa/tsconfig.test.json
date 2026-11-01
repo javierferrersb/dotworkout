@@ -8,6 +8,7 @@
     "src/i18n/messages.ts",
     "src/domain/**/*.ts",
     "src/application/workoutComposition.ts",
+    "src/application/stepEdit.ts",
     "test/**/*.ts"
   ],
   "references": [{ "path": "../codec" }, { "path": "../domain" }]

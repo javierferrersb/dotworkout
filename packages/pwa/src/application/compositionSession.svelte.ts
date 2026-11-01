@@ -1,78 +1,69 @@
 import {
-  paceToMetersPerSecond,
-  parseDistance,
-  parseDuration,
-  speedToMetersPerSecond,
-} from "@dotworkout/domain";
-import {
   ACTIVITY_CATALOGUE,
-  alertShapeOf,
   capabilitiesOf,
   type Activity,
   type ActivityCapabilities,
-  type AlertMetric,
-  type AlertReading,
-  type AlertStyle,
 } from "../domain/activity.js";
-import type { AlertDraft, BlockDraft, BlockKind } from "../domain/block.js";
+import type { BlockDraft, BlockKind } from "../domain/block.js";
 import {
-  isAnswered,
   questionSequence,
   unfinishedBlocks,
   type BlockContext,
   type Question,
-  type QuestionId,
   type Unfinished,
 } from "../domain/interview.js";
-import { cursorAfterRemoval, inPerformedOrder, isPinned, moved } from "../domain/order.js";
+import { isPinned, movedItem, performedOrder } from "../domain/order.js";
 import { activityName } from "../i18n/format.js";
+import { newStep } from "./stepEdit.js";
 import { inspect, type WorkoutDraft } from "./workoutComposition.js";
+
+/**
+ * A block with an identity that survives edits. Drafts are replaced on every
+ * change, so without one the step being typed into would be a new object, and
+ * a new row, after each keystroke.
+ */
+export interface Step {
+  readonly id: number;
+  readonly draft: BlockDraft;
+}
+
+interface Moment {
+  readonly steps: readonly Step[];
+  readonly open: number | undefined;
+}
+
+/** Keystrokes into one field within this long are one undo step, not one per character. */
+const COALESCE_MS = 1200;
+
+let lastId = 0;
+function step(draft: BlockDraft): Step {
+  lastId += 1;
+  return { id: lastId, draft };
+}
+
+function ordered(steps: readonly Step[]): Step[] {
+  return performedOrder(steps, (entry) => entry.draft.kind);
+}
 
 export class CompositionSession {
   activity = $state<Activity>(ACTIVITY_CATALOGUE[0]!);
   title = $state("Workout");
-  blocks = $state<BlockDraft[]>([]);
-  cursor = $state(0);
-  focused = $state<QuestionId | undefined>(undefined);
-  problem = $state<string | undefined>(undefined);
+  steps = $state.raw<readonly Step[]>([]);
+  /** The step whose editor is open. One at a time, like a disclosure list. */
+  open = $state<number | undefined>(undefined);
+  /** A step whose first missing field should take focus once its editor is drawn. */
+  focusRequest = $state<{ readonly id: number; readonly at: number } | undefined>(undefined);
+
+  private past = $state.raw<readonly Moment[]>([]);
+  private future = $state.raw<readonly Moment[]>([]);
+  private lastKey: string | undefined;
+  private lastAt = 0;
 
   capabilities = $derived<ActivityCapabilities>(capabilitiesOf(this.activity));
 
   activityName = $derived(activityName(this.activity.id));
 
-  draft = $derived<BlockDraft>(this.blocks[this.cursor] ?? {});
-
-  composingNew = $derived<boolean>(this.cursor >= this.blocks.length);
-
-  context = $derived<BlockContext>({
-    hasWarmup: this.blocks.some((block, index) => block.kind === "WARMUP" && index !== this.cursor),
-    hasCooldown: this.blocks.some(
-      (block, index) => block.kind === "COOLDOWN" && index !== this.cursor,
-    ),
-    position: this.cursor,
-  });
-
-  questions = $derived<readonly Question[]>(
-    questionSequence(this.draft, this.activity, this.capabilities, this.context),
-  );
-
-  current = $derived<Question | undefined>(
-    this.focused === undefined
-      ? this.questions.find((question) => !isAnswered(this.draft, question.id))
-      : this.questions.find((question) => question.id === this.focused),
-  );
-
-  answered = $derived<readonly Question[]>(
-    this.questions.filter(
-      (question) => isAnswered(this.draft, question.id) && question.id !== this.current?.id,
-    ),
-  );
-
-  upcoming = $derived<readonly Question[]>(
-    this.questions.filter(
-      (question) => !isAnswered(this.draft, question.id) && question.id !== this.current?.id,
-    ),
-  );
+  blocks = $derived<readonly BlockDraft[]>(this.steps.map((entry) => entry.draft));
 
   workout = $derived<WorkoutDraft>({
     title: this.title,
@@ -86,296 +77,215 @@ export class CompositionSession {
     unfinishedBlocks(this.blocks, this.activity, this.capabilities),
   );
 
-  complete = $derived<boolean>(
-    this.questions.every((question) => question.optional || isAnswered(this.draft, question.id)),
-  );
+  openIndex = $derived<number | undefined>(this.indexOf(this.open));
+
+  canUndo = $derived(this.past.length > 0);
+  canRedo = $derived(this.future.length > 0);
 
   snapshot = $derived({
     activityId: this.activity.id,
     title: this.title,
     blocks: this.blocks,
-    cursor: this.cursor,
+    cursor: this.openIndex ?? this.blocks.length,
   });
 
   chooseActivity(activity: Activity): void {
     this.activity = activity;
-    this.blocks = [];
-    this.cursor = 0;
-    this.focused = undefined;
+    this.steps = [];
+    this.open = undefined;
+    this.forget();
   }
 
-  restore(activity: Activity, title: string, blocks: readonly BlockDraft[], cursor: number): void {
+  restore(activity: Activity, title: string, blocks: readonly BlockDraft[], _cursor: number): void {
     this.activity = activity;
     this.title = title;
-    this.blocks = [...blocks];
-    this.cursor = Math.min(Math.max(0, cursor), blocks.length);
-    this.focused = undefined;
-    this.problem = undefined;
+    this.steps = ordered(blocks.map(step));
+    this.open = undefined;
+    this.forget();
   }
 
-  answer(id: QuestionId, raw: string): void {
-    this.problem = undefined;
-    try {
-      this.write(applyAnswer(this.draft, id, raw, this.activity));
-      this.focused = undefined;
-    } catch (error) {
-      this.problem = error instanceof Error ? error.message : String(error);
-    }
+  indexOf(id: number | undefined): number | undefined {
+    if (id === undefined) return undefined;
+    const index = this.steps.findIndex((entry) => entry.id === id);
+    return index === -1 ? undefined : index;
   }
 
-  skip(id: QuestionId): void {
-    this.problem = undefined;
-    const skipped = [...(this.draft.skipped ?? []), id];
-    this.write(
-      id === "alert" ? { ...this.draft, alertMetric: "NONE", skipped } : { ...this.draft, skipped },
-    );
-    this.focused = undefined;
-  }
-
-  focus(id: QuestionId): void {
-    this.focused = id;
-    this.problem = undefined;
-  }
-
-  previousQuestion(): void {
-    const order = this.questions;
-    const at = order.findIndex((question) => question.id === this.current?.id);
-    const previous = order[at <= 0 ? 0 : at - 1];
-    if (previous !== undefined) this.focus(previous.id);
-  }
-
-  nextQuestion(): void {
-    const order = this.questions;
-    const at = order.findIndex((question) => question.id === this.current?.id);
-    const next = order[at + 1];
-    if (next !== undefined) this.focus(next.id);
-  }
-
-  commitBlock(): void {
-    if (!this.complete) return;
-    if (this.composingNew) this.blocks = [...this.blocks, this.draft];
-    this.cursor = this.blocks.length;
-    this.focused = undefined;
-    this.problem = undefined;
-  }
-
-  goToBlock(index: number): void {
-    if (index < 0 || index > this.blocks.length) return;
-    this.cursor = index;
-    this.problem = undefined;
-
-    const target = this.blocks[index];
-    if (target === undefined) {
-      this.focused = undefined;
-      return;
-    }
-    const order = questionSequence(target, this.activity, this.capabilities, {
+  contextAt(index: number): BlockContext {
+    return {
       hasWarmup: this.blocks.some((block, at) => block.kind === "WARMUP" && at !== index),
       hasCooldown: this.blocks.some((block, at) => block.kind === "COOLDOWN" && at !== index),
       position: index,
-    });
-    const pending = order.find((question) => !isAnswered(target, question.id));
-    this.focused = pending?.id ?? order[order.length - 1]?.id;
+    };
   }
 
-  previousBlock(): void {
-    this.goToBlock(Math.max(0, this.cursor - 1));
+  /** The fields that apply to a step as it stands, in the order they are filled in. */
+  fieldsAt(index: number): readonly Question[] {
+    const draft = this.blocks[index];
+    if (draft === undefined) return [];
+    return questionSequence(draft, this.activity, this.capabilities, this.contextAt(index));
   }
 
-  nextBlock(): void {
-    this.goToBlock(Math.min(this.blocks.length, this.cursor + 1));
+  missingAt(index: number): Question | undefined {
+    return this.unfinished.find((entry) => entry.index === index)?.question;
   }
 
-  startNewBlock(): void {
-    this.goToBlock(this.blocks.length);
+  /** Kinds a step can become: one warm up and one cool down per workout, any number of the rest. */
+  kindsAt(index: number): readonly BlockKind[] {
+    const context = this.contextAt(index);
+    const kinds: BlockKind[] = [];
+    if (!context.hasWarmup) kinds.push("WARMUP");
+    kinds.push("INTERVAL", "RECOVERY");
+    if (!context.hasCooldown) kinds.push("COOLDOWN");
+    return kinds;
   }
 
-  removeBlock(index: number): void {
-    if (this.blocks[index] === undefined) return;
-
-    const remaining = this.blocks.filter((_, position) => position !== index);
-    this.blocks = remaining;
-    this.cursor = cursorAfterRemoval(this.cursor, index, remaining.length);
-    this.focused = undefined;
-    this.problem = undefined;
+  canAdd(kind: BlockKind): boolean {
+    if (kind === "WARMUP") return !this.blocks.some((block) => block.kind === "WARMUP");
+    if (kind === "COOLDOWN") return !this.blocks.some((block) => block.kind === "COOLDOWN");
+    return true;
   }
 
-  canDuplicate(index: number): boolean {
-    return !isPinned(this.blocks[index]);
+  add(kind: BlockKind): number | undefined {
+    if (!this.canAdd(kind)) return undefined;
+    this.checkpoint();
+    const added = step(newStep(kind, this.capabilities));
+    this.steps = ordered([...this.steps, added]);
+    this.open = added.id;
+    this.focusRequest = { id: added.id, at: Date.now() };
+    return added.id;
   }
 
-  canReorder(index: number): boolean {
-    return !isPinned(this.blocks[index]);
+  /**
+   * Replaces a step's draft. Edits that share a key, such as the keystrokes of
+   * one value, fold into a single undo step.
+   */
+  edit(id: number, change: (draft: BlockDraft) => BlockDraft, key?: string): void {
+    const current = this.steps.find((entry) => entry.id === id);
+    if (current === undefined) return;
+    const next = change(current.draft);
+    if (next === current.draft) return;
+    this.checkpoint(key === undefined ? undefined : `${id}:${key}`);
+    this.steps = ordered(
+      this.steps.map((entry) => (entry.id === id ? { id, draft: next } : entry)),
+    );
   }
 
-  canMoveUp(index: number): boolean {
-    return this.canReorder(index) && !isPinned(this.blocks[index - 1]);
+  remove(id: number): void {
+    const index = this.indexOf(id);
+    if (index === undefined) return;
+    this.checkpoint();
+    const remaining = this.steps.filter((entry) => entry.id !== id);
+    this.steps = remaining;
+    if (this.open === id) this.open = undefined;
   }
 
-  canMoveDown(index: number): boolean {
-    return this.canReorder(index) && !isPinned(this.blocks[index + 1]);
+  canDuplicate(id: number): boolean {
+    const index = this.indexOf(id);
+    return index !== undefined && !isPinned(this.blocks[index]);
   }
 
-  duplicateBlock(index: number): void {
-    if (!this.canDuplicate(index)) return;
-    const block = this.blocks[index];
-    if (block === undefined) return;
-
-    const copy = { ...block };
-    this.settle([...this.blocks.slice(0, index + 1), copy, ...this.blocks.slice(index + 1)], copy);
+  duplicate(id: number): void {
+    const index = this.indexOf(id);
+    if (index === undefined || !this.canDuplicate(id)) return;
+    this.checkpoint();
+    const copy = step({ ...this.steps[index]!.draft });
+    this.steps = ordered([...this.steps.slice(0, index + 1), copy, ...this.steps.slice(index + 1)]);
+    this.open = copy.id;
   }
 
-  moveBlock(from: number, to: number): void {
-    const block = this.blocks[from];
-    if (block === undefined || from === to) return;
-    this.settle(moved(this.blocks, from, to), block);
+  canMove(id: number, by: -1 | 1): boolean {
+    const index = this.indexOf(id);
+    if (index === undefined || isPinned(this.blocks[index])) return false;
+    return !isPinned(this.blocks[index + by]);
   }
 
-  private settle(blocks: readonly BlockDraft[], follow: BlockDraft): void {
-    const ordered = inPerformedOrder(blocks);
-    this.blocks = ordered;
-    this.cursor = ordered.indexOf(follow);
-    this.focused = undefined;
-    this.problem = undefined;
+  move(id: number, by: -1 | 1): void {
+    const index = this.indexOf(id);
+    if (index === undefined || !this.canMove(id, by)) return;
+    this.checkpoint();
+    this.steps = movedItem(this.steps, index, index + by, (entry) => entry.draft.kind);
   }
 
-  deselect(): void {
-    this.focused = undefined;
-    this.problem = undefined;
+  /** Moves a step to another slot, for drag and drop. Pinned ends stay where they are. */
+  place(id: number, to: number): void {
+    const index = this.indexOf(id);
+    if (index === undefined || index === to || isPinned(this.blocks[index])) return;
+    this.checkpoint();
+    this.steps = movedItem(this.steps, index, to, (entry) => entry.draft.kind);
   }
 
-  private write(next: BlockDraft): void {
-    const updated = this.composingNew
-      ? [...this.blocks, next]
-      : this.blocks.map((block, index) => (index === this.cursor ? next : block));
-    const settled = inPerformedOrder(updated);
-    this.blocks = settled;
-    this.cursor = settled.indexOf(next);
-  }
-}
-
-function applyAnswer(
-  draft: BlockDraft,
-  id: QuestionId,
-  raw: string,
-  activity: Activity,
-): BlockDraft {
-  switch (id) {
-    case "kind":
-      return draft.kind === raw ? draft : { kind: raw as BlockKind, label: draft.label };
-    // Changing the goal drops the measurements taken under the old one, which
-    // means confirming the goal you already had must be a no-op — otherwise
-    // reopening a finished block to look at it throws its numbers away.
-    case "goal":
-      return draft.goalKind === raw
-        ? draft
-        : {
-            ...draft,
-            goalKind: raw as BlockDraft["goalKind"],
-            distance: undefined,
-            duration: undefined,
-            sendOff: undefined,
-          };
-    case "distance":
-      return { ...draft, distance: parseDistance(raw, activity.defaultDistanceUnit) };
-    case "duration":
-      return { ...draft, duration: parseDuration(raw) };
-    case "sendOff":
-      return { ...draft, sendOff: parseDuration(raw) };
-    case "repetitions": {
-      const value = Number(raw);
-      if (!Number.isInteger(value) || value < 1) {
-        throw new Error("Give a whole number of reps, 1 or more");
-      }
-      return { ...draft, repetitions: value };
-    }
-    case "recovery":
-      return { ...draft, recovery: parseDuration(raw) };
-    case "alert":
-      return draft.alertMetric === raw
-        ? draft
-        : {
-            ...draft,
-            alertMetric: raw as AlertMetric | "NONE",
-            alertReading: undefined,
-            alertStyle: undefined,
-            alertFrom: undefined,
-            alert: undefined,
-          };
-    case "alertReading":
-      return draft.alertReading === raw
-        ? draft
-        : { ...draft, alertReading: raw as AlertReading, alert: undefined };
-    case "alertStyle":
-      return draft.alertStyle === raw
-        ? draft
-        : {
-            ...draft,
-            alertStyle: raw as AlertStyle,
-            alertFrom: undefined,
-            alert: undefined,
-          };
-    case "alertFrom":
-      return {
-        ...draft,
-        alertFrom: boundValue(draft.alertMetric, raw, activity),
-        alert: undefined,
-      };
-    case "alertValue":
-      return { ...draft, alert: buildAlert(draft, raw, activity) };
-    case "label":
-      return { ...draft, label: raw.trim() };
-  }
-}
-
-/**
- * Running enters a pace — minutes per kilometre — and everything else enters
- * the number it is displayed as. Both end up as metres per second.
- */
-function boundValue(metric: BlockDraft["alertMetric"], raw: string, activity: Activity): number {
-  if (metric !== "SPEED") return Number(raw);
-  return activity.sport === "RUNNING"
-    ? paceToMetersPerSecond(raw)
-    : speedToMetersPerSecond(Number(raw));
-}
-
-function buildAlert(draft: BlockDraft, raw: string, activity: Activity): AlertDraft {
-  const metric = draft.alertMetric;
-  if (metric === undefined || metric === "NONE") throw new Error("Choose a target first");
-
-  const shape = alertShapeOf(metric);
-  const style = (shape.styles.length > 1 ? draft.alertStyle : shape.styles[0]) ?? "VALUE";
-  const reading = draft.alertReading ?? "current";
-  const value = boundValue(metric, raw, activity);
-
-  if (style === "ZONE") return { metric: "HEART_RATE", style: "ZONE", zone: Number(raw) };
-
-  if (style === "RANGE") {
-    const other = draft.alertFrom;
-    if (other === undefined) throw new Error("Give the other end of the range first");
-    const low = Math.min(other, value);
-    const high = Math.max(other, value);
-
-    switch (metric) {
-      case "HEART_RATE":
-        return { metric, style: "RANGE", from: low, to: high };
-      case "SPEED":
-        return { metric, style: "RANGE", slower: low, faster: high, reading };
-      case "CADENCE":
-        return { metric, style: "RANGE", from: low, to: high };
-      case "POWER":
-        return { metric, style: "RANGE", from: low, to: high, reading };
-    }
+  toggle(id: number): void {
+    this.open = this.open === id ? undefined : id;
   }
 
-  switch (metric) {
-    case "HEART_RATE":
-      return { metric, style: "ZONE", zone: Number(raw) };
-    case "SPEED":
-      return { metric, style: "VALUE", metersPerSecond: value, reading };
-    case "CADENCE":
-      return { metric, style: "VALUE", perMinute: value };
-    case "POWER":
-      return { metric, style: "VALUE", watts: value, reading };
+  close(): void {
+    this.open = undefined;
+  }
+
+  /** Opens the step above or below the open one, or the first or last when none is. */
+  openAdjacent(by: -1 | 1): number | undefined {
+    if (this.steps.length === 0) return undefined;
+    const index = this.openIndex;
+    const target =
+      index === undefined
+        ? by === 1
+          ? 0
+          : this.steps.length - 1
+        : Math.max(0, Math.min(this.steps.length - 1, index + by));
+    this.open = this.steps[target]!.id;
+    return this.open;
+  }
+
+  /** Opens the first unfinished step and asks for its missing field. */
+  attendToUnfinished(): boolean {
+    const first = this.unfinished[0];
+    if (first === undefined) return false;
+    const target = this.steps[first.index];
+    if (target === undefined) return false;
+    this.open = target.id;
+    this.focusRequest = { id: target.id, at: Date.now() };
+    return true;
+  }
+
+  undo(): void {
+    const previous = this.past.at(-1);
+    if (previous === undefined) return;
+    this.future = [...this.future, this.moment()];
+    this.past = this.past.slice(0, -1);
+    this.settle(previous);
+  }
+
+  redo(): void {
+    const next = this.future.at(-1);
+    if (next === undefined) return;
+    this.past = [...this.past, this.moment()];
+    this.future = this.future.slice(0, -1);
+    this.settle(next);
+  }
+
+  private moment(): Moment {
+    return { steps: this.steps, open: this.open };
+  }
+
+  private settle(moment: Moment): void {
+    this.steps = moment.steps;
+    this.open = moment.open;
+    this.lastKey = undefined;
+  }
+
+  private checkpoint(key?: string): void {
+    const now = Date.now();
+    const folds = key !== undefined && key === this.lastKey && now - this.lastAt < COALESCE_MS;
+    this.lastKey = key;
+    this.lastAt = now;
+    if (folds) return;
+    this.past = [...this.past, this.moment()];
+    this.future = [];
+  }
+
+  private forget(): void {
+    this.past = [];
+    this.future = [];
+    this.lastKey = undefined;
   }
 }

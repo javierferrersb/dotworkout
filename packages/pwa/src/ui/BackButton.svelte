@@ -4,11 +4,13 @@
   interface Props {
     label: string;
     onclick: () => void;
+    /** In a toolbar rather than floating over the page. */
+    inline?: boolean;
   }
-  let { label, onclick }: Props = $props();
+  let { label, onclick, inline = false }: Props = $props();
 </script>
 
-<button {onclick}>
+<button {onclick} class:inline>
   <ChevronLeft size={16} strokeWidth={2} />
   <span>{label}</span>
 </button>
@@ -30,6 +32,10 @@
     transition:
       background 120ms var(--ease),
       color 120ms var(--ease);
+  }
+
+  button.inline {
+    position: static;
   }
 
   button:hover {

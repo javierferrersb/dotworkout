@@ -12,7 +12,6 @@
   import Composer from "./ui/Composer.svelte";
   import DownloadGuide from "./ui/DownloadGuide.svelte";
   import { isIos } from "./ui/platform.js";
-  import NameWorkout from "./ui/NameWorkout.svelte";
   import Welcome from "./ui/Welcome.svelte";
 
   const flow = new AppFlow();
@@ -96,14 +95,14 @@
     }
   }
 
+  // Picking the sport you were already building keeps the steps; another sport
+  // starts clean, since its goals and targets differ. The title is editable in
+  // the builder, so there is no separate screen for it.
   function pick(activity: Activity) {
-    session.chooseActivity(activity);
-    session.title = t("naming.defaultTitle", { activity: activityName(activity.id) });
-    flow.go("name");
-  }
-
-  function named(title: string) {
-    session.title = title;
+    if (activity.id !== session.activity.id || session.steps.length === 0) {
+      session.chooseActivity(activity);
+      session.title = t("naming.defaultTitle", { activity: activityName(activity.id) });
+    }
     flow.go("compose");
   }
 </script>
@@ -137,15 +136,6 @@
   {:else if flow.stage === "choose"}
     <div class="screen" out:fade={{ duration: 120 }}>
       <ActivityPicker onpick={pick} onback={() => flow.go("welcome")} />
-    </div>
-  {:else if flow.stage === "name"}
-    <div class="screen" out:fade={{ duration: 120 }}>
-      <NameWorkout
-        activity={session.activity}
-        initial={session.title}
-        onconfirm={named}
-        onback={() => flow.go("choose")}
-      />
     </div>
   {:else}
     <div class="screen">

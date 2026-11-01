@@ -6,15 +6,22 @@ Runs entirely on the client — not published to npm.
 
 ## What it is
 
-Pick an activity, name the workout, then compose it block by block. Each block
-asks one question at a time — goal, distance or time, alert, label — using only
-the goals and alerts that activity actually supports, so there is nothing to
-get wrong. The whole thing is keyboard-first: arrow keys move between
-questions and blocks, Enter confirms, Tab skips an optional one, Escape
-deselects. `unfinishedBlocks()` (from `src/domain/interview.ts`) catches a
-block left half-answered before it silently becomes a different workout — a
-send-off never entered composes to a plain distance goal, and the Watch would
-accept that without complaint.
+Pick an activity and the workout opens as a list of steps — warm up, sets,
+rests, cool down — with a strip above it drawing the session's shape. Open a
+step and its fields are all there at once: the goal, the distance with its
+unit beside it, repeats, rest, target and name, offering only the goals and
+targets that activity actually supports (`questionSequence()` in
+`src/domain/interview.ts`). Edits keep every value that still applies
+(`src/application/stepEdit.ts`), so switching a goal or a kind never throws
+the rest of the step away, and deleting a step can be undone.
+
+It stays keyboard-first: W, S, R and C add a step and land in its first empty
+field, Enter moves to the next field and closes the step after the last, the
+arrow keys move between steps, ⌘Z / Ctrl+Z undoes, ⌘S / Ctrl+S downloads.
+`unfinishedBlocks()` catches a step left half-filled before it silently
+becomes a different workout — a send-off never entered composes to a plain
+distance goal, and the Watch would accept that without complaint — and
+Download opens that step at the missing field instead of saving it.
 
 ## Getting the file onto a phone
 

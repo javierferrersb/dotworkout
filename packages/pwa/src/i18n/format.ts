@@ -1,4 +1,5 @@
-import { formatDistance, formatDuration, showsPace } from "@dotworkout/domain";
+import { formatDistance, showsPace } from "@dotworkout/domain";
+import { durationText } from "../application/stepEdit.js";
 import type { AlertMetric, GoalKind } from "../domain/activity.js";
 import type { BlockDraft, BlockKind } from "../domain/block.js";
 import type { Choice, Question, QuestionId } from "../domain/interview.js";
@@ -40,24 +41,6 @@ export function choiceText(choice: Choice, sport: string): string {
   if (choice.group === "reading") return t(`reading.${choice.value}` as MessageKey);
   if (choice.group === "style") return t(`style.${choice.value}` as MessageKey);
   return choice.value;
-}
-
-export function choiceKey(choice: Choice, sport: string): string {
-  if (choice.group === "zone") return choice.value;
-  if (choice.group === "alert" && choice.value === "SPEED") {
-    return showsPace(sport) ? t("alertKey.SPEED.pace") : t("alertKey.SPEED.speed");
-  }
-  const prefix =
-    choice.group === "kind"
-      ? "kindKey"
-      : choice.group === "goal"
-        ? "goalKey"
-        : choice.group === "reading"
-          ? "readingKey"
-          : choice.group === "style"
-            ? "styleKey"
-            : "alertKey";
-  return t(`${prefix}.${choice.value}` as MessageKey);
 }
 
 /** Metres per second as minutes and seconds per kilometre. */
@@ -106,61 +89,80 @@ export function alertSummary(draft: BlockDraft, sport: string): string {
   }
 }
 
-function round(value: number): string {
-  return Number.isInteger(value) ? String(value) : value.toFixed(2);
+/** What a step is, as the line reads: "8 × 400 m", "10:00", "Open". Empty until it is measured. */
+export function stepMeasure(draft: BlockDraft): string {
+  if (draft.kind === "RECOVERY") return durationText(draft.duration);
+  if (draft.goalKind === "OPEN") return goalName("OPEN");
+  const measure =
+    draft.distance !== undefined ? formatDistance(draft.distance) : durationText(draft.duration);
+  if (measure === "") return "";
+  const reps = draft.kind === "INTERVAL" ? (draft.repetitions ?? 1) : 1;
+  return reps > 1 ? `${reps} × ${measure}` : measure;
 }
 
-export function answerLabel(draft: BlockDraft, id: QuestionId, sport: string): string {
-  switch (id) {
-    case "kind":
-      return draft.kind === undefined ? "" : blockKindName(draft.kind);
-    case "goal":
-      return draft.goalKind === undefined ? "" : goalName(draft.goalKind);
-    case "distance":
-      return draft.distance === undefined ? "" : formatDistance(draft.distance);
-    case "duration":
-      return draft.duration === undefined ? "" : formatDuration(draft.duration);
-    case "sendOff":
-      return draft.sendOff === undefined ? "" : formatDuration(draft.sendOff);
-    case "repetitions":
-      return draft.repetitions === undefined ? "" : `${draft.repetitions}`;
-    case "recovery":
-      return draft.recovery === undefined ? t("alert.NONE") : formatDuration(draft.recovery);
-    case "alert":
-      return alertName(draft.alertMetric ?? "NONE", sport);
-    case "alertReading":
-      return draft.alertReading === undefined
-        ? ""
-        : t(`reading.${draft.alertReading}` as MessageKey);
-    case "alertStyle":
-      return draft.alertStyle === undefined ? "" : t(`style.${draft.alertStyle}` as MessageKey);
-    case "alertFrom": {
-      if (draft.alertFrom === undefined) return "";
-      if (draft.alertMetric !== "SPEED") return round(draft.alertFrom);
-      return showsPace(sport)
-        ? formatPace(draft.alertFrom)
-        : `${(draft.alertFrom * 3.6).toFixed(1)}`;
-    }
-    case "alertValue":
-      return alertSummary(draft, sport);
-    case "label":
-      return draft.label === undefined || draft.label === "" ? t("rail.untitled") : draft.label;
+/** Everything else about a step, quieter: the clock, the rest, the target, the name. */
+export function stepDetails(draft: BlockDraft, sport: string): string {
+  const parts: string[] = [];
+  if (draft.sendOff !== undefined) parts.push(t("step.on", { time: durationText(draft.sendOff) }));
+  if (draft.recovery !== undefined) {
+    parts.push(t("step.rest", { time: durationText(draft.recovery) }));
+  }
+  const target = alertSummary(draft, sport);
+  if (target !== "") parts.push(target);
+  if (draft.label !== undefined && draft.label !== "") parts.push(draft.label);
+  return parts.join(" · ");
+}
+
+export function targetUnit(metric: AlertMetric, sport: string): string {
+  switch (metric) {
+    case "HEART_RATE":
+      return t("unit.bpm");
+    case "CADENCE":
+      return t("unit.spm");
+    case "POWER":
+      return t("unit.watts");
+    case "SPEED":
+      return showsPace(sport) ? t("unit.pace") : t("unit.speed");
   }
 }
 
-export function blockSummary(draft: BlockDraft): string {
-  const parts: string[] = [];
-  if (draft.repetitions !== undefined && draft.repetitions > 1) parts.push(`${draft.repetitions}×`);
-  if (draft.distance !== undefined) parts.push(formatDistance(draft.distance));
-  if (draft.duration !== undefined) parts.push(formatDuration(draft.duration));
-  if (draft.goalKind === "OPEN") parts.push(goalName("OPEN").toLowerCase());
-  if (draft.sendOff !== undefined) parts.push(`↻ ${formatDuration(draft.sendOff)}`);
-  if (draft.recovery !== undefined) parts.push(`+ ${formatDuration(draft.recovery)}`);
-  return parts.join(" ");
-}
-
-export function blockHeading(draft: BlockDraft, index: number): string {
-  if (draft.label !== undefined && draft.label !== "") return draft.label;
-  if (draft.kind !== undefined && draft.kind !== "INTERVAL") return blockKindName(draft.kind);
-  return t("block.untitled", { index: index + 1 });
+/** The label a field carries in the step editor, and the name a missing one goes by. */
+export function fieldName(id: QuestionId, draft: BlockDraft, sport: string): string {
+  switch (id) {
+    case "kind":
+      return t("field.kind");
+    case "goal":
+      return t("field.goal");
+    case "distance":
+      return t("field.distance");
+    case "duration":
+      return t("field.duration");
+    case "sendOff":
+      return t("question.sendOff");
+    case "repetitions":
+      return t("field.repetitions");
+    case "recovery":
+      return t("question.recovery");
+    case "alert":
+      return t("field.alert");
+    case "alertReading":
+      return t("field.reading");
+    case "alertStyle":
+      return t("field.style");
+    case "alertFrom":
+    case "alertValue": {
+      const metric = draft.alertMetric;
+      if (metric === undefined || metric === "NONE") return t("field.alert");
+      if (
+        metric === "HEART_RATE" &&
+        draft.alert?.style !== "RANGE" &&
+        draft.alertStyle !== "RANGE"
+      ) {
+        return t("field.zone");
+      }
+      return alertName(metric, sport);
+    }
+    case "label":
+      return t("field.label");
+  }
 }
