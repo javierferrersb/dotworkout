@@ -18,7 +18,11 @@ export function ms(duration: number): number {
 export function move(
   node: Element,
   { from, to }: { from: DOMRect; to: DOMRect },
-  { duration }: { duration: number },
+  {
+    delay = 0,
+    duration = 250,
+    easing = cubicOut,
+  }: { delay?: number; duration?: number; easing?: (t: number) => number } = {},
 ): AnimationConfig {
   const dx = from.left - to.left;
   const dy = from.top - to.top;
@@ -26,8 +30,9 @@ export function move(
   const transform = getComputedStyle(node).transform;
   const base = transform === "none" ? "" : transform;
   return {
+    delay,
     duration,
-    easing: cubicOut,
+    easing,
     css: (_t, u) => `transform: ${base} translate(${u * dx}px, ${u * dy}px);`,
   };
 }
