@@ -67,6 +67,33 @@
   let style = $derived(targetStyle(draft));
   let ends = $derived(rangeEnds(draft));
 
+  /**
+   * The fields on screen, each keyed by what it shows rather than by its
+   * question. Switching Zone to Range swaps the zone picker for the range
+   * entry, and keying them apart lets one slide out while the other slides in
+   * instead of the old one vanishing on the spot.
+   */
+  let shown = $derived(
+    fields.flatMap((question) => {
+      const key = shownAs(question);
+      return key === undefined ? [] : [{ question, key }];
+    }),
+  );
+
+  function shownAs(question: Question): string | undefined {
+    switch (question.id) {
+      case "alertFrom":
+        return metric === undefined ? undefined : "range";
+      case "alertValue":
+        if (style === "RANGE" || metric === undefined) return undefined;
+        return question.form.type === "choice" ? "zone" : "target";
+      case "label":
+        return question.form.type === "text" ? "label" : undefined;
+      default:
+        return question.id;
+    }
+  }
+
   let kindOptions = $derived(
     session.kindsAt(index).map((kind) => ({
       value: kind,
@@ -208,7 +235,7 @@
     />
   </FieldRow>
 
-  {#each fields as question (question.id)}
+  {#each shown as { question, key } (key)}
     {@const label = fieldName(question.id, draft, sport)}
     {@const note = questionNote(question)}
     <div class="field" transition:slide={{ duration: ms(180) }}>
@@ -427,10 +454,6 @@
      that slides in or out takes its spacing with it instead of jumping. */
   .field {
     padding-top: 14px;
-  }
-
-  .field:empty {
-    display: none;
   }
 
   .range {
