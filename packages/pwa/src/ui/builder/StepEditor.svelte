@@ -1,5 +1,6 @@
 <script lang="ts">
   import { tick } from "svelte";
+  import { slide } from "svelte/transition";
   import { ArrowDown, ArrowUp, Copy, Trash2 } from "@lucide/svelte";
   import type { CompositionSession, Step } from "../../application/compositionSession.svelte.js";
   import {
@@ -38,6 +39,7 @@
   import { keys } from "../../i18n/keys.svelte.js";
   import { t } from "../../i18n/locale.svelte.js";
   import Kbd from "../Kbd.svelte";
+  import { ms } from "../motion.js";
   import CountEntry from "./CountEntry.svelte";
   import DistanceEntry from "./DistanceEntry.svelte";
   import Entry from "./Entry.svelte";
@@ -209,163 +211,167 @@
   {#each fields as question (question.id)}
     {@const label = fieldName(question.id, draft, sport)}
     {@const note = questionNote(question)}
-    {#if question.id === "goal"}
-      <FieldRow {label} field="goal" missing={missing(question)}>
-        <Segmented
-          onpick={advance}
-          {label}
-          options={options(question)}
-          selected={draft.goalKind}
-          onselect={(value) => edit((current) => changeGoal(current, value as GoalKind))}
-        />
-      </FieldRow>
-    {:else if question.id === "distance"}
-      <FieldRow {label} field="distance" missing={missing(question)}>
-        <DistanceEntry
-          {label}
-          distance={draft.distance}
-          fallbackUnit={session.activity.defaultDistanceUnit}
-          oncommit={(value) => edit((current) => withDistance(current, value), "distance")}
-        />
-      </FieldRow>
-    {:else if question.id === "duration" || question.id === "sendOff" || question.id === "recovery"}
-      {@const field = question.id}
-      <FieldRow {label} {field} optional={question.optional} missing={missing(question)} {note}>
-        <Entry
-          value={durationText(durationOf(field))}
-          {label}
-          placeholder={"placeholder" in question.form ? question.form.placeholder : ""}
-          required={!question.optional}
-          inputmode="numeric"
-          size="short"
-          read={(text) => readClock(field, text)}
-        />
-      </FieldRow>
-    {:else if question.id === "repetitions"}
-      <FieldRow {label} field="repetitions" missing={missing(question)}>
-        <CountEntry
-          {label}
-          count={draft.repetitions}
-          placeholder="8"
-          oncommit={(value) => edit((current) => withRepetitions(current, value), "repetitions")}
-        />
-      </FieldRow>
-    {:else if question.id === "alert"}
-      <FieldRow {label} field="alert" optional>
-        <Segmented
-          onpick={advance}
-          {label}
-          options={options(question)}
-          selected={draft.alertMetric ?? "NONE"}
-          onselect={(value) =>
-            edit((current) => withTarget(current, value as AlertMetric | "NONE"))}
-        />
-      </FieldRow>
-    {:else if question.id === "alertReading"}
-      <FieldRow {label} field="alertReading" {note}>
-        <Segmented
-          onpick={advance}
-          {label}
-          options={options(question)}
-          selected={draft.alertReading}
-          onselect={(value) => edit((current) => withReading(current, value as AlertReading))}
-        />
-      </FieldRow>
-    {:else if question.id === "alertStyle"}
-      <FieldRow {label} field="alertStyle">
-        <Segmented
-          onpick={advance}
-          {label}
-          options={options(question)}
-          selected={style}
-          onselect={(value) => edit((current) => withStyle(current, value as AlertStyle))}
-        />
-      </FieldRow>
-    {:else if question.id === "alertFrom" && metric !== undefined}
-      <FieldRow
-        label={t("field.range")}
-        field="range"
-        missing={draft.alert === undefined}
-        note={metric === "SPEED" ? undefined : note}
-      >
-        <div class="range">
-          <Entry
-            value={targetText(metric, ends.from, sport)}
-            label={t("question.from")}
-            placeholder={"placeholder" in question.form ? question.form.placeholder : ""}
-            required
-            inputmode="decimal"
-            size="short"
-            read={(text) =>
-              readNumber(text, (value) =>
-                edit((current) => withBound(current, "from", value), "from"),
-              )}
-          />
-          <span class="dash">–</span>
-          <Entry
-            value={targetText(metric, ends.to, sport)}
-            label={t("question.to")}
-            required
-            inputmode="decimal"
-            size="short"
-            suffix={targetUnit(metric, sport)}
-            read={(text) =>
-              readNumber(text, (value) => edit((current) => withBound(current, "to", value), "to"))}
-          />
-        </div>
-      </FieldRow>
-    {:else if question.id === "alertValue" && style !== "RANGE" && metric !== undefined}
-      {#if question.form.type === "choice"}
-        <FieldRow {label} field="zone" missing={missing(question)} {note}>
+    <div class="field" transition:slide={{ duration: ms(180) }}>
+      {#if question.id === "goal"}
+        <FieldRow {label} field="goal" missing={missing(question)}>
           <Segmented
             onpick={advance}
             {label}
             options={options(question)}
-            selected={draft.alert?.metric === "HEART_RATE" && draft.alert.style === "ZONE"
-              ? String(draft.alert.zone)
-              : undefined}
-            onselect={(value) => edit((current) => withZone(current, Number(value)))}
+            selected={draft.goalKind}
+            onselect={(value) => edit((current) => changeGoal(current, value as GoalKind))}
           />
         </FieldRow>
-      {:else}
-        <FieldRow {label} field="target" missing={missing(question)}>
+      {:else if question.id === "distance"}
+        <FieldRow {label} field="distance" missing={missing(question)}>
+          <DistanceEntry
+            {label}
+            distance={draft.distance}
+            fallbackUnit={session.activity.defaultDistanceUnit}
+            oncommit={(value) => edit((current) => withDistance(current, value), "distance")}
+          />
+        </FieldRow>
+      {:else if question.id === "duration" || question.id === "sendOff" || question.id === "recovery"}
+        {@const field = question.id}
+        <FieldRow {label} {field} optional={question.optional} missing={missing(question)} {note}>
           <Entry
-            value={targetText(metric, targetValue(draft), sport)}
+            value={durationText(durationOf(field))}
             {label}
             placeholder={"placeholder" in question.form ? question.form.placeholder : ""}
-            required
-            inputmode="decimal"
+            required={!question.optional}
+            inputmode="numeric"
             size="short"
-            suffix={targetUnit(metric, sport)}
-            read={(text) =>
-              readNumber(text, (value) => edit((current) => withValue(current, value), "target"))}
+            read={(text) => readClock(field, text)}
           />
         </FieldRow>
+      {:else if question.id === "repetitions"}
+        <FieldRow {label} field="repetitions" missing={missing(question)}>
+          <CountEntry
+            {label}
+            count={draft.repetitions}
+            placeholder="8"
+            oncommit={(value) => edit((current) => withRepetitions(current, value), "repetitions")}
+          />
+        </FieldRow>
+      {:else if question.id === "alert"}
+        <FieldRow {label} field="alert" optional>
+          <Segmented
+            onpick={advance}
+            {label}
+            options={options(question)}
+            selected={draft.alertMetric ?? "NONE"}
+            onselect={(value) =>
+              edit((current) => withTarget(current, value as AlertMetric | "NONE"))}
+          />
+        </FieldRow>
+      {:else if question.id === "alertReading"}
+        <FieldRow {label} field="alertReading" {note}>
+          <Segmented
+            onpick={advance}
+            {label}
+            options={options(question)}
+            selected={draft.alertReading}
+            onselect={(value) => edit((current) => withReading(current, value as AlertReading))}
+          />
+        </FieldRow>
+      {:else if question.id === "alertStyle"}
+        <FieldRow {label} field="alertStyle">
+          <Segmented
+            onpick={advance}
+            {label}
+            options={options(question)}
+            selected={style}
+            onselect={(value) => edit((current) => withStyle(current, value as AlertStyle))}
+          />
+        </FieldRow>
+      {:else if question.id === "alertFrom" && metric !== undefined}
+        <FieldRow
+          label={t("field.range")}
+          field="range"
+          missing={draft.alert === undefined}
+          note={metric === "SPEED" ? undefined : note}
+        >
+          <div class="range">
+            <Entry
+              value={targetText(metric, ends.from, sport)}
+              label={t("question.from")}
+              placeholder={"placeholder" in question.form ? question.form.placeholder : ""}
+              required
+              inputmode="decimal"
+              size="short"
+              read={(text) =>
+                readNumber(text, (value) =>
+                  edit((current) => withBound(current, "from", value), "from"),
+                )}
+            />
+            <span class="dash">–</span>
+            <Entry
+              value={targetText(metric, ends.to, sport)}
+              label={t("question.to")}
+              required
+              inputmode="decimal"
+              size="short"
+              suffix={targetUnit(metric, sport)}
+              read={(text) =>
+                readNumber(text, (value) =>
+                  edit((current) => withBound(current, "to", value), "to"),
+                )}
+            />
+          </div>
+        </FieldRow>
+      {:else if question.id === "alertValue" && style !== "RANGE" && metric !== undefined}
+        {#if question.form.type === "choice"}
+          <FieldRow {label} field="zone" missing={missing(question)} {note}>
+            <Segmented
+              onpick={advance}
+              {label}
+              options={options(question)}
+              selected={draft.alert?.metric === "HEART_RATE" && draft.alert.style === "ZONE"
+                ? String(draft.alert.zone)
+                : undefined}
+              onselect={(value) => edit((current) => withZone(current, Number(value)))}
+            />
+          </FieldRow>
+        {:else}
+          <FieldRow {label} field="target" missing={missing(question)}>
+            <Entry
+              value={targetText(metric, targetValue(draft), sport)}
+              {label}
+              placeholder={"placeholder" in question.form ? question.form.placeholder : ""}
+              required
+              inputmode="decimal"
+              size="short"
+              suffix={targetUnit(metric, sport)}
+              read={(text) =>
+                readNumber(text, (value) => edit((current) => withValue(current, value), "target"))}
+            />
+          </FieldRow>
+        {/if}
+      {:else if question.id === "label" && question.form.type === "text"}
+        <FieldRow {label} field="label" optional {note}>
+          <Entry
+            value={draft.label ?? ""}
+            {label}
+            size="wide"
+            read={(text) => edit((current) => withLabel(current, text), "label")}
+          />
+          <div class="suggestions">
+            {#each question.form.suggestions as key (key)}
+              {@const word = t(key)}
+              <button
+                type="button"
+                class="chip"
+                class:on={draft.label === word}
+                onclick={() =>
+                  edit((current) => withLabel(current, current.label === word ? "" : word))}
+              >
+                {word}
+              </button>
+            {/each}
+          </div>
+        </FieldRow>
       {/if}
-    {:else if question.id === "label" && question.form.type === "text"}
-      <FieldRow {label} field="label" optional {note}>
-        <Entry
-          value={draft.label ?? ""}
-          {label}
-          size="wide"
-          read={(text) => edit((current) => withLabel(current, text), "label")}
-        />
-        <div class="suggestions">
-          {#each question.form.suggestions as key (key)}
-            {@const word = t(key)}
-            <button
-              type="button"
-              class="chip"
-              class:on={draft.label === word}
-              onclick={() =>
-                edit((current) => withLabel(current, current.label === word ? "" : word))}
-            >
-              {word}
-            </button>
-          {/each}
-        </div>
-      </FieldRow>
-    {/if}
+    </div>
   {/each}
 
   <footer>
@@ -413,9 +419,18 @@
 <style>
   .editor {
     display: grid;
-    gap: 14px;
     padding: 16px 16px 14px;
     border-top: 1px solid var(--hairline);
+  }
+
+  /* The space above each field lives inside it, not in a grid gap, so a field
+     that slides in or out takes its spacing with it instead of jumping. */
+  .field {
+    padding-top: 14px;
+  }
+
+  .field:empty {
+    display: none;
   }
 
   .range {
@@ -467,7 +482,7 @@
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    margin-top: 2px;
+    margin-top: 16px;
     padding-top: 12px;
     border-top: 1px solid var(--hairline);
   }
