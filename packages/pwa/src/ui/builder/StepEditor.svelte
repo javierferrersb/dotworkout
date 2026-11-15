@@ -392,8 +392,8 @@
             read={(text) => edit((current) => withLabel(current, text), "label")}
           />
           <div class="suggestions">
-            {#each question.form.suggestions as key (key)}
-              {@const word = t(key)}
+            {#each question.form.suggestions as suggestion (suggestion)}
+              {@const word = t(suggestion)}
               <button
                 type="button"
                 class="chip"
