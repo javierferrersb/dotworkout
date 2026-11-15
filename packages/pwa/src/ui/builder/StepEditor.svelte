@@ -214,7 +214,7 @@
     const request = session.focusRequest;
     if (request === undefined || request.id !== id) return;
     void tick().then(() => {
-      const first = root?.querySelector("[data-field] + [data-field]");
+      const first = root?.querySelector(".field [data-field]");
       const waiting = root?.querySelector("[data-field][data-missing='true']");
       focusField(focusable(request.from === "start" ? first : (waiting ?? first)));
       session.focusRequest = undefined;
