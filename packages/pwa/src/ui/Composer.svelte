@@ -1,6 +1,5 @@
 <script lang="ts">
   import { tick } from "svelte";
-  import { flip } from "svelte/animate";
   import { fly } from "svelte/transition";
   import { Info, Languages, Monitor, Moon, Plus, Sun } from "@lucide/svelte";
   import { toMeters } from "@dotworkout/domain";
@@ -20,7 +19,7 @@
   import Kbd from "./Kbd.svelte";
   import Menu from "./Menu.svelte";
   import { modals } from "./modal.svelte.js";
-  import { ms } from "./motion.js";
+  import { move, ms } from "./motion.js";
   import { toasts } from "./toast.svelte.js";
 
   interface Props {
@@ -274,7 +273,7 @@
           {#each session.steps as entry, index (entry.id)}
             <li
               class="slot"
-              animate:flip={{ duration: ms(220) }}
+              animate:move={{ duration: ms(220) }}
               in:fly={{ y: -6, duration: ms(200) }}
             >
               <StepRow {session} {entry} {index} onremove={remove} onclose={close} />
