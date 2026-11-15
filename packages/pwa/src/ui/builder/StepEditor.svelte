@@ -155,7 +155,11 @@
   }
 
   function rows(): HTMLElement[] {
-    return root === undefined ? [] : [...root.querySelectorAll<HTMLElement>("[data-field]")];
+    if (root === undefined) return [];
+    // Skip fields that are sliding out: they are inert and about to go.
+    return [...root.querySelectorAll<HTMLElement>("[data-field]")].filter(
+      (row) => row.closest("[inert]") === null,
+    );
   }
 
   function move(from: HTMLElement, by: 1 | -1): boolean {
@@ -214,8 +218,8 @@
     const request = session.focusRequest;
     if (request === undefined || request.id !== id) return;
     void tick().then(() => {
-      const first = root?.querySelector(".field [data-field]");
-      const waiting = root?.querySelector("[data-field][data-missing='true']");
+      const first = root?.querySelector(".field:not([inert]) [data-field]");
+      const waiting = root?.querySelector(".field:not([inert]) [data-field][data-missing='true']");
       focusField(focusable(request.from === "start" ? first : (waiting ?? first)));
       session.focusRequest = undefined;
     });
@@ -238,7 +242,12 @@
   {#each shown as { question, key } (key)}
     {@const label = fieldName(question.id, draft, sport)}
     {@const note = questionNote(question)}
-    <div class="field" transition:slide={{ duration: ms(180) }}>
+    <div
+      class="field"
+      transition:slide={{ duration: ms(180) }}
+      onoutrostart={(event) => (event.currentTarget.inert = true)}
+      onintrostart={(event) => (event.currentTarget.inert = false)}
+    >
       {#if question.id === "goal"}
         <FieldRow {label} field="goal" missing={missing(question)}>
           <Segmented
