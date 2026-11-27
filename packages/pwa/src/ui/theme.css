@@ -112,6 +112,18 @@ button {
   cursor: pointer;
 }
 
+/* Controls never double-tap to zoom, so the browser can fire a tap at once
+   instead of waiting to see whether a second one follows. */
+button,
+a,
+input,
+select,
+label,
+[role="button"],
+[role="radio"] {
+  touch-action: manipulation;
+}
+
 button:active:not(:disabled) {
   opacity: 0.72;
 }
