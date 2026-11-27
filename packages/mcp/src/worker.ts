@@ -1,4 +1,5 @@
-import { handle, type ServerOptions } from "./http.js";
+import type { McpHttpHandler } from "@modelcontextprotocol/server";
+import { createHandler } from "./http.js";
 
 /**
  * Cloudflare Workers entry point.
@@ -15,6 +16,8 @@ interface Env {
 
 const DEFAULT_SITE = "https://workout.javierferrersb.dev";
 
+let handler: McpHttpHandler | undefined;
+
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
@@ -27,9 +30,9 @@ export default {
       return new Response("Not found. The MCP endpoint is /mcp.", { status: 404 });
     }
 
-    const options: ServerOptions = { site: env.DOTWORKOUT_SITE ?? DEFAULT_SITE };
+    handler ??= createHandler({ site: env.DOTWORKOUT_SITE ?? DEFAULT_SITE });
     try {
-      return await handle(request, options);
+      return await handler.fetch(request);
     } catch (error) {
       return new Response(JSON.stringify({ error: (error as Error).message }), {
         status: 500,

@@ -17,9 +17,10 @@
     "node": ">=22"
   },
   "scripts": {
-    "generate": "npm run generate:proto && npm run generate:constraints",
+    "generate": "npm run generate:proto && npm run generate:constraints && npm run generate:skills",
     "generate:proto": "buf generate",
     "generate:constraints": "node scripts/gen-compatibility.mjs",
+    "generate:skills": "node scripts/gen-skills.mjs",
     "generate:icons": "node scripts/gen-icons.mjs apple 10",
     "build": "tsc -b packages/codec packages/domain packages/notation packages/mcp packages/pwa/tsconfig.test.json",
     "clean": "tsc -b --clean packages/codec packages/domain packages/notation packages/mcp packages/pwa/tsconfig.test.json",

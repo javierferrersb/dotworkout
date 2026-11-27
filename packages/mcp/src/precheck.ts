@@ -27,6 +27,10 @@ const METRIC_OF: Record<string, string> = {
   powerRange: "POWER",
   speed: "SPEED",
   speedRange: "SPEED",
+  pace: "SPEED",
+  paceRange: "SPEED",
+  kmh: "SPEED",
+  kmhRange: "SPEED",
 };
 
 function goalKind(step: object, sendOff: string | undefined): string {
@@ -54,6 +58,16 @@ export function precheck(spec: WorkoutSpec): Precheck {
 
   const checkGoal = (label: string, step: object, sendOff: string | undefined) => {
     const goal = goalKind(step, sendOff);
+    // "400" on a run is 400 km: the sport's default unit, not metres. Nobody
+    // means that, and the file would be valid, so nothing else would say so.
+    if ("distance" in step && typeof step.distance === "string") {
+      const bare = /^\s*(\d+(?:\.\d+)?)\s*$/.exec(step.distance);
+      if (bare !== null && sport.defaultUnit !== "m" && Number(bare[1]) >= 50) {
+        warnings.push(
+          `"${step.distance}" (${label}) is ${bare[1]} ${sport.defaultUnit}, because ${spec.activity} defaults to ${sport.defaultUnit}. Write "${bare[1]}m" if you meant metres.`,
+        );
+      }
+    }
     if (!can.goals.includes(goal as (typeof can.goals)[number])) {
       errors.push(`${where} has no ${goal} goal (${label}). It offers: ${can.goals.join(", ")}`);
     }

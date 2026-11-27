@@ -18,6 +18,7 @@ export default tseslint.config(
       "**/.wrangler/**",
       "packages/codec/src/gen/**",
       "packages/domain/src/generated/**",
+      "packages/mcp/src/skills.generated.ts",
     ],
   },
   js.configs.recommended,
