@@ -79,15 +79,33 @@
       const deleting = event instanceof InputEvent && event.inputType.startsWith("delete");
       const shaped = shape(text, deleting);
       if (shaped !== text) {
-        // Set the element too so the caret lands at the end of the new text.
+        // Set the element too, and keep the caret in front of the same digits:
+        // typing at the end stays at the end, and an edit mid-text stays put.
+        const after = digitsIn(text.slice(input.selectionEnd ?? text.length));
         text = shaped;
         input.value = shaped;
-        input.setSelectionRange(shaped.length, shaped.length);
+        const caret = caretBefore(shaped, after);
+        input.setSelectionRange(caret, caret);
       }
     }
     // Values land as they are typed so the step line and the total follow,
     // but a complaint waits until the person has finished, unless one is up.
     attempt(problem === undefined);
+  }
+
+  function digitsIn(part: string): number {
+    return part.replace(/\D/g, "").length;
+  }
+
+  /** Where the caret goes in `shaped` so that `after` digits follow it. */
+  function caretBefore(shaped: string, after: number): number {
+    if (after === 0) return shaped.length;
+    let seen = 0;
+    for (let index = shaped.length - 1; index >= 0; index--) {
+      if (/\d/.test(shaped[index] ?? "")) seen++;
+      if (seen === after) return index;
+    }
+    return 0;
   }
 
   function onfocus() {
