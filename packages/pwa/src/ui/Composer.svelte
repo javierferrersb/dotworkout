@@ -245,6 +245,7 @@
           placeholder={defaultTitle}
           maxlength="60"
           spellcheck="false"
+          enterkeyhint="done"
           onblur={settleTitle}
           onkeydown={(event) => {
             if (event.key === "Enter") event.currentTarget.blur();

@@ -397,6 +397,7 @@
             value={draft.label ?? ""}
             {label}
             size="wide"
+            enterkeyhint="done"
             read={(text) => edit((current) => withLabel(current, text), "label")}
           />
           <div class="suggestions">

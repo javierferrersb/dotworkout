@@ -11,6 +11,8 @@
     placeholder?: string;
     required?: boolean;
     inputmode?: "text" | "numeric" | "decimal";
+    /** What Enter does here, so a phone's return key can say it: next field, or finish. */
+    enterkeyhint?: "next" | "done";
     size?: "short" | "medium" | "wide";
     suffix?: string;
     /** Takes the trimmed text, empty to clear; throws a FieldError when it cannot. */
@@ -25,6 +27,7 @@
     placeholder = "",
     required = false,
     inputmode = "text",
+    enterkeyhint = "next",
     size = "medium",
     suffix,
     read,
@@ -114,6 +117,7 @@
       bind:value={text}
       {placeholder}
       {inputmode}
+      {enterkeyhint}
       aria-label={label}
       aria-invalid={problem !== undefined}
       aria-describedby={problem === undefined ? undefined : problemId}
