@@ -82,6 +82,14 @@ describe("a value reads back as it was typed", () => {
     strictEqual(typedClock("99:59:591"), "99:59:59");
   });
 
+  it("empties a clock when deleting leaves only zeros", () => {
+    strictEqual(typedClock("0:0", true), "");
+    strictEqual(typedClock("0:00", true), "");
+    strictEqual(typedClock("0:1", true), "0:01");
+    strictEqual(typedClock("5:3", true), "0:53");
+    strictEqual(typedClock("0", false), "0:00");
+  });
+
   it("leaves an empty field and text that is not only digits alone", () => {
     strictEqual(typedClock(""), "");
     strictEqual(typedClock(":"), "");

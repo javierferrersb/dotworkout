@@ -17,8 +17,8 @@
     suffix?: string;
     /** Takes the trimmed text, empty to clear; throws a FieldError when it cannot. */
     read: (text: string) => void;
-    /** Rewrites the text as it is typed, such as digits into a clock. */
-    shape?: (text: string) => string;
+    /** Rewrites the text as it is typed, such as digits into a clock; told when the edit deleted text. */
+    shape?: (text: string, deleting: boolean) => string;
     trailing?: Snippet;
   }
   let {
@@ -74,9 +74,10 @@
     }
   }
 
-  function oninput() {
+  function oninput(event: Event) {
     if (shape !== undefined) {
-      const shaped = shape(text);
+      const deleting = event instanceof InputEvent && event.inputType.startsWith("delete");
+      const shaped = shape(text, deleting);
       if (shaped !== text) {
         // Set the element too so the caret lands at the end of the new text.
         text = shaped;
