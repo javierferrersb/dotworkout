@@ -14,6 +14,7 @@
     targetText,
     targetValue,
     typedClock,
+    typesPace,
     withBound,
     withDistance,
     withDuration,
@@ -67,6 +68,8 @@
   );
   let style = $derived(targetStyle(draft));
   let ends = $derived(rangeEnds(draft));
+  // A running pace is a clock, so it gets the same number pad and layout as a time.
+  let paced = $derived(metric !== undefined && typesPace(metric, sport));
 
   /**
    * The fields on screen, each keyed by what it shows rather than by its
@@ -335,7 +338,8 @@
               label={t("question.from")}
               placeholder={"placeholder" in question.form ? question.form.placeholder : ""}
               required
-              inputmode="decimal"
+              inputmode={paced ? "numeric" : "decimal"}
+              shape={paced ? typedClock : undefined}
               size="short"
               read={(text) =>
                 readNumber(text, (value) =>
@@ -347,7 +351,8 @@
               value={targetText(metric, ends.to, sport)}
               label={t("question.to")}
               required
-              inputmode="decimal"
+              inputmode={paced ? "numeric" : "decimal"}
+              shape={paced ? typedClock : undefined}
               size="short"
               suffix={targetUnit(metric, sport)}
               read={(text) =>
@@ -377,7 +382,8 @@
               {label}
               placeholder={"placeholder" in question.form ? question.form.placeholder : ""}
               required
-              inputmode="decimal"
+              inputmode={paced ? "numeric" : "decimal"}
+              shape={paced ? typedClock : undefined}
               size="short"
               suffix={targetUnit(metric, sport)}
               read={(text) =>

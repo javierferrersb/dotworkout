@@ -15,6 +15,7 @@ import {
   readTarget,
   targetText,
   typedClock,
+  typesPace,
   withBound,
   withReading,
   withTarget,
@@ -100,6 +101,14 @@ describe("a value reads back as it was typed", () => {
   it("round-trips a running pace instead of exposing metres per second", () => {
     const pace = readTarget("SPEED", "5:00", "RUNNING");
     strictEqual(targetText("SPEED", pace, "RUNNING"), "5:00");
+  });
+
+  it("types a running pace as a clock, and other speeds as plain numbers", () => {
+    strictEqual(typesPace("SPEED", "RUNNING"), true);
+    strictEqual(typesPace("SPEED", "CYCLING"), false);
+    strictEqual(typesPace("HEART_RATE", "RUNNING"), false);
+    const pace = readTarget("SPEED", typedClock("530"), "RUNNING");
+    strictEqual(targetText("SPEED", pace, "RUNNING"), "5:30");
   });
 
   it("round-trips a cycling speed in km/h", () => {

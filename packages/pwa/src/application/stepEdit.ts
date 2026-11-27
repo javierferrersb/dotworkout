@@ -277,6 +277,11 @@ export function readCount(text: string): number {
   return value;
 }
 
+/** Whether a target is typed as a clock, a running pace such as 5:00 per km. */
+export function typesPace(metric: AlertMetric, sport: string): boolean {
+  return metric === "SPEED" && showsPace(sport);
+}
+
 /** A target number as typed: a pace for running, km/h for other speeds, a whole number otherwise. */
 export function readTarget(metric: AlertMetric, text: string, sport: string): number {
   const clean = normalised(text);
