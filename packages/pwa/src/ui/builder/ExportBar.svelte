@@ -13,6 +13,7 @@
   import SendPanel from "../SendPanel.svelte";
   import { menuKeydown } from "../menuKeys.js";
   import { ms } from "../motion.js";
+  import { isIphone } from "../platform.js";
   import { toasts } from "../toast.svelte.js";
 
   const HELP_KEY = "dotworkout.installHelpSeen";
@@ -139,10 +140,13 @@
           <MessageCircle size={15} strokeWidth={2} />
           {t("builder.whatsapp")}
         </button>
-        <button bind:this={shareItems[1]} type="button" role="menuitem" onclick={scan}>
-          <QrCode size={15} strokeWidth={2} />
-          {t("rail.scan")}
-        </button>
+        <!-- The QR code carries the workout to the phone; on that phone it has nowhere to go. -->
+        {#if !isIphone}
+          <button bind:this={shareItems[1]} type="button" role="menuitem" onclick={scan}>
+            <QrCode size={15} strokeWidth={2} />
+            {t("rail.scan")}
+          </button>
+        {/if}
       </div>
     {/if}
   </div>
