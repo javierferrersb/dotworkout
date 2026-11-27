@@ -15,8 +15,8 @@ real device. Let the tools do it.
 
 `create_workout` returns a link. **The workout is inside the link**: it is
 encoded in the part after `#w=`, so nothing is stored anywhere and the link is
-the only copy. Opening it on the iPhone loads the workout in the composer with a
-Download button, and from there it goes to the Watch.
+the only copy. Opening it on the iPhone shows the workout with a **Save the workout**
+button, and from there it goes to the Watch.
 
 So every reply after `create_workout` must contain the full link, unchanged, on
 its own line. Do not shorten it, retype it, put "[link]" in its place, or leave
@@ -28,7 +28,7 @@ A good reply:
 > Here's your Norwegian 4×4: a 10 minute warm up, four 4 minute intervals in
 > zone 4 with 3 minute jogs, and a 5 minute cool down.
 >
-> Open this on your iPhone and tap Download:
+> Open this on your iPhone and tap Save the workout:
 >
 > https://workout.javierferrersb.dev/#w=…
 >

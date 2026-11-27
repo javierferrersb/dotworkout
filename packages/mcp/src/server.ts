@@ -48,7 +48,7 @@ const READ_ONLY = { readOnlyHint: true, idempotentHint: true, openWorldHint: fal
  * it; either way the workout is gone, because the link is the workout.
  */
 const LINK_RULE =
-  "Give the user this link in full, on its own line. The workout is inside the link, so a shortened, retyped or omitted link loses it. Opening it on their iPhone loads the workout with a Download button; the Workout app takes it from there.";
+  "Give the user this link in full, on its own line. The workout is inside the link, so a shortened, retyped or omitted link loses it. Opening it on their iPhone shows the workout with a “Save the workout” button; once saved, the Workout app takes it from there.";
 
 export const INSTRUCTIONS = `dotworkout builds custom workouts for the Apple Watch Workout app (.workout files): intervals, warm ups, cool downs, repeats, swim send-offs, and heart rate, pace, power or cadence targets.
 
@@ -204,8 +204,8 @@ export async function buildServer(options: ServerOptions): Promise<McpServer> {
       title: "Create a workout",
       description:
         local === undefined
-          ? "Build a workout and return a link that opens it on the user's iPhone, ready to download into the Workout app. Always show the user the full link. Check list_activities first for what the activity supports."
-          : "Build a workout and return a link (and a QR code) that opens it on the user's iPhone, ready to download into the Workout app; give outputPath to also write the .workout file. Always show the user the full link. Check list_activities first for what the activity supports.",
+          ? "Build a workout and return a link that opens it on the user's iPhone, ready to save into the Workout app. Always show the user the full link. Check list_activities first for what the activity supports."
+          : "Build a workout and return a link (and a QR code) that opens it on the user's iPhone, ready to save into the Workout app; give outputPath to also write the .workout file. Always show the user the full link. Check list_activities first for what the activity supports.",
       inputSchema: createInput,
       outputSchema: createOutput,
       annotations:

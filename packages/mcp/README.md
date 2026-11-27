@@ -52,7 +52,7 @@ puts the rule right above the link. A reply looks like this:
 
 > Here's your Norwegian 4×4: a 10 minute warm up, four 4 minute intervals in
 > zone 4 with 3 minute jogs, and a 5 minute cool down. Open this on your iPhone
-> and tap Download:
+> and tap Save the workout:
 >
 > https://workout.javierferrersb.dev/#w=SiREODRGMDU5RC04NzM1…&n=Norwegian%204%C3%974
 
