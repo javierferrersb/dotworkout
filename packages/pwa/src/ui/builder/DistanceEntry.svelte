@@ -112,4 +112,13 @@
     outline: 2px solid var(--accent);
     outline-offset: 1px;
   }
+
+  /* On touch screens: 16px, as iOS zooms the page into a field under 16px and
+     leaves it zoomed; and a little taller, as it sits inside a 44pt field. */
+  @media (pointer: coarse) {
+    select {
+      height: 34px;
+      font-size: 16px;
+    }
+  }
 </style>

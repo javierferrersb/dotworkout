@@ -277,6 +277,11 @@ export function readCount(text: string): number {
   return value;
 }
 
+/** Whether a target is typed as a clock, a running pace such as 5:00 per km. */
+export function typesPace(metric: AlertMetric, sport: string): boolean {
+  return metric === "SPEED" && showsPace(sport);
+}
+
 /** A target number as typed: a pace for running, km/h for other speeds, a whole number otherwise. */
 export function readTarget(metric: AlertMetric, text: string, sport: string): number {
   const clean = normalised(text);
@@ -315,6 +320,27 @@ export function clockText(totalSeconds: number): string {
 
 export function durationText(duration: Duration | undefined): string {
   return duration === undefined ? "" : clockText(toSeconds(duration));
+}
+
+/**
+ * A time field's text as it is being typed, laid out as a clock read from the
+ * right like a microwave timer: 5 → 0:05, 530 → 5:30, 13000 → 1:30:00. A phone's
+ * number pad has no ":", so the digits alone have to be enough. Text with
+ * anything other than digits and ":" (a unit, a decimal) is left as typed.
+ * Deleting down to nothing but zeros empties the field, or backspace would
+ * keep turning 0:0 back into 0:00 and the field could never be cleared.
+ */
+export function typedClock(text: string, deleting = false): string {
+  if (!/^[\d:]*$/.test(text)) return text;
+  const typed = text.replaceAll(":", "");
+  if (typed === "") return "";
+  const significant = typed.replace(/^0+/, "");
+  if (deleting && significant === "") return "";
+  const digits = significant.slice(0, 6).padStart(3, "0");
+  const seconds = digits.slice(-2);
+  const minutes = digits.slice(-4, -2);
+  const hours = digits.slice(0, -4);
+  return hours === "" ? `${Number(minutes)}:${seconds}` : `${Number(hours)}:${minutes}:${seconds}`;
 }
 
 export function targetText(metric: AlertMetric, value: number | undefined, sport: string): string {

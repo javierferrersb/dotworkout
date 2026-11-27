@@ -103,8 +103,10 @@
       box-shadow 120ms var(--ease);
   }
 
-  button:hover:not(.on) {
-    color: var(--text-primary);
+  @media (hover: hover) and (pointer: fine) {
+    button:hover:not(.on) {
+      color: var(--text-primary);
+    }
   }
 
   button.on {
@@ -144,5 +146,14 @@
   .flag {
     margin-left: -4px;
     color: var(--text-tertiary);
+  }
+
+  /* Fingers need about 44pt to hit reliably; with the track's padding a 40pt
+     choice makes a 44pt row. A mouse keeps the compact sizes. */
+  @media (pointer: coarse) {
+    button {
+      min-height: 40px;
+      padding: 0 14px;
+    }
   }
 </style>

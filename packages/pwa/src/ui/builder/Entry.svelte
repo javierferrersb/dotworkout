@@ -11,10 +11,14 @@
     placeholder?: string;
     required?: boolean;
     inputmode?: "text" | "numeric" | "decimal";
+    /** What Enter does here, so a phone's return key can say it: next field, or finish. */
+    enterkeyhint?: "next" | "done";
     size?: "short" | "medium" | "wide";
     suffix?: string;
     /** Takes the trimmed text, empty to clear; throws a FieldError when it cannot. */
     read: (text: string) => void;
+    /** Rewrites the text as it is typed, such as digits into a clock; told when the edit deleted text. */
+    shape?: (text: string, deleting: boolean) => string;
     trailing?: Snippet;
   }
   let {
@@ -23,14 +27,17 @@
     placeholder = "",
     required = false,
     inputmode = "text",
+    enterkeyhint = "next",
     size = "medium",
     suffix,
     read,
+    shape,
     trailing,
   }: Props = $props();
 
   const problemId = `problem-${Math.random().toString(36).slice(2, 9)}`;
 
+  let input: HTMLInputElement;
   let text = $state(untrack(() => value));
   let problem = $state<string | undefined>(undefined);
   let focused = false;
@@ -67,10 +74,50 @@
     }
   }
 
-  function oninput() {
+  function oninput(event: Event) {
+    if (shape !== undefined) {
+      const deleting = event instanceof InputEvent && event.inputType.startsWith("delete");
+      const shaped = shape(text, deleting);
+      if (shaped !== text) {
+        // Set the element too, and keep the caret in front of the same digits:
+        // typing at the end stays at the end, and an edit mid-text stays put.
+        const after = digitsIn(text.slice(input.selectionEnd ?? text.length));
+        text = shaped;
+        input.value = shaped;
+        const caret = caretBefore(shaped, after);
+        input.setSelectionRange(caret, caret);
+      }
+    }
     // Values land as they are typed so the step line and the total follow,
     // but a complaint waits until the person has finished, unless one is up.
     attempt(problem === undefined);
+  }
+
+  function digitsIn(part: string): number {
+    return part.replace(/\D/g, "").length;
+  }
+
+  /** Where the caret goes in `shaped` so that `after` digits follow it. */
+  function caretBefore(shaped: string, after: number): number {
+    if (after === 0) return shaped.length;
+    let seen = 0;
+    for (let index = shaped.length - 1; index >= 0; index--) {
+      if (/\d/.test(shaped[index] ?? "")) seen++;
+      if (seen === after) return index;
+    }
+    return 0;
+  }
+
+  function onfocus() {
+    focused = true;
+    // A clock fills in from the right, so digits typed after the old value
+    // would join it (5:30 then 1 makes 53:01). Select it so typing replaces it;
+    // waiting a tick lets a tap place its caret first, then takes it over.
+    if (shape !== undefined) {
+      setTimeout(() => {
+        if (document.activeElement === input) input.setSelectionRange(0, input.value.length);
+      });
+    }
   }
 
   function onblur() {
@@ -97,15 +144,17 @@
 <div class="entry {size}" class:invalid={problem !== undefined}>
   <div class="box">
     <input
+      bind:this={input}
       bind:value={text}
       {placeholder}
       {inputmode}
+      {enterkeyhint}
       aria-label={label}
       aria-invalid={problem !== undefined}
       aria-describedby={problem === undefined ? undefined : problemId}
       autocomplete="off"
       spellcheck="false"
-      onfocus={() => (focused = true)}
+      {onfocus}
       {oninput}
       {onblur}
       {onkeydown}
@@ -175,6 +224,18 @@
   input::placeholder {
     color: var(--text-tertiary);
     font-weight: 400;
+  }
+
+  @media (pointer: coarse) {
+    /* Fingers need about 44pt to hit reliably; a mouse keeps the compact sizes. */
+    .box {
+      height: 44px;
+    }
+
+    /* iOS zooms the page into a field under 16px and leaves it zoomed. */
+    input {
+      font-size: 16px;
+    }
   }
 
   .suffix {

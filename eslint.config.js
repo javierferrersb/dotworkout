@@ -16,6 +16,10 @@ export default tseslint.config(
       // CI never sees them, but `wrangler dev` leaves them behind and without
       // this they are most of what `npm run lint` reports.
       "**/.wrangler/**",
+      // Coding agents check out whole copies of the repo here. Each has its own
+      // tsconfig, so linting them confuses the TypeScript parser into hundreds
+      // of errors that are not about this checkout.
+      ".claude/worktrees/**",
       "packages/codec/src/gen/**",
       "packages/domain/src/generated/**",
     ],

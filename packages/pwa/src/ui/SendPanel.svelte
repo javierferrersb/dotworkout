@@ -194,8 +194,10 @@
     font-weight: 500;
   }
 
-  .copy:hover {
-    background: var(--bg-raised);
+  @media (hover: hover) and (pointer: fine) {
+    .copy:hover {
+      background: var(--bg-raised);
+    }
   }
 
   .close {
@@ -203,7 +205,9 @@
     color: var(--on-ink);
   }
 
-  .close:hover {
-    background: var(--ink-hover);
+  @media (hover: hover) and (pointer: fine) {
+    .close:hover {
+      background: var(--ink-hover);
+    }
   }
 </style>

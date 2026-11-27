@@ -93,6 +93,9 @@ body {
 
 #app {
   height: 100%;
+  /* Installed, the app draws under a translucent status bar (viewport-fit=cover),
+     so its headers need pushing below it. The inset is 0 in a browser tab. */
+  padding-top: env(safe-area-inset-top);
 }
 
 h1,
@@ -107,6 +110,18 @@ button {
   border: none;
   background: none;
   cursor: pointer;
+}
+
+/* Controls never double-tap to zoom, so the browser can fire a tap at once
+   instead of waiting to see whether a second one follows. */
+button,
+a,
+input,
+select,
+label,
+[role="button"],
+[role="radio"] {
+  touch-action: manipulation;
 }
 
 button:active:not(:disabled) {

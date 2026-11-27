@@ -13,6 +13,8 @@
     targetStyle,
     targetText,
     targetValue,
+    typedClock,
+    typesPace,
     withBound,
     withDistance,
     withDuration,
@@ -66,6 +68,8 @@
   );
   let style = $derived(targetStyle(draft));
   let ends = $derived(rangeEnds(draft));
+  // A running pace is a clock, so it gets the same number pad and layout as a time.
+  let paced = $derived(metric !== undefined && typesPace(metric, sport));
 
   /**
    * The fields on screen, each keyed by what it shows rather than by its
@@ -278,6 +282,7 @@
             inputmode="numeric"
             size="short"
             read={(text) => readClock(field, text)}
+            shape={typedClock}
           />
         </FieldRow>
       {:else if question.id === "repetitions"}
@@ -333,7 +338,8 @@
               label={t("question.from")}
               placeholder={"placeholder" in question.form ? question.form.placeholder : ""}
               required
-              inputmode="decimal"
+              inputmode={paced ? "numeric" : "decimal"}
+              shape={paced ? typedClock : undefined}
               size="short"
               read={(text) =>
                 readNumber(text, (value) =>
@@ -345,7 +351,8 @@
               value={targetText(metric, ends.to, sport)}
               label={t("question.to")}
               required
-              inputmode="decimal"
+              inputmode={paced ? "numeric" : "decimal"}
+              shape={paced ? typedClock : undefined}
               size="short"
               suffix={targetUnit(metric, sport)}
               read={(text) =>
@@ -375,7 +382,8 @@
               {label}
               placeholder={"placeholder" in question.form ? question.form.placeholder : ""}
               required
-              inputmode="decimal"
+              inputmode={paced ? "numeric" : "decimal"}
+              shape={paced ? typedClock : undefined}
               size="short"
               suffix={targetUnit(metric, sport)}
               read={(text) =>
@@ -389,6 +397,7 @@
             value={draft.label ?? ""}
             {label}
             size="wide"
+            enterkeyhint="done"
             read={(text) => edit((current) => withLabel(current, text), "label")}
           />
           <div class="suggestions">
@@ -498,9 +507,11 @@
       color 100ms var(--ease);
   }
 
-  .chip:hover {
-    background: var(--bg-raised);
-    color: var(--text-primary);
+  @media (hover: hover) and (pointer: fine) {
+    .chip:hover {
+      background: var(--bg-raised);
+      color: var(--text-primary);
+    }
   }
 
   .chip.on {
@@ -549,15 +560,19 @@
     padding: 0;
   }
 
-  .ghost:hover,
-  .icon:hover {
-    background: var(--bg-raised);
-    color: var(--text-primary);
+  @media (hover: hover) and (pointer: fine) {
+    .ghost:hover,
+    .icon:hover {
+      background: var(--bg-raised);
+      color: var(--text-primary);
+    }
   }
 
-  .danger:hover {
-    background: color-mix(in srgb, var(--danger) 12%, transparent);
-    color: var(--danger);
+  @media (hover: hover) and (pointer: fine) {
+    .danger:hover {
+      background: color-mix(in srgb, var(--danger) 12%, transparent);
+      color: var(--danger);
+    }
   }
 
   .done {
@@ -575,8 +590,10 @@
     transition: background 120ms var(--ease);
   }
 
-  .done:hover {
-    background: var(--ink-hover);
+  @media (hover: hover) and (pointer: fine) {
+    .done:hover {
+      background: var(--ink-hover);
+    }
   }
 
   @media (max-width: 560px) {
@@ -590,6 +607,33 @@
 
     .done {
       padding: 0 14px;
+    }
+  }
+
+  /* Fingers need about 44pt to hit reliably; a mouse keeps the compact sizes. */
+  @media (pointer: coarse) {
+    .ghost,
+    .done {
+      height: 44px;
+    }
+
+    .icon {
+      width: 44px;
+      height: 44px;
+    }
+
+    .range .dash {
+      padding-top: 12px;
+    }
+
+    /* A row of quick suggestions: a bit under 44pt, spaced so a miss lands on nothing. */
+    .suggestions {
+      gap: 8px;
+    }
+
+    .chip {
+      min-height: 36px;
+      padding: 0 12px;
     }
   }
 </style>

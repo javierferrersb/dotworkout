@@ -14,6 +14,8 @@ import {
   readDuration,
   readTarget,
   targetText,
+  typedClock,
+  typesPace,
   withBound,
   withReading,
   withTarget,
@@ -59,6 +61,47 @@ describe("a value reads back as it was typed", () => {
     strictEqual(durationText(readDuration(durationText(rest))), "1:30");
   });
 
+  it("lays out bare digits as a clock from the right while they are typed", () => {
+    strictEqual(typedClock("5"), "0:05");
+    strictEqual(typedClock("53"), "0:53");
+    strictEqual(typedClock("530"), "5:30");
+    strictEqual(typedClock("1000"), "10:00");
+    strictEqual(typedClock("13000"), "1:30:00");
+  });
+
+  it("keeps laying out a clock as digits are added to or deleted from one", () => {
+    strictEqual(typedClock("0:530"), "5:30");
+    strictEqual(typedClock("5:3"), "0:53");
+    strictEqual(typedClock("10:00:0"), "1:00:00");
+    strictEqual(typedClock("1:30"), "1:30");
+  });
+
+  it("starts a clock from a typed zero and stops at six digits", () => {
+    strictEqual(typedClock("0"), "0:00");
+    strictEqual(typedClock("0:005"), "0:05");
+    strictEqual(typedClock("99:59:591"), "99:59:59");
+  });
+
+  it("empties a clock when deleting leaves only zeros", () => {
+    strictEqual(typedClock("0:0", true), "");
+    strictEqual(typedClock("0:00", true), "");
+    strictEqual(typedClock("0:1", true), "0:01");
+    strictEqual(typedClock("5:3", true), "0:53");
+    strictEqual(typedClock("0", false), "0:00");
+  });
+
+  it("leaves an empty field and text that is not only digits alone", () => {
+    strictEqual(typedClock(""), "");
+    strictEqual(typedClock(":"), "");
+    strictEqual(typedClock("90s"), "90s");
+    strictEqual(typedClock("1.5"), "1.5");
+  });
+
+  it("reads a laid-out clock as the time it shows", () => {
+    strictEqual(durationText(readDuration(typedClock("130"))), "1:30");
+    strictEqual(durationText(readDuration(typedClock("90"))), "1:30");
+  });
+
   it("writes an hour-long step with hours", () => {
     strictEqual(durationText({ value: 75, unit: "min" }), "1:15:00");
   });
@@ -66,6 +109,14 @@ describe("a value reads back as it was typed", () => {
   it("round-trips a running pace instead of exposing metres per second", () => {
     const pace = readTarget("SPEED", "5:00", "RUNNING");
     strictEqual(targetText("SPEED", pace, "RUNNING"), "5:00");
+  });
+
+  it("types a running pace as a clock, and other speeds as plain numbers", () => {
+    strictEqual(typesPace("SPEED", "RUNNING"), true);
+    strictEqual(typesPace("SPEED", "CYCLING"), false);
+    strictEqual(typesPace("HEART_RATE", "RUNNING"), false);
+    const pace = readTarget("SPEED", typedClock("530"), "RUNNING");
+    strictEqual(targetText("SPEED", pace, "RUNNING"), "5:30");
   });
 
   it("round-trips a cycling speed in km/h", () => {

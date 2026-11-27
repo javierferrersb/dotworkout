@@ -177,9 +177,11 @@
       color 120ms var(--ease);
   }
 
-  .source:hover {
-    background: var(--bg-raised);
-    color: var(--text-primary);
+  @media (hover: hover) and (pointer: fine) {
+    .source:hover {
+      background: var(--bg-raised);
+      color: var(--text-primary);
+    }
   }
 
   .sourceText {
@@ -240,8 +242,10 @@
     transition: background 120ms var(--ease);
   }
 
-  .start:hover {
-    background: var(--ink-hover);
+  @media (hover: hover) and (pointer: fine) {
+    .start:hover {
+      background: var(--ink-hover);
+    }
   }
 
   .desktopHint {
@@ -341,6 +345,19 @@
   @media (max-width: 640px) {
     .start {
       width: 100%;
+    }
+  }
+
+  /* Fingers need about 44pt to hit reliably; a mouse keeps the compact sizes. */
+  @media (pointer: coarse) {
+    .brand,
+    .source {
+      min-height: 44px;
+    }
+
+    .source {
+      justify-content: center;
+      min-width: 44px;
     }
   }
 </style>

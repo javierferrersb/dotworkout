@@ -38,14 +38,23 @@
     position: static;
   }
 
-  button:hover {
-    background: var(--bg-raised);
-    color: var(--text-primary);
+  @media (hover: hover) and (pointer: fine) {
+    button:hover {
+      background: var(--bg-raised);
+      color: var(--text-primary);
+    }
   }
 
   @media (max-width: 640px) {
     button {
       left: 10px;
+    }
+  }
+
+  /* Fingers need about 44pt to hit reliably; a mouse keeps the compact sizes. */
+  @media (pointer: coarse) {
+    button {
+      min-height: 44px;
     }
   }
 </style>

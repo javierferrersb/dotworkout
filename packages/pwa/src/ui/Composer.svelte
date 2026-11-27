@@ -245,6 +245,7 @@
           placeholder={defaultTitle}
           maxlength="60"
           spellcheck="false"
+          enterkeyhint="done"
           onblur={settleTitle}
           onkeydown={(event) => {
             if (event.key === "Enter") event.currentTarget.blur();
@@ -366,9 +367,11 @@
       color 120ms var(--ease);
   }
 
-  .about:hover {
-    background: var(--bg-raised);
-    color: var(--text-primary);
+  @media (hover: hover) and (pointer: fine) {
+    .about:hover {
+      background: var(--bg-raised);
+      color: var(--text-primary);
+    }
   }
 
   .divider {
@@ -408,8 +411,10 @@
     transition: background 120ms var(--ease);
   }
 
-  .title:hover {
-    background: var(--bg-raised);
+  @media (hover: hover) and (pointer: fine) {
+    .title:hover {
+      background: var(--bg-raised);
+    }
   }
 
   .title:focus {
@@ -475,8 +480,10 @@
     transition: background 100ms var(--ease);
   }
 
-  .addKind:hover {
-    background: var(--bg-raised);
+  @media (hover: hover) and (pointer: fine) {
+    .addKind:hover {
+      background: var(--bg-raised);
+    }
   }
 
   .addKind :global(svg) {
@@ -588,6 +595,18 @@
   @media (max-width: 640px) {
     .only-wide {
       display: none;
+    }
+  }
+
+  /* Fingers need about 44pt to hit reliably; a mouse keeps the compact sizes. */
+  @media (pointer: coarse) {
+    .about {
+      width: 44px;
+      height: 44px;
+    }
+
+    .addKind {
+      height: 44px;
     }
   }
 </style>

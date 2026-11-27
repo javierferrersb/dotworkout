@@ -13,6 +13,7 @@
   import SendPanel from "../SendPanel.svelte";
   import { menuKeydown } from "../menuKeys.js";
   import { ms } from "../motion.js";
+  import { isIphone } from "../platform.js";
   import { toasts } from "../toast.svelte.js";
 
   const HELP_KEY = "dotworkout.installHelpSeen";
@@ -139,10 +140,13 @@
           <MessageCircle size={15} strokeWidth={2} />
           {t("builder.whatsapp")}
         </button>
-        <button bind:this={shareItems[1]} type="button" role="menuitem" onclick={scan}>
-          <QrCode size={15} strokeWidth={2} />
-          {t("rail.scan")}
-        </button>
+        <!-- The QR code carries the workout to the phone; on that phone it has nowhere to go. -->
+        {#if !isIphone}
+          <button bind:this={shareItems[1]} type="button" role="menuitem" onclick={scan}>
+            <QrCode size={15} strokeWidth={2} />
+            {t("rail.scan")}
+          </button>
+        {/if}
       </div>
     {/if}
   </div>
@@ -194,8 +198,10 @@
     color: var(--on-ink);
   }
 
-  .primary:hover:not(:disabled) {
-    background: var(--ink-hover);
+  @media (hover: hover) and (pointer: fine) {
+    .primary:hover:not(:disabled) {
+      background: var(--ink-hover);
+    }
   }
 
   .secondary {
@@ -206,8 +212,10 @@
     font-weight: 500;
   }
 
-  .secondary:hover:not(:disabled) {
-    background: var(--bg-raised);
+  @media (hover: hover) and (pointer: fine) {
+    .secondary:hover:not(:disabled) {
+      background: var(--bg-raised);
+    }
   }
 
   button:disabled {
@@ -244,10 +252,16 @@
     outline: none;
   }
 
-  [role="menuitem"]:hover,
   [role="menuitem"]:focus-visible {
     outline: none;
     background: var(--bg-raised);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    [role="menuitem"]:hover {
+      outline: none;
+      background: var(--bg-raised);
+    }
   }
 
   [role="menuitem"] :global(svg) {
@@ -288,6 +302,13 @@
     .popover {
       top: auto;
       bottom: calc(100% + 8px);
+    }
+  }
+
+  /* Fingers need about 44pt to hit reliably; a mouse keeps the compact sizes. */
+  @media (pointer: coarse) {
+    [role="menuitem"] {
+      min-height: 44px;
     }
   }
 </style>

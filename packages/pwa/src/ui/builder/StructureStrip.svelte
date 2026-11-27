@@ -138,8 +138,10 @@
     opacity: 0.38;
   }
 
-  .group:hover {
-    opacity: 1 !important;
+  @media (hover: hover) and (pointer: fine) {
+    .group:hover {
+      opacity: 1 !important;
+    }
   }
 
   .bar {

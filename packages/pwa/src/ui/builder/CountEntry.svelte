@@ -86,9 +86,11 @@
     color: var(--text-secondary);
   }
 
-  button:hover:not(:disabled) {
-    background: var(--segment-on);
-    color: var(--text-primary);
+  @media (hover: hover) and (pointer: fine) {
+    button:hover:not(:disabled) {
+      background: var(--segment-on);
+      color: var(--text-primary);
+    }
   }
 
   button:disabled {
@@ -100,5 +102,16 @@
     width: 1px;
     height: 14px;
     background: var(--hairline-strong);
+  }
+
+  /* Fingers need about 44pt to hit reliably; a mouse keeps the compact sizes. */
+  @media (pointer: coarse) {
+    .stepper {
+      height: 44px;
+    }
+
+    button {
+      width: 44px;
+    }
   }
 </style>
