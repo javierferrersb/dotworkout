@@ -89,6 +89,18 @@
     attempt(problem === undefined);
   }
 
+  function onfocus() {
+    focused = true;
+    // A clock fills in from the right, so digits typed after the old value
+    // would join it (5:30 then 1 makes 53:01). Select it so typing replaces it;
+    // waiting a tick lets a tap place its caret first, then takes it over.
+    if (shape !== undefined) {
+      setTimeout(() => {
+        if (document.activeElement === input) input.setSelectionRange(0, input.value.length);
+      });
+    }
+  }
+
   function onblur() {
     focused = false;
     if (text.trim() === "" && required) {
@@ -123,7 +135,7 @@
       aria-describedby={problem === undefined ? undefined : problemId}
       autocomplete="off"
       spellcheck="false"
-      onfocus={() => (focused = true)}
+      {onfocus}
       {oninput}
       {onblur}
       {onkeydown}
