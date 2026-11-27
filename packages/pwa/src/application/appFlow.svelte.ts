@@ -38,7 +38,14 @@ export class AppFlow {
   }
 
   applyTheme(): void {
-    document.documentElement.dataset["theme"] = this.resolvedTheme;
+    const root = document.documentElement;
+    root.dataset["theme"] = this.resolvedTheme;
+    // The browser bar and status bar follow the page's own background, so a
+    // theme picked in the app wins over the system one index.html starts from.
+    const canvas = getComputedStyle(root).getPropertyValue("--bg-canvas").trim();
+    for (const meta of document.querySelectorAll('meta[name="theme-color"]')) {
+      meta.setAttribute("content", canvas);
+    }
   }
 
   watchSystem(): () => void {
