@@ -112,4 +112,11 @@
     outline: 2px solid var(--accent);
     outline-offset: 1px;
   }
+
+  /* iOS zooms the page into a field under 16px and leaves it zoomed. */
+  @media (pointer: coarse) {
+    select {
+      font-size: 16px;
+    }
+  }
 </style>

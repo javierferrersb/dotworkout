@@ -191,6 +191,13 @@
     font-weight: 400;
   }
 
+  /* iOS zooms the page into a field under 16px and leaves it zoomed. */
+  @media (pointer: coarse) {
+    input {
+      font-size: 16px;
+    }
+  }
+
   .suffix {
     flex: none;
     padding-right: 6px;
