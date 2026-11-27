@@ -226,17 +226,15 @@
     font-weight: 400;
   }
 
-  /* iOS zooms the page into a field under 16px and leaves it zoomed. */
   @media (pointer: coarse) {
-    input {
-      font-size: 16px;
-    }
-  }
-
-  /* Fingers need about 44pt to hit reliably; a mouse keeps the compact sizes. */
-  @media (pointer: coarse) {
+    /* Fingers need about 44pt to hit reliably; a mouse keeps the compact sizes. */
     .box {
       height: 44px;
+    }
+
+    /* iOS zooms the page into a field under 16px and leaves it zoomed. */
+    input {
+      font-size: 16px;
     }
   }
 
