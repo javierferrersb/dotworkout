@@ -15,6 +15,8 @@
     suffix?: string;
     /** Takes the trimmed text, empty to clear; throws a FieldError when it cannot. */
     read: (text: string) => void;
+    /** Rewrites the text as it is typed, such as digits into a clock. */
+    shape?: (text: string) => string;
     trailing?: Snippet;
   }
   let {
@@ -26,11 +28,13 @@
     size = "medium",
     suffix,
     read,
+    shape,
     trailing,
   }: Props = $props();
 
   const problemId = `problem-${Math.random().toString(36).slice(2, 9)}`;
 
+  let input: HTMLInputElement;
   let text = $state(untrack(() => value));
   let problem = $state<string | undefined>(undefined);
   let focused = false;
@@ -68,6 +72,15 @@
   }
 
   function oninput() {
+    if (shape !== undefined) {
+      const shaped = shape(text);
+      if (shaped !== text) {
+        // Set the element too so the caret lands at the end of the new text.
+        text = shaped;
+        input.value = shaped;
+        input.setSelectionRange(shaped.length, shaped.length);
+      }
+    }
     // Values land as they are typed so the step line and the total follow,
     // but a complaint waits until the person has finished, unless one is up.
     attempt(problem === undefined);
@@ -97,6 +110,7 @@
 <div class="entry {size}" class:invalid={problem !== undefined}>
   <div class="box">
     <input
+      bind:this={input}
       bind:value={text}
       {placeholder}
       {inputmode}

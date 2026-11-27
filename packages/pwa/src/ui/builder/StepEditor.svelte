@@ -13,6 +13,7 @@
     targetStyle,
     targetText,
     targetValue,
+    typedClock,
     withBound,
     withDistance,
     withDuration,
@@ -278,6 +279,7 @@
             inputmode="numeric"
             size="short"
             read={(text) => readClock(field, text)}
+            shape={typedClock}
           />
         </FieldRow>
       {:else if question.id === "repetitions"}

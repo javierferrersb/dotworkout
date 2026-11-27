@@ -14,6 +14,7 @@ import {
   readDuration,
   readTarget,
   targetText,
+  typedClock,
   withBound,
   withReading,
   withTarget,
@@ -57,6 +58,39 @@ describe("a value reads back as it was typed", () => {
     const rest = readDuration("90");
     strictEqual(durationText(rest), "1:30");
     strictEqual(durationText(readDuration(durationText(rest))), "1:30");
+  });
+
+  it("lays out bare digits as a clock from the right while they are typed", () => {
+    strictEqual(typedClock("5"), "0:05");
+    strictEqual(typedClock("53"), "0:53");
+    strictEqual(typedClock("530"), "5:30");
+    strictEqual(typedClock("1000"), "10:00");
+    strictEqual(typedClock("13000"), "1:30:00");
+  });
+
+  it("keeps laying out a clock as digits are added to or deleted from one", () => {
+    strictEqual(typedClock("0:530"), "5:30");
+    strictEqual(typedClock("5:3"), "0:53");
+    strictEqual(typedClock("10:00:0"), "1:00:00");
+    strictEqual(typedClock("1:30"), "1:30");
+  });
+
+  it("starts a clock from a typed zero and stops at six digits", () => {
+    strictEqual(typedClock("0"), "0:00");
+    strictEqual(typedClock("0:005"), "0:05");
+    strictEqual(typedClock("99:59:591"), "99:59:59");
+  });
+
+  it("leaves an empty field and text that is not only digits alone", () => {
+    strictEqual(typedClock(""), "");
+    strictEqual(typedClock(":"), "");
+    strictEqual(typedClock("90s"), "90s");
+    strictEqual(typedClock("1.5"), "1.5");
+  });
+
+  it("reads a laid-out clock as the time it shows", () => {
+    strictEqual(durationText(readDuration(typedClock("130"))), "1:30");
+    strictEqual(durationText(readDuration(typedClock("90"))), "1:30");
   });
 
   it("writes an hour-long step with hours", () => {
