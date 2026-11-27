@@ -17,27 +17,89 @@ validator that says what is wrong.
 
 ## Tools
 
-| Tool                | Does                                                      |
-| ------------------- | --------------------------------------------------------- |
-| `list_activities`   | Every activity with the goals and alerts it supports      |
-| `describe_activity` | One activity in detail, including unverified combinations |
-| `validate_workout`  | Check a workout without writing anything                  |
-| `create_workout`    | Build a `.workout` file                                   |
-| `inspect_workout`   | Decode a workout and describe it                          |
+| Tool                | Does                                                        |
+| ------------------- | ----------------------------------------------------------- |
+| `list_activities`   | Every activity with the goals and alerts it supports        |
+| `describe_activity` | One activity in detail, including unverified combinations   |
+| `validate_workout`  | Check a workout without building it                         |
+| `create_workout`    | Build a workout and return the link that carries it         |
+| `inspect_workout`   | Decode a workout link (or, locally, a file) and describe it |
 
-Run locally, `create_workout` takes an `outputPath` and writes there; run as a
-remote server it returns a link instead, because the disk it is running on is
-not yours. Distances and durations are strings the library parses: `"400"`,
-`"1.2 km"`, `"0.5mi"`, `"1:00"`, `":20"`, `"90s"`.
+Every tool but a local `create_workout` is marked read-only, so a client can run
+them without asking. `create_workout` and `validate_workout` also return
+structured results (`link`, `fileName`, `warnings`…; `valid`, `errors`) next to
+the text, and a refusal comes back as a tool error naming the step that is
+wrong.
+
+Distances and durations are strings the library parses: `"400m"`, `"1.2 km"`,
+`"0.5mi"`, `"4:00"`, `":20"`, `"90s"`, `"10min"`. Write the unit: a bare number
+is seconds, or the sport's default unit, which is kilometres for a run, so the
+server warns about `"400"` on one. Targets take heart-rate zones or ranges,
+power, cadence, and paces (`"4:30/km"`, `"7:00/mi"`) or km/h, which the server
+converts to the metres per second the file stores.
 
 Sports offered both indoors and out take a `location`, and it changes what is
 allowed — a stationary bike has no speed target and no distance goal. The warm
 up and the cool down carry a target and a label of their own.
 
+## The link is the workout
+
+`create_workout` returns a link with the whole workout encoded after `#w=`.
+Nothing is stored on a server, so the link is the only copy, and the model has
+to hand it to the user intact. The server says so in three places the model
+reads: its instructions, the tool description, and the result itself, which
+puts the rule right above the link. A reply looks like this:
+
+> Here's your Norwegian 4×4: a 10 minute warm up, four 4 minute intervals in
+> zone 4 with 3 minute jogs, and a 5 minute cool down. Open this on your iPhone
+> and tap Download:
+>
+> https://workout.javierferrersb.dev/#w=SiREODRGMDU5RC04NzM1…&n=Norwegian%204%C3%974
+
+(The real link is longer; the model is told to paste all of it.)
+
+## The skill
+
+The server also ships a skill, `apple-watch-workouts`, in
+[`skills/`](skills/apple-watch-workouts/SKILL.md): how to turn a training idea
+into a spec, the units and targets each field takes, what each sport supports,
+and how to reply. Its [examples](skills/apple-watch-workouts/references/examples.md)
+are real workouts, each with the request, the exact `create_workout` arguments
+and notes: Norwegian 4×4 (run and bike), tempo on a pace band, track 400s, mile
+repeats, a long run, a treadmill progression, FTP 2×20, 30/30s, cadence drills,
+a swim pyramid, send-offs, an IM set, yards, Tabata, a strength circuit, max-rep
+sets, rowing and walking, plus the mistakes the validator catches. The test
+suite builds every one of them and checks the strict validator accepts it, so
+an example cannot quietly go stale.
+
+It reaches the model three ways, because hosts are at different stages:
+
+- **The MCP Skills extension** ([SEP-2640](https://modelcontextprotocol.io/seps/2640-skills-extension)).
+  A host that supports it lists the skill with `skills/list` and loads it like a
+  local one, marked as coming from this server.
+- **A resource.** The server instructions name its URI,
+  `skill://dotworkout/apple-watch-workouts/SKILL.md`, which any client can read
+  with `resources/read`.
+- **A prompt.** `plan_workout` returns the skill and the examples as one
+  message, with an optional `request` ("a Norwegian 4×4 on the bike").
+
+The markdown under `skills/` is the source. It is compiled into the server by
+`npm run generate:skills`, because the Workers build has no filesystem; CI fails
+if the two differ.
+
+## Protocol
+
+Built on the MCP TypeScript SDK v2, which speaks the 2026-07-28 revision
+(stateless: no handshake and no session; cache hints on lists; `Mcp-Method` and
+`Mcp-Name` headers) and still serves 2025-11-25 clients, over HTTP and stdio
+alike. Nobody has to upgrade their client to keep using it.
+
 ## Getting the file onto the phone
 
-The file lands on the machine Claude is running on, which is not the one paired
-with your Watch. So the local server also prints a QR code. Scan it and the
+Run locally, `create_workout` takes an optional `outputPath` (`~` works) and
+writes the file there too. That file lands on the machine Claude is running on,
+which is not the one paired with your Watch. So the local server also prints a
+QR code. Scan it and the
 composer opens on your phone with the workout already loaded, ready to
 download — the workout travels inside the link itself, so nothing is uploaded
 and no account is involved.
@@ -121,6 +183,11 @@ that today. Turn it on for a client you know renders attachments.
 The link is the part that always works, and it matters that neither route asks a
 model to turn base64 into bytes. Asked to do that, one dropped a byte off the
 end, and the Watch refused a workout that was otherwise perfect.
+
+Moving to the 2026-07-28 protocol does not change this. It adds no new way to
+send a file: a tool can still return a file only as an embedded resource (the
+attachment above) or as a `resource_link` the client has to fetch and save,
+and how either is shown is still up to the client. The link stays the default.
 
 ## Using it
 

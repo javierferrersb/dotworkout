@@ -3,6 +3,8 @@ import {
   SPORTS,
   findSport,
   custom,
+  paceToMetersPerSecond,
+  speedToMetersPerSecond,
   type AlertSpec,
   type StepExtras,
   type StepInput,
@@ -21,16 +23,68 @@ const step = z.union([
   z.object({ open: z.literal(true).describe("no goal; the wearer ends the step") }),
 ]);
 
+const PACE = /^\s*(\d+(?::\d{1,2}){0,2})\s*\/\s*(km|mi)\s*$/i;
+
+const pace = z
+  .string()
+  .regex(PACE, 'a pace like "4:30/km" or "7:15/mi"')
+  .describe('time per km or mile, e.g. "4:30/km", "7:15/mi"');
+
 const alert = z.discriminatedUnion("kind", [
   z.object({ kind: z.literal("heartRateZone"), zone: z.number().int().min(1).max(5) }),
-  z.object({ kind: z.literal("heartRateRange"), from: z.number(), to: z.number() }),
+  z.object({
+    kind: z.literal("heartRateRange"),
+    from: z.number().describe("beats per minute"),
+    to: z.number(),
+  }),
   z.object({ kind: z.literal("cadence"), perMinute: z.number() }),
   z.object({ kind: z.literal("cadenceRange"), from: z.number(), to: z.number() }),
   z.object({ kind: z.literal("power"), watts: z.number() }),
   z.object({ kind: z.literal("powerRange"), from: z.number(), to: z.number() }),
+  z.object({ kind: z.literal("pace"), pace: pace }),
+  z.object({
+    kind: z.literal("paceRange"),
+    from: pace.describe('one end of the band, e.g. "4:40/km"'),
+    to: pace.describe('the other end, e.g. "4:20/km"; order does not matter'),
+  }),
+  z.object({ kind: z.literal("kmh"), kmh: z.number().describe("speed in km/h, e.g. 30") }),
+  z.object({ kind: z.literal("kmhRange"), from: z.number(), to: z.number() }),
   z.object({ kind: z.literal("speed"), metersPerSecond: z.number() }),
   z.object({ kind: z.literal("speedRange"), slower: z.number(), faster: z.number() }),
 ]);
+
+export type AlertInput = z.infer<typeof alert>;
+
+/**
+ * A pace as metres per second. Runners think in minutes per kilometre and the
+ * file stores metres per second, and asking a model to do that division is
+ * asking for a target that is quietly wrong.
+ */
+function paceSpeed(text: string): number {
+  const match = PACE.exec(text);
+  if (match === null) throw new Error(`Cannot read "${text}" as a pace (try "4:30/km")`);
+  return paceToMetersPerSecond(match[1]!, match[2]!.toLowerCase() as "km" | "mi");
+}
+
+/** The alert as the library takes it: paces and km/h become metres per second. */
+export function toAlertSpec(input: AlertInput): AlertSpec {
+  switch (input.kind) {
+    case "pace":
+      return { kind: "speed", metersPerSecond: paceSpeed(input.pace) };
+    case "paceRange": {
+      const [a, b] = [paceSpeed(input.from), paceSpeed(input.to)];
+      return { kind: "speedRange", slower: Math.min(a, b), faster: Math.max(a, b) };
+    }
+    case "kmh":
+      return { kind: "speed", metersPerSecond: speedToMetersPerSecond(input.kmh) };
+    case "kmhRange": {
+      const [a, b] = [speedToMetersPerSecond(input.from), speedToMetersPerSecond(input.to)];
+      return { kind: "speedRange", slower: Math.min(a, b), faster: Math.max(a, b) };
+    }
+    default:
+      return input;
+  }
+}
 
 const block = z.object({
   repeat: z.number().int().min(1).default(1),
@@ -58,25 +112,24 @@ const edgeStep = z.intersection(
 );
 
 export const workoutShape = {
-  activity: z.enum(ACTIVITIES),
+  activity: z.enum(ACTIVITIES).describe("call list_activities for what each one supports"),
   location: z
     .enum(["outdoor", "indoor"])
     .optional()
     .describe("indoor changes what a sport offers: a stationary bike has no speed or distance"),
-  name: z.string().optional(),
+  name: z.string().optional().describe('shown in the Workout app, e.g. "Norwegian 4×4"'),
   warmup: edgeStep.optional(),
   blocks: z.array(block).min(1),
   cooldown: edgeStep.optional(),
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- built only to derive WorkoutSpec via z.infer; the lint rule doesn't recognise that as a use
-const workoutSchema = z.object(workoutShape);
+export const workoutSchema = z.object(workoutShape);
 
 export type WorkoutSpec = z.infer<typeof workoutSchema>;
 
 function extrasOf(value: z.infer<typeof edgeStep>): StepExtras {
   return {
-    ...(value.alert === undefined ? {} : { alert: value.alert as AlertSpec }),
+    ...(value.alert === undefined ? {} : { alert: toAlertSpec(value.alert) }),
     ...(value.label === undefined ? {} : { label: value.label }),
     ...(value.sendOff === undefined ? {} : { sendOff: value.sendOff }),
   };
@@ -104,7 +157,7 @@ export function buildWorkout(spec: WorkoutSpec): WorkoutBuilder {
     if (entry.sendOff !== undefined) set.on(entry.sendOff);
     if (entry.rest !== undefined) set.rest(entry.rest);
     if (entry.label !== undefined) set.label(entry.label);
-    if (entry.alert !== undefined) set.alert(entry.alert as AlertSpec);
+    if (entry.alert !== undefined) set.alert(toAlertSpec(entry.alert));
   }
 
   if (spec.cooldown !== undefined)

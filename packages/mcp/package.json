@@ -1,6 +1,6 @@
 {
   "name": "@dotworkout/mcp",
-  "version": "0.5.1",
+  "version": "0.6.0",
   "type": "module",
   "description": "MCP server for building Apple .workout files",
   "license": "MIT",
@@ -22,12 +22,13 @@
     "dotworkout-mcp": "dist/src/index.js"
   },
   "files": [
-    "dist/src"
+    "dist/src",
+    "skills"
   ],
   "dependencies": {
     "@dotworkout/codec": "0.1.0",
     "@dotworkout/domain": "0.3.1",
-    "@modelcontextprotocol/sdk": "^1.30.0",
+    "@modelcontextprotocol/server": "^2.4.0",
     "qrcode-generator": "^2.0.4",
     "zod": "^4.4.3"
   },
