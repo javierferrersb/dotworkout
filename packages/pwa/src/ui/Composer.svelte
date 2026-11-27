@@ -597,4 +597,16 @@
       display: none;
     }
   }
+
+  /* Fingers need about 44pt to hit reliably; a mouse keeps the compact sizes. */
+  @media (pointer: coarse) {
+    .about {
+      width: 44px;
+      height: 44px;
+    }
+
+    .addKind {
+      height: 44px;
+    }
+  }
 </style>

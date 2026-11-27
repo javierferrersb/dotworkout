@@ -300,4 +300,11 @@
       bottom: calc(100% + 8px);
     }
   }
+
+  /* Fingers need about 44pt to hit reliably; a mouse keeps the compact sizes. */
+  @media (pointer: coarse) {
+    [role="menuitem"] {
+      min-height: 44px;
+    }
+  }
 </style>

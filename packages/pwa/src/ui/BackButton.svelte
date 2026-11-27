@@ -50,4 +50,11 @@
       left: 10px;
     }
   }
+
+  /* Fingers need about 44pt to hit reliably; a mouse keeps the compact sizes. */
+  @media (pointer: coarse) {
+    button {
+      min-height: 44px;
+    }
+  }
 </style>

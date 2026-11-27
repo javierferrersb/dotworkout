@@ -173,4 +173,17 @@
       outline: none;
     }
   }
+
+  /* Fingers need about 44pt to hit reliably; a mouse keeps the compact sizes. */
+  @media (pointer: coarse) {
+    .trigger {
+      justify-content: center;
+      min-width: 44px;
+      min-height: 44px;
+    }
+
+    .option {
+      min-height: 44px;
+    }
+  }
 </style>
