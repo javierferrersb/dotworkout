@@ -119,4 +119,11 @@
       font-size: 16px;
     }
   }
+
+  /* Inside a 44pt field on touch screens, so a little taller too. */
+  @media (pointer: coarse) {
+    select {
+      height: 34px;
+    }
+  }
 </style>

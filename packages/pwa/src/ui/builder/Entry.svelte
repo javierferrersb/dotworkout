@@ -198,6 +198,13 @@
     }
   }
 
+  /* Fingers need about 44pt to hit reliably; a mouse keeps the compact sizes. */
+  @media (pointer: coarse) {
+    .box {
+      height: 44px;
+    }
+  }
+
   .suffix {
     flex: none;
     padding-right: 6px;

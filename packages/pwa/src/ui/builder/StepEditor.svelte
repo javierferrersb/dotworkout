@@ -608,4 +608,31 @@
       padding: 0 14px;
     }
   }
+
+  /* Fingers need about 44pt to hit reliably; a mouse keeps the compact sizes. */
+  @media (pointer: coarse) {
+    .ghost,
+    .done {
+      height: 44px;
+    }
+
+    .icon {
+      width: 44px;
+      height: 44px;
+    }
+
+    .range .dash {
+      padding-top: 12px;
+    }
+
+    /* A row of quick suggestions: a bit under 44pt, spaced so a miss lands on nothing. */
+    .suggestions {
+      gap: 8px;
+    }
+
+    .chip {
+      min-height: 36px;
+      padding: 0 12px;
+    }
+  }
 </style>
