@@ -93,6 +93,9 @@ body {
 
 #app {
   height: 100%;
+  /* Installed, the app draws under a translucent status bar (viewport-fit=cover),
+     so its headers need pushing below it. The inset is 0 in a browser tab. */
+  padding-top: env(safe-area-inset-top);
 }
 
 h1,
