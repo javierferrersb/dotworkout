@@ -38,9 +38,11 @@
     position: static;
   }
 
-  button:hover {
-    background: var(--bg-raised);
-    color: var(--text-primary);
+  @media (hover: hover) and (pointer: fine) {
+    button:hover {
+      background: var(--bg-raised);
+      color: var(--text-primary);
+    }
   }
 
   @media (max-width: 640px) {

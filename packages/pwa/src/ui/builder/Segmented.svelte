@@ -103,8 +103,10 @@
       box-shadow 120ms var(--ease);
   }
 
-  button:hover:not(.on) {
-    color: var(--text-primary);
+  @media (hover: hover) and (pointer: fine) {
+    button:hover:not(.on) {
+      color: var(--text-primary);
+    }
   }
 
   button.on {

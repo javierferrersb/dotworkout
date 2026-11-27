@@ -86,9 +86,11 @@
     color: var(--text-secondary);
   }
 
-  button:hover:not(:disabled) {
-    background: var(--segment-on);
-    color: var(--text-primary);
+  @media (hover: hover) and (pointer: fine) {
+    button:hover:not(:disabled) {
+      background: var(--segment-on);
+      color: var(--text-primary);
+    }
   }
 
   button:disabled {

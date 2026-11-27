@@ -114,10 +114,16 @@
       color 120ms var(--ease);
   }
 
-  .trigger:hover,
   .trigger[aria-expanded="true"] {
     background: var(--bg-raised);
     color: var(--text-primary);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .trigger:hover {
+      background: var(--bg-raised);
+      color: var(--text-primary);
+    }
   }
 
   .popover {
@@ -156,9 +162,15 @@
     text-align: left;
   }
 
-  .option:hover,
   .option:focus-visible {
     background: var(--bg-raised);
     outline: none;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .option:hover {
+      background: var(--bg-raised);
+      outline: none;
+    }
   }
 </style>

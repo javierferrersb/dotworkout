@@ -177,9 +177,11 @@
       color 120ms var(--ease);
   }
 
-  .source:hover {
-    background: var(--bg-raised);
-    color: var(--text-primary);
+  @media (hover: hover) and (pointer: fine) {
+    .source:hover {
+      background: var(--bg-raised);
+      color: var(--text-primary);
+    }
   }
 
   .sourceText {
@@ -240,8 +242,10 @@
     transition: background 120ms var(--ease);
   }
 
-  .start:hover {
-    background: var(--ink-hover);
+  @media (hover: hover) and (pointer: fine) {
+    .start:hover {
+      background: var(--ink-hover);
+    }
   }
 
   .desktopHint {

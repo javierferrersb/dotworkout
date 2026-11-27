@@ -179,7 +179,9 @@
     transition: background 120ms var(--ease);
   }
 
-  .close:hover {
-    background: var(--ink-hover);
+  @media (hover: hover) and (pointer: fine) {
+    .close:hover {
+      background: var(--ink-hover);
+    }
   }
 </style>

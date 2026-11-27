@@ -194,8 +194,10 @@
     color: var(--on-ink);
   }
 
-  .primary:hover:not(:disabled) {
-    background: var(--ink-hover);
+  @media (hover: hover) and (pointer: fine) {
+    .primary:hover:not(:disabled) {
+      background: var(--ink-hover);
+    }
   }
 
   .secondary {
@@ -206,8 +208,10 @@
     font-weight: 500;
   }
 
-  .secondary:hover:not(:disabled) {
-    background: var(--bg-raised);
+  @media (hover: hover) and (pointer: fine) {
+    .secondary:hover:not(:disabled) {
+      background: var(--bg-raised);
+    }
   }
 
   button:disabled {
@@ -244,10 +248,16 @@
     outline: none;
   }
 
-  [role="menuitem"]:hover,
   [role="menuitem"]:focus-visible {
     outline: none;
     background: var(--bg-raised);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    [role="menuitem"]:hover {
+      outline: none;
+      background: var(--bg-raised);
+    }
   }
 
   [role="menuitem"] :global(svg) {

@@ -76,8 +76,10 @@
     transition: background 100ms var(--ease);
   }
 
-  .head:hover {
-    background: color-mix(in srgb, var(--bg-raised) 55%, transparent);
+  @media (hover: hover) and (pointer: fine) {
+    .head:hover {
+      background: color-mix(in srgb, var(--bg-raised) 55%, transparent);
+    }
   }
 
   .head:focus-visible {

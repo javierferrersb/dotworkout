@@ -366,9 +366,11 @@
       color 120ms var(--ease);
   }
 
-  .about:hover {
-    background: var(--bg-raised);
-    color: var(--text-primary);
+  @media (hover: hover) and (pointer: fine) {
+    .about:hover {
+      background: var(--bg-raised);
+      color: var(--text-primary);
+    }
   }
 
   .divider {
@@ -408,8 +410,10 @@
     transition: background 120ms var(--ease);
   }
 
-  .title:hover {
-    background: var(--bg-raised);
+  @media (hover: hover) and (pointer: fine) {
+    .title:hover {
+      background: var(--bg-raised);
+    }
   }
 
   .title:focus {
@@ -475,8 +479,10 @@
     transition: background 100ms var(--ease);
   }
 
-  .addKind:hover {
-    background: var(--bg-raised);
+  @media (hover: hover) and (pointer: fine) {
+    .addKind:hover {
+      background: var(--bg-raised);
+    }
   }
 
   .addKind :global(svg) {

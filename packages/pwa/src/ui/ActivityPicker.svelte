@@ -377,9 +377,11 @@
       box-shadow 120ms var(--ease);
   }
 
-  .tile:hover {
-    border-color: var(--hairline-strong);
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  @media (hover: hover) and (pointer: fine) {
+    .tile:hover {
+      border-color: var(--hairline-strong);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
   }
 
   .tile.first {

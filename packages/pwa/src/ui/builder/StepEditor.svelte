@@ -506,9 +506,11 @@
       color 100ms var(--ease);
   }
 
-  .chip:hover {
-    background: var(--bg-raised);
-    color: var(--text-primary);
+  @media (hover: hover) and (pointer: fine) {
+    .chip:hover {
+      background: var(--bg-raised);
+      color: var(--text-primary);
+    }
   }
 
   .chip.on {
@@ -557,15 +559,19 @@
     padding: 0;
   }
 
-  .ghost:hover,
-  .icon:hover {
-    background: var(--bg-raised);
-    color: var(--text-primary);
+  @media (hover: hover) and (pointer: fine) {
+    .ghost:hover,
+    .icon:hover {
+      background: var(--bg-raised);
+      color: var(--text-primary);
+    }
   }
 
-  .danger:hover {
-    background: color-mix(in srgb, var(--danger) 12%, transparent);
-    color: var(--danger);
+  @media (hover: hover) and (pointer: fine) {
+    .danger:hover {
+      background: color-mix(in srgb, var(--danger) 12%, transparent);
+      color: var(--danger);
+    }
   }
 
   .done {
@@ -583,8 +589,10 @@
     transition: background 120ms var(--ease);
   }
 
-  .done:hover {
-    background: var(--ink-hover);
+  @media (hover: hover) and (pointer: fine) {
+    .done:hover {
+      background: var(--ink-hover);
+    }
   }
 
   @media (max-width: 560px) {

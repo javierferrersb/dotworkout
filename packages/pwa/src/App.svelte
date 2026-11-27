@@ -281,7 +281,9 @@
     padding: 6px 6px;
   }
 
-  .resumed .link:hover {
-    color: var(--text-primary);
+  @media (hover: hover) and (pointer: fine) {
+    .resumed .link:hover {
+      color: var(--text-primary);
+    }
   }
 </style>

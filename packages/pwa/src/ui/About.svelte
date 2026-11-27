@@ -172,8 +172,10 @@
     transition: background 100ms var(--ease);
   }
 
-  a:hover {
-    background: var(--bg-raised);
+  @media (hover: hover) and (pointer: fine) {
+    a:hover {
+      background: var(--bg-raised);
+    }
   }
 
   a :global(svg) {
@@ -196,7 +198,9 @@
     transition: background 120ms var(--ease);
   }
 
-  .ok:hover {
-    background: var(--ink-hover);
+  @media (hover: hover) and (pointer: fine) {
+    .ok:hover {
+      background: var(--ink-hover);
+    }
   }
 </style>
