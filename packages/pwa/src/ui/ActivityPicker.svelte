@@ -414,6 +414,7 @@
     color: var(--accent);
     font-size: 11.5px;
     font-weight: 600;
+    white-space: nowrap;
   }
 
   .none {
